@@ -1,4 +1,4 @@
-package com.example.vasarely.View
+package com.example.vasarely.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

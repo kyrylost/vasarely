@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/signInSignUpScreen"
-        android:name="com.example.vasarely.View.SignInSignUpScreen"
+        android:name="com.example.vasarely.view.SignInSignUpScreen"
         android:label="SignInSignUpScreen" />
 </navigation>
