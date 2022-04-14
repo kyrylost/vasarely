@@ -27,9 +27,14 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
+        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+
         binding.welcomeText.typeface = montserratBoldFont
         binding.selectPrefText.typeface = montserratBoldFont
+        binding.firstCategory.typeface = montserratBoldFont
+        binding.firstCategoryMin.typeface = montserratRegularFont
     }
 
     override fun onDestroy() {
