@@ -27,7 +27,15 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // write code here
+        val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
+        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+
+        binding.signinText.typeface = montserratBoldFont
+        binding.signupText.typeface = montserratBoldFont
+        binding.forgetPasswordText.typeface = montserratBoldFont
+        binding.emailInput.typeface = montserratRegularFont
+        binding.passwordInput.typeface = montserratRegularFont
+        binding.usernameInput.typeface = montserratRegularFont
     }
 
     override fun onDestroy() {
