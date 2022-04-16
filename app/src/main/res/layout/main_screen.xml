@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
@@ -10,9 +12,7 @@
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <?xml version="1.0" encoding="utf-8"?>
         <androidx.constraintlayout.widget.ConstraintLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -34,7 +34,8 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0">
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="SpeakableTextPresentCheck">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -62,14 +63,14 @@
                     android:layout_marginEnd="81dp"
                     android:layout_marginBottom="25dp"
                     android:background="#fafafa"
-                    android:contentDescription="@drawable/home_icon"
+                    android:contentDescription="Locate to &quot;home&quot;"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton2"
                     app:layout_constraintHorizontal_bias="0.45"
                     app:layout_constraintStart_toEndOf="@+id/imageButton3"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/home_icon" />
+                    app:srcCompat="@drawable/home_icon_selected" />
 
                 <ImageButton
                     android:id="@+id/imageButton2"
@@ -79,7 +80,7 @@
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="25dp"
                     android:background="#fafafa"
-                    android:contentDescription="@drawable/user_icon"
+                    android:contentDescription="Locate to &quot;my page&quot;"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -93,13 +94,12 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="25dp"
                     android:background="#fafafa"
-                    android:contentDescription="@drawable/search_icon"
+                    android:contentDescription="Locate to &quot;search&quot;"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/search_icon" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

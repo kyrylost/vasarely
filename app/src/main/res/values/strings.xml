@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Vasarely</string>
+    <string name="sign_in_text">Увійти</string>
+    <string name="sign_up_text">Зареєструватись</string>
+    <string name="email_hint">Електронна пошта</string>
+    <string name="password_hint">Пароль</string>
+    <string name="username_hint">Юзернейм</string>
+    <string name="forget_password">Забули пароль?</string>
+    <string name="empty_email_error_message">Уведіть адресу електронної пошти!</string>
+    <string name="empty_password_error_message">Уведіть пароль!</string>
+    <string name="empty_username_error_message">Уведіть юзернейм!</string>
 </resources>

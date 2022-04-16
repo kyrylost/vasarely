@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "593931416809",
+    "project_id": "vasarely-f0ed5",
+    "storage_bucket": "vasarely-f0ed5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593931416809:android:9cf1be1cc1a24dbcceec78",
+        "android_client_info": {
+          "package_name": "com.example.vasarely"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593931416809-7a5mn8718tsbd13ftcebn0h4g0r2a8pk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbVYg_vqHh9Z012QWWHzylfStsL_sk4OY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593931416809-7a5mn8718tsbd13ftcebn0h4g0r2a8pk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
