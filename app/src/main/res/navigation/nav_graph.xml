@@ -7,5 +7,13 @@
     <fragment
         android:id="@+id/signInSignUpScreen"
         android:name="com.example.vasarely.view.SignInSignUpScreen"
-        android:label="SignInSignUpScreen" />
+        android:label="SignInSignUpScreen" >
+        <action
+            android:id="@+id/action_signInSignUpScreen_to_preferencesSelectionScreen"
+            app:destination="@id/preferencesSelectionScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/preferencesSelectionScreen"
+        android:name="com.example.vasarely.view.PreferencesSelectionScreen"
+        android:label="PreferencesSelectionScreen" />
 </navigation>

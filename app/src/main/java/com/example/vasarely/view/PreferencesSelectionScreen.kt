@@ -33,8 +33,35 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
         binding.welcomeText.typeface = montserratBoldFont
         binding.selectPrefText.typeface = montserratBoldFont
+
+
         binding.firstCategory.typeface = montserratBoldFont
         binding.firstCategoryMin.typeface = montserratRegularFont
+
+        binding.byHandButton.typeface = montserratRegularFont
+        binding.compGraphButton.typeface = montserratRegularFont
+
+
+        binding.secondCategory.typeface = montserratBoldFont
+        binding.secondCategoryMin.typeface = montserratRegularFont
+
+        binding.stillLifeButton.typeface = montserratRegularFont
+        binding.portraitButton.typeface = montserratRegularFont
+        binding.landscapeButton.typeface = montserratRegularFont
+        binding.marineButton.typeface = montserratRegularFont
+        binding.battlePaintingButton.typeface = montserratRegularFont
+        binding.interiorButton.typeface = montserratRegularFont
+        binding.caricatureButton.typeface = montserratRegularFont
+        binding.nudeButton.typeface = montserratRegularFont
+        binding.animeButton.typeface = montserratRegularFont
+        binding.horrorButton.typeface = montserratRegularFont
+
+
+        binding.thirdCategory.typeface = montserratBoldFont
+        binding.thirdCategoryMin.typeface = montserratRegularFont
+
+        binding.depressedButton.typeface = montserratRegularFont
+        binding.funButton.typeface = montserratRegularFont
     }
 
     override fun onDestroy() {

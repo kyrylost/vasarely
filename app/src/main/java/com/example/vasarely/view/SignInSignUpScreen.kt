@@ -31,12 +31,7 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         appViewModel.initAppViewModel(Application())
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
-
             // Here is navigation part. Example is below
-
-            /*val action = LoginRegisterScreenDirections.actionLoginRegisterScreenToMainScreen()
-            findNavController().navigate(action)*/
-
         }
 
         _binding = SignInSignUpScreenBinding.inflate(inflater, container, false)
