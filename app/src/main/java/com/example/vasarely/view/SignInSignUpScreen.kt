@@ -37,7 +37,7 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         appViewModel.initAppViewModel(Application())
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
-            // Here is navigation part. Example is below
+            // Here is navigation part
         }
 
         _binding = SignInSignUpScreenBinding.inflate(inflater, container, false)
@@ -60,6 +60,7 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         binding.signupButton.visibility = View.GONE
 
         binding.signupButton.setOnClickListener{
+            Log.d("signupButton", "+")
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
             val username = binding.usernameInput.text.toString()
@@ -83,13 +84,13 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
             val btnSingUp = binding.signupButton
             val btnSingIn = binding.signinButton
 
-            textSingIn.setTextColor(Color.GRAY);
-            textSingUp.setTextColor(Color.parseColor("#0082DD"));
-                Username.visibility = View.VISIBLE
-                Usernametxt.visibility = View.VISIBLE
-                Password.visibility = View.GONE
-                btnSingIn.visibility = View.GONE
-                btnSingUp.visibility = View.VISIBLE
+            textSingIn.setTextColor(Color.GRAY)
+            textSingUp.setTextColor(Color.parseColor("#0082DD"))
+            Username.visibility = View.VISIBLE
+            Usernametxt.visibility = View.VISIBLE
+            Password.visibility = View.GONE
+            btnSingIn.visibility = View.GONE
+            btnSingUp.visibility = View.VISIBLE
 
         }
 
@@ -113,7 +114,8 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
         }
 
-        binding.signupButton.setOnClickListener{
+        binding.signinButton.setOnClickListener{
+            Log.d("signinButton", "+")
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
