@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.MainScreenBinding
 import com.example.vasarely.databinding.SearchScreenBinding
@@ -25,7 +26,18 @@ class MainScreen: Fragment(R.layout.main_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // write code here
+
+    //----------------------------Navigation between screens---------------------------------------
+        //From MainScreen to SearchScreen
+        binding.searchButton.setOnClickListener {
+            val action = MainScreenDirections.actionMainScreenToSearchScreen()
+            findNavController().navigate(action)
+        }
+        //From MainScreen to UserPersonalPageScreen
+        binding.userPageButton.setOnClickListener {
+            val action = MainScreenDirections.actionMainScreenToUserPersonalPageScreen()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroy() {

@@ -11,9 +11,45 @@
         <action
             android:id="@+id/action_signInSignUpScreen_to_preferencesSelectionScreen"
             app:destination="@id/preferencesSelectionScreen" />
+        <action
+            android:id="@+id/action_signInSignUpScreen_to_searchScreen"
+            app:destination="@id/searchScreen" />
     </fragment>
     <fragment
         android:id="@+id/preferencesSelectionScreen"
         android:name="com.example.vasarely.view.PreferencesSelectionScreen"
         android:label="PreferencesSelectionScreen" />
+    <fragment
+        android:id="@+id/searchScreen"
+        android:name="com.example.vasarely.view.SearchScreen"
+        android:label="SearchScreen" >
+        <action
+            android:id="@+id/action_searchScreen_to_userPersonalPageScreen"
+            app:destination="@id/userPersonalPageScreen" />
+        <action
+            android:id="@+id/action_searchScreen_to_mainScreen"
+            app:destination="@id/mainScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/userPersonalPageScreen"
+        android:name="com.example.vasarely.view.UserPersonalPageScreen"
+        android:label="UserPersonalPageScreen" >
+        <action
+            android:id="@+id/action_userPersonalPageScreen_to_searchScreen"
+            app:destination="@id/searchScreen" />
+        <action
+            android:id="@+id/action_userPersonalPageScreen_to_mainScreen"
+            app:destination="@id/mainScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainScreen"
+        android:name="com.example.vasarely.view.MainScreen"
+        android:label="MainScreen" >
+        <action
+            android:id="@+id/action_mainScreen_to_searchScreen"
+            app:destination="@id/searchScreen" />
+        <action
+            android:id="@+id/action_mainScreen_to_userPersonalPageScreen"
+            app:destination="@id/userPersonalPageScreen" />
+    </fragment>
 </navigation>

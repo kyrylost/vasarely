@@ -26,7 +26,20 @@ class SearchScreen: Fragment(R.layout.search_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // write code here
+
+    //----------------------------Navigation between screens---------------------------------------
+    /*  binding.homeButton.setOnClickListener {
+            val action = SearchScreenDirections.actionSearchScreenToMainScreen()
+            findNavController().navigate(action)
+        }
+
+        binding.userPageButton.setOnClickListener {
+            val action = SearchScreenDirections.actionSearchScreenToUserPersonalPageScreen()
+            findNavController().navigate(action)
+        }
+     */
+
+
     }
 
     override fun onDestroy() {
