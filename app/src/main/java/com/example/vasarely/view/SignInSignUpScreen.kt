@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
@@ -38,8 +39,6 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
 
-            // Here is navigation part. Example is below
-
             val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
             findNavController().navigate(action)
 
@@ -60,9 +59,9 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         binding.emailInput.typeface = montserratRegularFont
         binding.passwordInput.typeface = montserratRegularFont
         binding.usernameInput.typeface = montserratRegularFont
-        binding.usernameInput.visibility = View.GONE
-        binding.usernameInputLayout.visibility = View.GONE
-        binding.signupButton.visibility = View.GONE
+        binding.usernameInput.visibility = GONE
+        binding.usernameInputLayout.visibility = GONE
+        binding.signupButton.visibility = GONE
 
         binding.signupButton.setOnClickListener{
             val email = binding.emailInput.text.toString()
@@ -82,43 +81,43 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         binding.signupText.setOnClickListener {
             val textSingUp = binding.signupText;
             val textSingIn = binding.signinText;
-            val Username = binding.usernameInput
-            val Usernametxt = binding.usernameInputLayout
-            val Password = binding.forgetPasswordText
+            val username = binding.usernameInput
+            val usernametxt = binding.usernameInputLayout
+            val password = binding.forgetPasswordText
             val btnSingUp = binding.signupButton
             val btnSingIn = binding.signinButton
 
             textSingIn.setTextColor(Color.GRAY);
             textSingUp.setTextColor(Color.parseColor("#0082DD"));
-                Username.visibility = View.VISIBLE
-                Usernametxt.visibility = View.VISIBLE
-                Password.visibility = View.GONE
-                btnSingIn.visibility = View.GONE
-                btnSingUp.visibility = View.VISIBLE
+            username.visibility = VISIBLE
+            usernametxt.visibility = VISIBLE
+            password.visibility = GONE
+            btnSingIn.visibility = GONE
+            btnSingUp.visibility = VISIBLE
 
         }
 
         binding.signinText.setOnClickListener {
             val textSingUp = binding.signupText;
             val textSingIn = binding.signinText;
-            val Username = binding.usernameInput
-            val Usernametxt = binding.usernameInputLayout
-            val Password = binding.forgetPasswordText
+            val username = binding.usernameInput
+            val usernametxt = binding.usernameInputLayout
+            val password = binding.forgetPasswordText
             val btnSingUp = binding.signupButton
             val btnSingIn = binding.signinButton
 
             textSingIn.setTextColor(Color.parseColor("#0082DD"));
             textSingUp.setTextColor(Color.GRAY);
-            Username.visibility = View.GONE
-            Usernametxt.visibility = View.GONE
-            Password.visibility = View.VISIBLE
-            btnSingIn.visibility = View.VISIBLE
-            btnSingUp.visibility = View.GONE
+            username.visibility = GONE
+            usernametxt.visibility = GONE
+            password.visibility = VISIBLE
+            btnSingIn.visibility = VISIBLE
+            btnSingUp.visibility = GONE
 
 
         }
 
-        binding.signupButton.setOnClickListener{
+        binding.signinButton.setOnClickListener{
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
 

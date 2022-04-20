@@ -17,6 +17,8 @@ class AppViewModel: ViewModel() {
         userMutableLiveData = database.userMutableLiveData
     }
 
-    fun register(email:String, password:String, username:String) = database.register(email, password, username)
+    fun register(email:String, password:String, username:String) {
+        database.register(email, password, username)
+    }
     fun login(email:String, password:String) = database.login(email, password)
 }
