@@ -7,8 +7,10 @@
     <string name="username_hint">Юзернейм</string>
     <string name="forget_password">Забули пароль?</string>
     <string name="empty_email_error_message">Уведіть адресу електронної пошти!</string>
-    <string name="empty_password_error_message">Уведіть пароль!</string>
+    <string name="incorrect_email_error_message">Будь ласка, використайте пошту Gmail</string>
     <string name="empty_username_error_message">Уведіть юзернейм!</string>
+    <string name="empty_password_error_message">Уведіть пароль!</string>
+    <string name="short_password_error_message">Пароль занадто короткий!</string>
     <string name="locate_to_home">Locate to home</string>
     <string name="locate_to_my_page">Locate to my page</string>
     <string name="locate_to_search">Locate to search</string>
@@ -34,4 +36,9 @@
     <string name="third_category_min">(необов’язково)</string>
     <string name="depressed_button">Депресивний</string>
     <string name="fun_button">Веселий</string>
+    <string name="nicknameplacer">NicknamePlacer</string>
+    <string name="subs_text">Підписників</string>
+    <string name="follow_text">Відстежує</string>
+    <string name="add_work_text">Додати роботу</string>
+    <string name="continue_btn_text">Далі</string>
 </resources>

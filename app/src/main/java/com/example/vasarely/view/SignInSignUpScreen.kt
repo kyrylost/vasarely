@@ -68,13 +68,17 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
             val password = binding.passwordInput.text.toString()
             val username = binding.usernameInput.text.toString()
 
-            if (password.isNotEmpty() && email.isNotEmpty() && username.isNotEmpty()) {
+            if ((password.isNotEmpty() && password.length >= 6) &&
+                (email.isNotEmpty() && email.drop(email.length - 9) == "gmail.com") &&
+                username.isNotEmpty()) {
                 appViewModel.register(email, password, username)
             }
             else {
                 if (email.isEmpty()) binding.emailInput.error = getString(R.string.empty_email_error_message)
                 if (password.isEmpty()) binding.passwordInput.error = getString(R.string.empty_password_error_message)
                 if (username.isEmpty()) binding.usernameInput.error = getString(R.string.empty_username_error_message)
+                if (password.isNotEmpty() && password.length < 6) binding.passwordInput.error = getString(R.string.short_password_error_message)
+                if (password.isNotEmpty() && email.drop(email.length - 9) != "gmail.com") binding.emailInput.error = getString(R.string.incorrect_email_error_message)
             }
         }
 
