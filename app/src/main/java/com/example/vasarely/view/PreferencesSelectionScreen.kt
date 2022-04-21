@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
 import com.example.vasarely.databinding.SearchScreenBinding
@@ -27,6 +28,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.continueButton.setOnClickListener {
+            var action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
+            findNavController().navigate(action)
+        }
 
         val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)

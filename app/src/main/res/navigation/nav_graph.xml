@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/preferencesSelectionScreen"
         android:name="com.example.vasarely.view.PreferencesSelectionScreen"
-        android:label="PreferencesSelectionScreen" />
+        android:label="PreferencesSelectionScreen" >
+        <action
+            android:id="@+id/action_preferencesSelectionScreen_to_searchScreen"
+            app:destination="@id/searchScreen" />
+    </fragment>
     <fragment
         android:id="@+id/searchScreen"
         android:name="com.example.vasarely.view.SearchScreen"
