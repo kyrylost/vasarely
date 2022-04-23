@@ -1,6 +1,8 @@
 package com.example.vasarely.view
 
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
-import com.example.vasarely.databinding.SearchScreenBinding
+
 
 class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen) {
 
@@ -24,18 +26,18 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
     ): View {
         _binding = PreferencesSelectionScreenBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.continueButton.setOnClickListener {
-            var action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
-            findNavController().navigate(action)
-        }
 
-        val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
-        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+
+        val montserratBoldFont: Typeface? =
+            ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
+        val montserratRegularFont: Typeface? =
+            ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
         binding.welcomeText.typeface = montserratBoldFont
         binding.selectPrefText.typeface = montserratBoldFont
@@ -68,10 +70,226 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
         binding.depressedButton.typeface = montserratRegularFont
         binding.funButton.typeface = montserratRegularFont
+        var click = 0;
+        var clickH = 0;
+        var clicked = 0
+        var clicked1 = 0
+        var clickF = 0
+        var clickS = 0
+        var clickP = 0;
+        var clickL = 0;
+        var clickM = 0;
+        var clickB = 0;
+        var clickI = 0;
+        var clickC = 0;
+        var clickN = 0;
+        var clickA = 0;
+        var min = 0;
+
+        binding.byHandButton.setOnClickListener {
+            val byHand = binding.byHandButton;
+
+            clicked += 1;
+            if (clicked > 2) clicked = 1;
+            if (clicked !=2) {
+                byHand.setBackgroundColor(Color.parseColor("#0082DD"))
+                byHand.setTextColor(Color.WHITE)
+            }
+            if (clicked != 1 && clicked1 != 2) {
+                byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                byHand.setTextColor(Color.BLACK)
+            }
+        }
+        binding.compGraphButton.setOnClickListener {
+            val compGraph = binding.compGraphButton;
+            clicked1 += 1;
+            if (clicked1 > 2) clicked1 = 1;
+            if (clicked1!=2) {
+                compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
+                compGraph.setTextColor(Color.WHITE)
+
+            }
+            if (clicked1 != 1 && clicked != 2) {
+                compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                compGraph.setTextColor(Color.BLACK)
+            }
+
+
+        }
+
+        binding.depressedButton.setOnClickListener {
+            val depress = binding.depressedButton
+            click += 1;
+            if (click > 2) click = 1
+            if (click != 2) {
+               depress.setBackgroundColor(Color.parseColor("#0082DD"));
+                depress.setTextColor(Color.WHITE)}else{
+                depress.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                depress.setTextColor(Color.BLACK)
+            }
+        }
+        binding.funButton.setOnClickListener {
+            val funBut = binding.funButton
+            clickF += 1;
+            if (clickF != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)}else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+            }
+        }
+        binding.stillLifeButton.setOnClickListener {
+            val funBut = binding.stillLifeButton
+            clickS += 1;
+            if (clickS > 2) clickS = 1
+            if (clickS != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+            min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min-=1
+            }
+        }
+        binding.portraitButton.setOnClickListener {
+            val funBut = binding.portraitButton
+            clickP += 1;
+            if (clickP > 2) clickP = 1
+            if (clickP != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.landscapeButton.setOnClickListener {
+            val funBut = binding.landscapeButton
+            clickL += 1;
+            if (clickL > 2) clickL = 1
+            if (clickL != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.marineButton.setOnClickListener {
+            val funBut = binding.marineButton
+            clickM += 1;
+            if (clickM > 2) clickM = 1
+            if (clickM != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.battlePaintingButton.setOnClickListener {
+            val funBut = binding.battlePaintingButton
+            clickB += 1;
+            if (clickB > 2) clickB = 1
+            if (clickB != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.interiorButton.setOnClickListener {
+            val funBut = binding.interiorButton
+            clickI += 1;
+            if (clickI > 2) clickI = 1
+            if (clickI != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.caricatureButton.setOnClickListener {
+            val funBut = binding.caricatureButton
+            clickC += 1;
+            if (clickC > 2) clickC = 1
+            if (clickC != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.nudeButton.setOnClickListener {
+            val funBut = binding.nudeButton
+            clickN += 1;
+            if (clickN > 2) clickN = 1
+            if (clickN != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.animeButton.setOnClickListener {
+            val funBut = binding.animeButton
+            clickA += 1;
+            if (clickA > 2) clickA = 1
+            if (clickA != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.horrorButton.setOnClickListener {
+            val funBut = binding.horrorButton
+            clickH += 1;
+            if (clickH != 2) {
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setTextColor(Color.WHITE)
+                min +=1
+            }else{
+                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                funBut.setTextColor(Color.BLACK)
+                min -=1
+            }
+        }
+        binding.continueButton.setOnClickListener {
+            if (min < 2){
+                binding.secondCategoryMin.setTextColor(Color.RED)
+            }else{
+            var action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
+            findNavController().navigate(action)}
+        }
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
+        override fun onDestroy() {
+            super.onDestroy()
+            _binding = null
+        }
+
 }

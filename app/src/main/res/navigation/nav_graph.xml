@@ -2,18 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signInSignUpScreen">
+    app:startDestination="@id/preferencesSelectionScreen">
 
     <fragment
         android:id="@+id/signInSignUpScreen"
         android:name="com.example.vasarely.view.SignInSignUpScreen"
         android:label="SignInSignUpScreen" >
         <action
-            android:id="@+id/action_signInSignUpScreen_to_preferencesSelectionScreen"
-            app:destination="@id/preferencesSelectionScreen" />
-        <action
             android:id="@+id/action_signInSignUpScreen_to_searchScreen"
             app:destination="@id/searchScreen" />
+        <action
+            android:id="@+id/action_signInSignUpScreen_to_preferencesSelectionScreen"
+            app:destination="@id/preferencesSelectionScreen" />
     </fragment>
     <fragment
         android:id="@+id/preferencesSelectionScreen"

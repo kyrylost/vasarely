@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <data>
         <variable
             name="viewmodel"
@@ -218,7 +219,7 @@
 
                 <Button
                     android:id="@+id/landscape_button"
-                    style="?android:attr/buttonBarButtonStyle"
+                    style="?android:attr/selectableItemBackgroundBorderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
