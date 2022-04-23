@@ -1,17 +1,20 @@
 package com.example.vasarely.view
 
-import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 class SearchScreen: Fragment(R.layout.search_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -20,6 +23,12 @@ class SearchScreen: Fragment(R.layout.search_screen) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
+            val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
+            findNavController().navigate(action)
+        }
+
         _binding = SearchScreenBinding.inflate(inflater, container, false)
         return binding.root
     }

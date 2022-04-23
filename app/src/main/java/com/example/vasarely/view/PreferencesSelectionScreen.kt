@@ -2,20 +2,22 @@ package com.example.vasarely.view
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 
 class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: PreferencesSelectionScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -31,8 +33,6 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         val montserratBoldFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
@@ -70,74 +70,77 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
         binding.depressedButton.typeface = montserratRegularFont
         binding.funButton.typeface = montserratRegularFont
-        var click = 0;
-        var clickH = 0;
-        var clicked = 0
-        var clicked1 = 0
-        var clickF = 0
+        var byHandClicked = 0
+        var computerGraphClicked = 0
+        var depressedButtonClicked = 0
+        var funButtonClicked = 0
         var clickS = 0
-        var clickP = 0;
-        var clickL = 0;
-        var clickM = 0;
-        var clickB = 0;
-        var clickI = 0;
-        var clickC = 0;
-        var clickN = 0;
-        var clickA = 0;
-        var min = 0;
+        var clickP = 0
+        var clickL = 0
+        var clickM = 0
+        var clickB = 0
+        var clickI = 0
+        var clickC = 0
+        var clickN = 0
+        var clickA = 0
+        var clickH = 0
+        var min = 0
 
         binding.byHandButton.setOnClickListener {
-            val byHand = binding.byHandButton;
+            val byHand = binding.byHandButton
 
-            clicked += 1;
-            if (clicked > 2) clicked = 1;
-            if (clicked !=2) {
+            byHandClicked += 1
+            if (byHandClicked > 2) byHandClicked = 1
+            if (byHandClicked !=2) {
                 byHand.setBackgroundColor(Color.parseColor("#0082DD"))
                 byHand.setTextColor(Color.WHITE)
             }
-            if (clicked != 1 && clicked1 != 2) {
+            if (byHandClicked != 1 && computerGraphClicked != 2) {
                 byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 byHand.setTextColor(Color.BLACK)
             }
         }
         binding.compGraphButton.setOnClickListener {
-            val compGraph = binding.compGraphButton;
-            clicked1 += 1;
-            if (clicked1 > 2) clicked1 = 1;
-            if (clicked1!=2) {
+            val compGraph = binding.compGraphButton
+
+            computerGraphClicked += 1
+            if (computerGraphClicked > 2) computerGraphClicked = 1
+            if (computerGraphClicked!=2) {
                 compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
                 compGraph.setTextColor(Color.WHITE)
 
             }
-            if (clicked1 != 1 && clicked != 2) {
+            if (computerGraphClicked != 1 && byHandClicked != 2) {
                 compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 compGraph.setTextColor(Color.BLACK)
             }
-
-
         }
 
         binding.depressedButton.setOnClickListener {
             val depress = binding.depressedButton
-            click += 1;
-            if (click > 2) click = 1
-            if (click != 2) {
-               depress.setBackgroundColor(Color.parseColor("#0082DD"));
-                depress.setTextColor(Color.WHITE)}else{
+            depressedButtonClicked += 1
+            if (depressedButtonClicked > 2) depressedButtonClicked = 1
+            if (depressedButtonClicked != 2) {
+                depress.setBackgroundColor(Color.parseColor("#0082DD"));
+                depress.setTextColor(Color.WHITE)}
+            else{
                 depress.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 depress.setTextColor(Color.BLACK)
             }
         }
         binding.funButton.setOnClickListener {
             val funBut = binding.funButton
-            clickF += 1;
-            if (clickF != 2) {
+            funButtonClicked += 1
+            if (funButtonClicked > 2) depressedButtonClicked = 1
+            if (funButtonClicked != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"));
-                funBut.setTextColor(Color.WHITE)}else{
+                funBut.setTextColor(Color.WHITE)}
+            else{
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
             }
         }
+
         binding.stillLifeButton.setOnClickListener {
             val funBut = binding.stillLifeButton
             clickS += 1;
@@ -280,9 +283,14 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         binding.continueButton.setOnClickListener {
             if (min < 2){
                 binding.secondCategoryMin.setTextColor(Color.RED)
-            }else{
-            var action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
-            findNavController().navigate(action)}
+            }
+            else{
+                appViewModel.savePreference(byHandClicked, computerGraphClicked,
+                    depressedButtonClicked, funButtonClicked, clickS, clickP, clickL, clickM,
+                    clickB, clickI, clickC, clickN, clickA, clickH)
+
+                val action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
+                findNavController().navigate(action)}
         }
 
     }

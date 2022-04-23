@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/preferencesSelectionScreen">
+    app:startDestination="@id/signInSignUpScreen">
 
     <fragment
         android:id="@+id/signInSignUpScreen"
         android:name="com.example.vasarely.view.SignInSignUpScreen"
-        android:label="SignInSignUpScreen" >
+        android:label="SignInSignUpScreen">
         <action
             android:id="@+id/action_signInSignUpScreen_to_searchScreen"
             app:destination="@id/searchScreen" />
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/preferencesSelectionScreen"
         android:name="com.example.vasarely.view.PreferencesSelectionScreen"
-        android:label="PreferencesSelectionScreen" >
+        android:label="PreferencesSelectionScreen">
         <action
             android:id="@+id/action_preferencesSelectionScreen_to_searchScreen"
             app:destination="@id/searchScreen" />
@@ -26,18 +26,21 @@
     <fragment
         android:id="@+id/searchScreen"
         android:name="com.example.vasarely.view.SearchScreen"
-        android:label="SearchScreen" >
+        android:label="SearchScreen">
         <action
             android:id="@+id/action_searchScreen_to_userPersonalPageScreen"
             app:destination="@id/userPersonalPageScreen" />
         <action
             android:id="@+id/action_searchScreen_to_mainScreen"
             app:destination="@id/mainScreen" />
+        <action
+            android:id="@+id/action_searchScreen_to_preferencesSelectionScreen"
+            app:destination="@id/preferencesSelectionScreen" />
     </fragment>
     <fragment
         android:id="@+id/userPersonalPageScreen"
         android:name="com.example.vasarely.view.UserPersonalPageScreen"
-        android:label="UserPersonalPageScreen" >
+        android:label="UserPersonalPageScreen">
         <action
             android:id="@+id/action_userPersonalPageScreen_to_searchScreen"
             app:destination="@id/searchScreen" />
@@ -48,7 +51,7 @@
     <fragment
         android:id="@+id/mainScreen"
         android:name="com.example.vasarely.view.MainScreen"
-        android:label="MainScreen" >
+        android:label="MainScreen">
         <action
             android:id="@+id/action_mainScreen_to_searchScreen"
             app:destination="@id/searchScreen" />

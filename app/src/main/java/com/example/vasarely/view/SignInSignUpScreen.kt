@@ -4,25 +4,18 @@ import android.app.Application
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
-import com.example.vasarely.databinding.SearchScreenBinding
 import com.example.vasarely.databinding.SignInSignUpScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
-import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.database.collection.LLRBNode
 
 class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
@@ -37,11 +30,15 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
     ): View {
         appViewModel.initAppViewModel(Application())
 
-        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
-
-            val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
-            findNavController().navigate(action)
-
+        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+            if (preferencesAreSelected) {
+                val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToSearchScreen()
+                findNavController().navigate(action)
+            }
+            else {
+                val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
+                findNavController().navigate(action)
+            }
         }
 
         _binding = SignInSignUpScreenBinding.inflate(inflater, container, false)
