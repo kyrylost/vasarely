@@ -85,6 +85,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         var clickA = 0
         var clickH = 0
         var min = 0
+        var min1 = 0
 
         binding.byHandButton.setOnClickListener {
             val byHand = binding.byHandButton
@@ -94,10 +95,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (byHandClicked !=2) {
                 byHand.setBackgroundColor(Color.parseColor("#0082DD"))
                 byHand.setTextColor(Color.WHITE)
-            }
-            if (byHandClicked != 1 && computerGraphClicked != 2) {
+                min1 += 1
+            }else{
                 byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 byHand.setTextColor(Color.BLACK)
+                min1-=1
             }
         }
         binding.compGraphButton.setOnClickListener {
@@ -108,11 +110,12 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (computerGraphClicked!=2) {
                 compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
                 compGraph.setTextColor(Color.WHITE)
+                min1 += 1
 
-            }
-            if (computerGraphClicked != 1 && byHandClicked != 2) {
+            }else{
                 compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 compGraph.setTextColor(Color.BLACK)
+                min -= 1
             }
         }
 
@@ -281,6 +284,9 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             }
         }
         binding.continueButton.setOnClickListener {
+            if (min1 < 1){
+                binding.firstCategoryMin.setTextColor(Color.RED)
+            }
             if (min < 2){
                 binding.secondCategoryMin.setTextColor(Color.RED)
             }
