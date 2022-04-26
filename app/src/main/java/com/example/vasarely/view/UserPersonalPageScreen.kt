@@ -38,6 +38,16 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToMainScreen()
             findNavController().navigate(action)
         }
+
+        binding.gridImgBtn.setOnClickListener{
+            binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.accent));
+            binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        binding.columnImgBtn.setOnClickListener{
+            binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.white));
+            binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.accent));
+        }
     }
 
     override fun onDestroy() {
