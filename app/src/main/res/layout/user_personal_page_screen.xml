@@ -12,11 +12,11 @@
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:visibility="visible">
+            android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/menu_img_btn"
@@ -24,47 +24,76 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
+                android:background="@null"
                 android:contentDescription="@string/app_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/settings"
-                android:background="@null" />
+                app:srcCompat="@drawable/settings" />
 
-            <ImageButton
-                android:id="@+id/home_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="188dp"
-                android:layout_marginBottom="30dp"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/home_icon" />
-
-            <ImageButton
-                android:id="@+id/search_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginBottom="30dp"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/search_icon" />
-
-            <ImageButton
-                android:id="@+id/user_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="30dp"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/footer_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fafafa"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/user_icon_selected" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"
+                    app:layout_constraintBottom_toTopOf="@+id/user_page_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ImageButton
+                    android:id="@+id/home_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@null"
+                    android:contentDescription="@string/locate_to_home"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/user_page_button"
+                    app:layout_constraintStart_toEndOf="@+id/search_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:srcCompat="@drawable/home_icon" />
+
+                <ImageButton
+                    android:id="@+id/user_page_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@null"
+                    android:contentDescription="@string/locate_to_my_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/user_icon_selected" />
+
+                <ImageButton
+                    android:id="@+id/search_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@null"
+                    android:contentDescription="@string/locate_to_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_icon" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/l"
@@ -180,7 +209,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/l1"
                 tools:ignore="TextContrastCheck" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

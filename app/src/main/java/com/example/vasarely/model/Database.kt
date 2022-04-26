@@ -1,7 +1,6 @@
 package com.example.vasarely.model
 
 import android.app.Application
-import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

@@ -29,12 +29,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         //----------------------------Navigation between screens---------------------------------------
         //to SearchScreen
-        binding.searchBtn.setOnClickListener {
+        binding.searchButton.setOnClickListener {
             val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
             findNavController().navigate(action)
         }
         //to MainScreen
-        binding.homeBtn.setOnClickListener {
+        binding.homeButton.setOnClickListener {
             val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToMainScreen()
             findNavController().navigate(action)
         }
