@@ -286,8 +286,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         binding.continueButton.setOnClickListener {
             if (min1 < 1){
                 binding.firstCategoryMin.setTextColor(Color.RED)
+                if (min < 2){
+                    binding.secondCategoryMin.setTextColor(Color.RED)
+                }
             }
-            if (min < 2){
+            else if (min < 2){
                 binding.secondCategoryMin.setTextColor(Color.RED)
             }
             else{
