@@ -41,4 +41,5 @@
     <string name="follow_text">Відстежує</string>
     <string name="add_work_text">Додати роботу</string>
     <string name="continue_btn_text">Далі</string>
+    <string name="rememberUserSwitchText">Запам\'ятати мене</string>
 </resources>

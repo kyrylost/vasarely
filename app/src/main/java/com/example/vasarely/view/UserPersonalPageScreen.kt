@@ -27,7 +27,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //----------------------------Navigation between screens---------------------------------------
+        //----------------------------Navigation between screens------------------------------------
         //to SearchScreen
         binding.searchButton.setOnClickListener {
             val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
