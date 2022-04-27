@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_userPersonalPageScreen_to_mainScreen"
             app:destination="@id/mainScreen" />
+        <action
+            android:id="@+id/action_userPersonalPageScreen_to_signInSignUpScreen"
+            app:destination="@id/signInSignUpScreen" />
     </fragment>
     <fragment
         android:id="@+id/mainScreen"

@@ -1,17 +1,20 @@
 package com.example.vasarely.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
-import com.example.vasarely.databinding.UserPageScreenBinding
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: UserPersonalPageScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -48,6 +51,19 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.white));
             binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.accent));
         }
+
+
+        /*binding.logoutButton.setOnClickListener {
+            appViewModel.signOut()
+
+            val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val editor = sharedPref.edit()
+            editor.putString("remember", "false")
+            editor.apply()
+
+            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+            findNavController().navigate(action)
+        }*/
     }
 
     override fun onDestroy() {
