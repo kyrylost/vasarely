@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_userPersonalPageScreen_to_mainScreen"
             app:destination="@id/mainScreen" />
+        <action
+            android:id="@+id/action_userPersonalPageScreen_to_likedPostScreen"
+            app:destination="@id/likedPostScreen" />
     </fragment>
     <fragment
         android:id="@+id/mainScreen"
@@ -57,6 +60,20 @@
             app:destination="@id/searchScreen" />
         <action
             android:id="@+id/action_mainScreen_to_userPersonalPageScreen"
+            app:destination="@id/userPersonalPageScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/likedPostScreen"
+        android:name="com.example.vasarely.view.LikedPostScreen"
+        android:label="LikedPostScreen" >
+        <action
+            android:id="@+id/action_likedPostScreen_to_mainScreen"
+            app:destination="@id/mainScreen" />
+        <action
+            android:id="@+id/action_likedPostScreen_to_searchScreen"
+            app:destination="@id/searchScreen" />
+        <action
+            android:id="@+id/action_likedPostScreen_to_userPersonalPageScreen"
             app:destination="@id/userPersonalPageScreen" />
     </fragment>
 </navigation>
