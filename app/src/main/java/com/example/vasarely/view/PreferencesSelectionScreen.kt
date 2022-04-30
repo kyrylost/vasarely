@@ -274,7 +274,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"));
                 funBut.setTextColor(Color.WHITE)
                 min +=1
-            }else{
+            } else{
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
                 min -=1
