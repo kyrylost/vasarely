@@ -39,6 +39,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             findNavController().navigate(action)
         }
 
+        binding.menuImgBtn.setOnClickListener {
+            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+            findNavController().navigate(action)
+        }
+
         binding.gridImgBtn.setOnClickListener{
             binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.accent));
             binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.white));

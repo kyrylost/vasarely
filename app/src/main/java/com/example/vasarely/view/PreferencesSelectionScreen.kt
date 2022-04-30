@@ -28,7 +28,6 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
     ): View {
         _binding = PreferencesSelectionScreenBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
