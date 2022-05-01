@@ -260,7 +260,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             clickA += 1;
             if (clickA > 2) clickA = 1
             if (clickA != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
