@@ -20,7 +20,6 @@ class LikedPostScreen : Fragment(R.layout.liked_post_screen) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = LikedPostScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,6 +65,11 @@ class LikedPostScreen : Fragment(R.layout.liked_post_screen) {
             val action = LikedPostScreenDirections.actionLikedPostScreenToUserPersonalPageScreen()
             findNavController().navigate(action)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

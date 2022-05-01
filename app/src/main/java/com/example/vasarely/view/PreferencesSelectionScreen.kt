@@ -303,9 +303,9 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
     }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            _binding = null
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }
