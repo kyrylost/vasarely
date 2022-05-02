@@ -41,4 +41,9 @@
     <string name="follow_text">Відстежує</string>
     <string name="add_work_text">Додати роботу</string>
     <string name="continue_btn_text">Далі</string>
+    <string name="Like_text">Вподобані публікації</string>
+    <string name="new_pref_text">Вказати нові вподобання</string>
+    <string name="settings_nickname_text">Змінити нікнейм</string>
+    <string name="key_text">Змінити пароль</string>
+    <string name="logout_text">Вийти</string>
 </resources>

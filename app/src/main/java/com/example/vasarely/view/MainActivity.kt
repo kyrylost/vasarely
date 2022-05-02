@@ -1,5 +1,6 @@
 package com.example.vasarely.view
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.vasarely.R
