@@ -12,7 +12,7 @@
         app:cardCornerRadius="20dp">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/likedPostIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginLeft="20dp"
@@ -22,7 +22,7 @@
             tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/newPrefButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -66,7 +66,7 @@
             tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
         <TextView
-            android:id="@+id/Like_text"
+            android:id="@+id/likedPostText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="90dp"

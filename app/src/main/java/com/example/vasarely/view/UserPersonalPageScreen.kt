@@ -1,10 +1,13 @@
 package com.example.vasarely.view
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -62,22 +65,74 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val popupView = layoutInflater.inflate(R.layout.menu_user_personal_page_screen, null)
 
             dialogBuilder.setView(popupView)
-            val addNoteDialog = dialogBuilder.create()
-            addNoteDialog.show()
+            val settingsDialog = dialogBuilder.create()
+            settingsDialog.show()
+
+            val logoutButton = popupView.findViewById<ImageButton>(R.id.logoutButton)
+            val logoutText = popupView.findViewById<TextView>(R.id.logout_text)
+
+            val likedPostButton = popupView.findViewById<ImageButton>(R.id.likedPostIcon)
+            val likedPostText = popupView.findViewById<TextView>(R.id.likedPostText)
+
+            val newPrefButton = popupView.findViewById<ImageButton>(R.id.newPrefButton)
+            val newPrefText = popupView.findViewById<TextView>(R.id.new_pref_text)
+
+            logoutButton.setOnClickListener {
+                appViewModel.logout()
+
+                val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
+                val editor = sharedPref.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+
+                settingsDialog.dismiss()
+
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+                findNavController().navigate(action)
+            }
+
+            logoutText.setOnClickListener {
+                appViewModel.logout()
+
+                val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
+                val editor = sharedPref.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+
+                settingsDialog.dismiss()
+
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+                findNavController().navigate(action)
+            }
+
+            likedPostButton.setOnClickListener {
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+                findNavController().navigate(action)
+
+                settingsDialog.dismiss()
+            }
+
+            likedPostText.setOnClickListener {
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+                findNavController().navigate(action)
+
+                settingsDialog.dismiss()
+            }
+
+            newPrefButton.setOnClickListener {
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+                findNavController().navigate(action)
+
+                settingsDialog.dismiss()
+            }
+
+            newPrefText.setOnClickListener {
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+                findNavController().navigate(action)
+
+                settingsDialog.dismiss()
+            }
         }
-
-        /*binding.logoutButton.setOnClickListener {
-            appViewModel.signOut()
-
-            val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
-            val editor = sharedPref.edit()
-            editor.putString("remember", "false")
-            editor.apply()
-
-            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
-            findNavController().navigate(action)
-        }*/
-
     }
 
     override fun onDestroy() {
