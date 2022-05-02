@@ -113,6 +113,18 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Switch
+            android:id="@+id/rememberUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
+            android:text="@string/rememberUserSwitchText"
+            android:trackTint="@drawable/new_track"
+            android:thumbTint="@drawable/new_thumb"
+            tools:ignore="TouchTargetSizeCheck"/>
+
         <TextView
             android:id="@+id/forget_password_text"
             android:layout_width="match_parent"

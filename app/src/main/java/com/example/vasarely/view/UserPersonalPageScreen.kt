@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: UserPersonalPageScreenBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -26,7 +29,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //----------------------------Navigation between screens---------------------------------------
+        //----------------------------Navigation between screens------------------------------------
         //to SearchScreen
         binding.searchButton.setOnClickListener {
             val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
@@ -62,6 +65,19 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val addNoteDialog = dialogBuilder.create()
             addNoteDialog.show()
         }
+
+        /*binding.logoutButton.setOnClickListener {
+            appViewModel.signOut()
+
+            val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
+            val editor = sharedPref.edit()
+            editor.putString("remember", "false")
+            editor.apply()
+
+            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+            findNavController().navigate(action)
+        }*/
+
     }
 
     override fun onDestroy() {

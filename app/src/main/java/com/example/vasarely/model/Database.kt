@@ -63,6 +63,10 @@ class Database {
         }
     }
 
+    fun logout() {
+        //
+    }
+
     fun savePreference(byHandSelected: Boolean, computerGraphicsSelected: Boolean,
                        depressedButtonSelected: Boolean, funButtonSelected: Boolean,
                        stillLifeButtonSelected: Boolean, portraitButtonSelected: Boolean,

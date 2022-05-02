@@ -1,9 +1,11 @@
 package com.example.vasarely.view
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -47,6 +49,16 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return
+        val checkbox = sharedPref.getString("remember", " ")
+        val prefEmail = sharedPref.getString("email", " ")
+        val prefPassword = sharedPref.getString("password", " ")
+
+        if (checkbox.equals("true")) {
+            appViewModel.login(prefEmail!!, prefPassword!!)
+        }
+
         val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
@@ -59,25 +71,6 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         binding.usernameInput.visibility = GONE
         binding.usernameInputLayout.visibility = GONE
         binding.signupButton.visibility = GONE
-
-        binding.signupButton.setOnClickListener{
-            val email = binding.emailInput.text.toString()
-            val password = binding.passwordInput.text.toString()
-            val username = binding.usernameInput.text.toString()
-
-            if ((password.isNotEmpty() && password.length >= 6) &&
-                (email.isNotEmpty() && email.drop(email.length - 9) == "gmail.com") &&
-                username.isNotEmpty()) {
-                appViewModel.register(email, password, username)
-            }
-            else {
-                if (email.isEmpty()) binding.emailInput.error = getString(R.string.empty_email_error_message)
-                if (password.isEmpty()) binding.passwordInput.error = getString(R.string.empty_password_error_message)
-                if (username.isEmpty()) binding.usernameInput.error = getString(R.string.empty_username_error_message)
-                if (password.isNotEmpty() && password.length < 6) binding.passwordInput.error = getString(R.string.short_password_error_message)
-                if (password.isNotEmpty() && email.drop(email.length - 9) != "gmail.com") binding.emailInput.error = getString(R.string.incorrect_email_error_message)
-            }
-        }
 
         binding.signupText.setOnClickListener {
             val textSingUp = binding.signupText;
@@ -95,7 +88,6 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
             password.visibility = GONE
             btnSingIn.visibility = GONE
             btnSingUp.visibility = VISIBLE
-
         }
 
         binding.signinText.setOnClickListener {
@@ -114,8 +106,42 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
             password.visibility = VISIBLE
             btnSingIn.visibility = VISIBLE
             btnSingUp.visibility = GONE
+        }
 
 
+        binding.signupButton.setOnClickListener{
+            val email = binding.emailInput.text.toString()
+            val password = binding.passwordInput.text.toString()
+            val username = binding.usernameInput.text.toString()
+
+            if ((password.isNotEmpty() && password.length >= 6) &&
+                (email.isNotEmpty() && email.drop(email.length - 9) == "gmail.com") &&
+                username.isNotEmpty()) {
+
+                if (binding.rememberUser.isChecked) {
+                    val editor = sharedPref.edit()
+                    editor.putString("remember", "true")
+                    editor.putString("email", email)
+                    editor.putString("password", password)
+                    editor.apply()
+                    Log.d("up", "work")
+                }
+                else {
+                    val editor = sharedPref.edit()
+                    editor.putString("remember", "false")
+                    editor.apply()
+                    Log.d("up", "dwork")
+                }
+
+                appViewModel.register(email, password, username)
+            }
+            else {
+                if (email.isEmpty()) binding.emailInput.error = getString(R.string.empty_email_error_message)
+                if (password.isEmpty()) binding.passwordInput.error = getString(R.string.empty_password_error_message)
+                if (username.isEmpty()) binding.usernameInput.error = getString(R.string.empty_username_error_message)
+                if (password.isNotEmpty() && password.length < 6) binding.passwordInput.error = getString(R.string.short_password_error_message)
+                if (password.isNotEmpty() && email.drop(email.length - 9) != "gmail.com") binding.emailInput.error = getString(R.string.incorrect_email_error_message)
+            }
         }
 
         binding.signinButton.setOnClickListener{
@@ -123,6 +149,22 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
             val password = binding.passwordInput.text.toString()
 
             if (password.isNotEmpty() && email.isNotEmpty()) {
+
+                if (binding.rememberUser.isChecked) {
+                    val editor = sharedPref.edit()
+                    editor.putString("remember", "true")
+                    editor.putString("email", email)
+                    editor.putString("password", password)
+                    editor.apply()
+                    Log.d("in", "work")
+                }
+                else {
+                    val editor = sharedPref.edit()
+                    editor.putString("remember", "false")
+                    editor.apply()
+                    Log.d("in", "dwork")
+                }
+
                 appViewModel.login(email, password)
             }
             else {
