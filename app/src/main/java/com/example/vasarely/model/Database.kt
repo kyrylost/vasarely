@@ -64,7 +64,7 @@ class Database {
     }
 
     fun logout() {
-        //
+        firebaseAuth.signOut()
     }
 
     fun savePreference(byHandSelected: Boolean, computerGraphicsSelected: Boolean,

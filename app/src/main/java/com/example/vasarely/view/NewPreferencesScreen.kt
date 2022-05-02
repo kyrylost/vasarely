@@ -171,7 +171,7 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
             onPictureMoodsClicked(binding.depressedButton)
         }
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
