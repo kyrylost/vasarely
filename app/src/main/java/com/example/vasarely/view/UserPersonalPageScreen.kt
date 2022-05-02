@@ -1,7 +1,6 @@
 package com.example.vasarely.view
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
