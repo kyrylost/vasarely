@@ -3,20 +3,41 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/menu_user_personal_page_screen.xml" value="0.3625" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.14444444444444443" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.3625" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.4" />
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.23505434782608695" />
+=======
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/main_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/search_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.15021459227467812" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1775" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/activity_main.xml" value="0.225" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.1" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/main_screen.xml" value="0.25" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.225" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/search_screen.xml" value="0.225" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.225" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.225" />
+        <entry key="..\:/Users/Vitaliy/StudioProjects/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.25" />
+>>>>>>> 8aae1e3860fc06bbd22d740136d1cd2230eeb1dc
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/font/fonts.xml" value="0.28020833333333334" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/main_screen.xml" value="0.264" />
-        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.176" />
-        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/search_screen.xml" value="0.4" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.12083333333333333" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/main_screen.xml" value="0.25" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/new_preferences_screen.xml" value="0.10371376811594203" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.2" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/search_screen.xml" value="0.2" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.25" />
-        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.264" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.25" />
       </map>
     </option>
   </component>

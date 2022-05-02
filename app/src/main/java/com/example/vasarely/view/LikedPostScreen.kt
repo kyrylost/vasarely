@@ -9,11 +9,10 @@ import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
-import com.example.vasarely.databinding.MainScreenBinding
+import com.example.vasarely.databinding.LikedPostScreenBinding
 
-class MainScreen: Fragment(R.layout.main_screen) {
-
-    private var _binding: MainScreenBinding? = null
+class LikedPostScreen : Fragment(R.layout.liked_post_screen) {
+    private var _binding: LikedPostScreenBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -21,7 +20,7 @@ class MainScreen: Fragment(R.layout.main_screen) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = MainScreenBinding.inflate(inflater, container, false)
+        _binding = LikedPostScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,26 +36,33 @@ class MainScreen: Fragment(R.layout.main_screen) {
             statusBarHeight = resources.getDimensionPixelSize(resourceId);
         }
 
-        binding.footerHome.measure(0,0)
+        binding.likedPostCardView.measure(0,0)
+        binding.footerUser.measure(0,0)
 
-        val footerHeight = binding.footerHome.measuredHeight
+        val likedPostCardViewHeight = binding.likedPostCardView.measuredHeight
+        val footerHeight = binding.footerUser.measuredHeight
 
-        val scrollView : ScrollView = binding.scrollView
+        val scrollView : ScrollView = binding.scroll
         val scrollViewParams: ViewGroup.LayoutParams = scrollView.layoutParams
 
-        scrollViewParams.height = screenHeight - footerHeight - statusBarHeight
+        scrollViewParams.height = screenHeight - footerHeight - likedPostCardViewHeight - statusBarHeight
         scrollViewParams.width = screenWidth
         scrollView.layoutParams = scrollViewParams
 
-    //----------------------------Navigation between screens---------------------------------------
-        //From MainScreen to SearchScreen
+        //----------------------------Navigation between screens------------------------------------
+        //to SearchScreen
         binding.searchButton.setOnClickListener {
-            val action = MainScreenDirections.actionMainScreenToSearchScreen()
+            val action = LikedPostScreenDirections.actionLikedPostScreenToSearchScreen()
             findNavController().navigate(action)
         }
-        //From MainScreen to UserPersonalPageScreen
-        binding.userPageButton.setOnClickListener {
-            val action = MainScreenDirections.actionMainScreenToUserPersonalPageScreen()
+        //to MainScreen
+        binding.homeButton.setOnClickListener {
+            val action = LikedPostScreenDirections.actionLikedPostScreenToMainScreen()
+            findNavController().navigate(action)
+        }
+        //to UserPersonalPage
+        binding.returnButton.setOnClickListener {
+            val action = LikedPostScreenDirections.actionLikedPostScreenToUserPersonalPageScreen()
             findNavController().navigate(action)
         }
     }
@@ -65,4 +71,5 @@ class MainScreen: Fragment(R.layout.main_screen) {
         super.onDestroy()
         _binding = null
     }
+
 }

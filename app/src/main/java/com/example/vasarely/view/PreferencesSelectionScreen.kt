@@ -28,7 +28,6 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
     ): View {
         _binding = PreferencesSelectionScreenBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,6 +84,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         var clickA = 0
         var clickH = 0
         var min = 0
+        var min1 = 0
 
         binding.byHandButton.setOnClickListener {
             val byHand = binding.byHandButton
@@ -94,10 +94,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (byHandClicked !=2) {
                 byHand.setBackgroundColor(Color.parseColor("#0082DD"))
                 byHand.setTextColor(Color.WHITE)
-            }
-            if (byHandClicked != 1 && computerGraphClicked != 2) {
+                min1 += 1
+            }else{
                 byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 byHand.setTextColor(Color.BLACK)
+                min1-=1
             }
         }
         binding.compGraphButton.setOnClickListener {
@@ -108,11 +109,12 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (computerGraphClicked!=2) {
                 compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
                 compGraph.setTextColor(Color.WHITE)
+                min1 += 1
 
-            }
-            if (computerGraphClicked != 1 && byHandClicked != 2) {
+            }else{
                 compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 compGraph.setTextColor(Color.BLACK)
+                min -= 1
             }
         }
 
@@ -258,7 +260,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             clickA += 1;
             if (clickA > 2) clickA = 1
             if (clickA != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -281,7 +283,13 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             }
         }
         binding.continueButton.setOnClickListener {
-            if (min < 2){
+            if (min1 < 1){
+                binding.firstCategoryMin.setTextColor(Color.RED)
+                if (min < 2){
+                    binding.secondCategoryMin.setTextColor(Color.RED)
+                }
+            }
+            else if (min < 2){
                 binding.secondCategoryMin.setTextColor(Color.RED)
             }
             else{
@@ -295,9 +303,9 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
     }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            _binding = null
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }
