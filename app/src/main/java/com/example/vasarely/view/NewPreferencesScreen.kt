@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.NewPreferencesScreenBinding
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: NewPreferencesScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -52,6 +55,21 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
             binding.depressedButton to 0,
             binding.funButton to 0
         )
+
+        binding.homeButton.setOnClickListener {
+            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToMainScreen()
+            findNavController().navigate(action)
+        }
+
+        binding.searchButton.setOnClickListener {
+            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToSearchScreen()
+            findNavController().navigate(action)
+        }
+
+        binding.returnButton.setOnClickListener {
+            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+            findNavController().navigate(action)
+        }
 
         fun buttonSelect(_button: Button) {
             _button.setBackgroundColor(Color.parseColor("#0082DD"));
@@ -170,7 +188,43 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
         binding.depressedButton.setOnClickListener {
             onPictureMoodsClicked(binding.depressedButton)
         }
+
+        binding.continueButton2.setOnClickListener {
+            if (min < 1) {
+                binding.firstCategoryMin.setTextColor(Color.RED)
+                if (min1 < 2) {
+                    binding.secondCategoryMin.setTextColor(Color.RED)
+                }
+            }
+            else if (min < 2) {
+                binding.secondCategoryMin.setTextColor(Color.RED)
+            }
+            else {
+                appViewModel.savePreference(workPerformances[binding.byHandButton] ?: 0,
+                    workPerformances[binding.compGraphButton] ?: 0,
+                    pictureMoods[binding.depressedButton] ?: 0,
+                    pictureMoods[binding.funButton] ?: 0,
+                    favouriteGenres[binding.stillLifeButton] ?: 0,
+                    favouriteGenres[binding.portraitButton] ?: 0,
+                    favouriteGenres[binding.landscapeButton] ?: 0,
+                    favouriteGenres[binding.marineButton] ?: 0,
+                    favouriteGenres[binding.battlePaintingButton] ?: 0,
+                    favouriteGenres[binding.interiorButton] ?: 0,
+                    favouriteGenres[binding.caricatureButton] ?: 0,
+                    favouriteGenres[binding.nudeButton] ?: 0,
+                    favouriteGenres[binding.animeButton] ?: 0,
+                    favouriteGenres[binding.horrorButton] ?: 0)
+
+                val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+                findNavController().navigate(action)
+            }
+        }
     }
+
+    /*private fun getValue(_map : MutableMap<Button, Int>, key : Button) : Int
+    {
+        return _map[key] ?: 0;
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
