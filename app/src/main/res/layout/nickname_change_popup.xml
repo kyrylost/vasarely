@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.vasarely.viewmodel.AppViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/fonts"
+        android:text="Уведіть новий юзернейм"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="274dp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nickname_input"
+            android:layout_width="270dp"
+            android:layout_height="45dp"
+            android:hint="Юзернейм"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            app:boxBackgroundColor="#00FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="50dp"
+            app:strokeColor="@color/black"
+            android:paddingStart="42dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="42dp"
+            android:paddingBottom="12dp"
+            android:stateListAnimator="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <Button
+            android:id="@+id/button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="142dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            android:backgroundTint="@color/accent"
+            android:includeFontPadding="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="6dp"
+            android:paddingRight="18dp"
+            android:paddingBottom="6dp"
+            android:stateListAnimator="@null"
+            android:text="Зберегти"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:boxBackgroundMode="outline"
+            app:cornerRadius="10dp"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:layout_editor_absoluteX="200dp"
+            tools:layout_editor_absoluteY="369dp" />
+    </LinearLayout>
+</layout>
