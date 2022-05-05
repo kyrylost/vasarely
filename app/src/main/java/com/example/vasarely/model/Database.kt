@@ -63,6 +63,7 @@ class Database {
         }
     }
 
+
     fun logout() {
         firebaseAuth.signOut()
     }
@@ -105,4 +106,10 @@ class Database {
         genresReference.setValue(selectedGenres)
     }
 
+    public fun updateName(newname: String){
+        currentUser = firebaseAuth.currentUser!!
+        val  firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
+        currentUserDb = databaseReference.child((currentUser.uid))
+        currentUserDb.child("username").setValue(newname)
+    }
 }

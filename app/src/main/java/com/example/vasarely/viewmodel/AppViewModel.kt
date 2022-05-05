@@ -44,4 +44,8 @@ class AppViewModel: ViewModel() {
             asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected))
 
     }
+
+    fun updateName(newnickname: String) {
+         database.updateName(newnickname)
+    }
 }
