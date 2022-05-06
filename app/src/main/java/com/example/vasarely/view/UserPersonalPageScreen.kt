@@ -75,6 +75,14 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             }
         btnCN.setOnClickListener {
+            val dialogBuilder1 = AlertDialog.Builder(context)
+
+            dialogBuilder1.setView(popupView1)
+            val addNoteDialog1 = dialogBuilder1.create()
+            addNoteDialog1.show()
+            
+        }
+        btnCN.setOnClickListener {
                 val dialogBuilder1 = AlertDialog.Builder(context)
 
                 dialogBuilder1.setView(popupView1)
