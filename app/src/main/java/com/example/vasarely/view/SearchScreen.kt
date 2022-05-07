@@ -28,9 +28,14 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) {
-            val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
-            findNavController().navigate(action)
+        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+            if (!preferencesAreSelected) {
+                val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
+                findNavController().navigate(action)
+            }
+
+            appViewModel.getData()
+
         }
 
         _binding = SearchScreenBinding.inflate(inflater, container, false)

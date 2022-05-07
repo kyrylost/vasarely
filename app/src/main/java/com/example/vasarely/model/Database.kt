@@ -1,6 +1,7 @@
 package com.example.vasarely.model
 
 import android.app.Application
+import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -45,7 +46,7 @@ class Database {
     fun login(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener{
             if(firebaseAuth.currentUser != null) {
-                userMutableLiveData.postValue(true)
+                //userMutableLiveData.postValue(true)
 
                 firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
                 databaseReference = firebaseDatabase.reference.child("profiles")
@@ -55,6 +56,9 @@ class Database {
                 currentUserDb.child("preferences").get().addOnSuccessListener {
                     if (!it.exists()) {
                         userMutableLiveData.postValue(false)
+                    }
+                    else {
+                        userMutableLiveData.postValue(true)
                     }
                 }
             }
@@ -106,10 +110,17 @@ class Database {
         genresReference.setValue(selectedGenres)
     }
 
-    public fun updateName(newname: String){
-        currentUser = firebaseAuth.currentUser!!
-        val  firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
-        currentUserDb = databaseReference.child((currentUser.uid))
-        currentUserDb.child("username").setValue(newname)
+    fun updateName(newNickname: String){
+        currentUserDb.child("username").setValue(newNickname)
+    }
+
+    fun getData() {
+        currentUserDb.child("preferences").get().addOnSuccessListener {
+            Log.d("dataSnapshot", it.toString())
+        }
+
+        currentUserDb.child("username").get().addOnSuccessListener {
+            Log.d("username", it.toString())
+        }
     }
 }

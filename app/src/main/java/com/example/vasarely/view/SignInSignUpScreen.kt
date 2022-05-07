@@ -34,10 +34,12 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
             if (preferencesAreSelected) {
+                appViewModel.getData()
                 val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToSearchScreen()
                 findNavController().navigate(action)
             }
             else {
+                appViewModel.getData()
                 val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
             }
@@ -56,7 +58,11 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         val prefPassword = sharedPref.getString("password", " ")
 
         if (checkbox.equals("true")) {
+
             appViewModel.login(prefEmail!!, prefPassword!!)
+            val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToSearchScreen()
+            findNavController().navigate(action)
+
         }
 
         val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)

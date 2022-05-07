@@ -102,6 +102,20 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 findNavController().navigate(action)
             }
 
+            logoutText.setOnClickListener {
+                appViewModel.logout()
+
+                val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
+                val editor = sharedPref.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+
+                settingsDialog.dismiss()
+
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+                findNavController().navigate(action)
+            }
+
             likedPostButton.setOnClickListener {
                 val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
                 findNavController().navigate(action)
@@ -161,22 +175,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
 
     }
-
-
-
-        /*binding.logoutButton.setOnClickListener {
-            appViewModel.signOut()
-
-            val sharedPref = activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE) ?: return@setOnClickListener
-            val editor = sharedPref.edit()
-            editor.putString("remember", "false")
-            editor.apply()
-
-            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
-            findNavController().navigate(action)
-        }*/
-
-
 
         override fun onDestroy() {
             super.onDestroy()

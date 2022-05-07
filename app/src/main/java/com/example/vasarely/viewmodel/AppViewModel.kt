@@ -10,7 +10,7 @@ class AppViewModel: ViewModel() {
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
 
 
-    fun asBoolean(int: Int): Boolean {
+    private fun asBoolean(int: Int): Boolean {
         return (int == 1)
     }
 
@@ -45,7 +45,11 @@ class AppViewModel: ViewModel() {
 
     }
 
-    fun updateName(newnickname: String) {
-         database.updateName(newnickname)
+    fun updateName(newNickname: String) {
+         database.updateName(newNickname)
+    }
+
+    fun getData() {
+        database.getData()
     }
 }
