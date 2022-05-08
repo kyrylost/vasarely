@@ -1,6 +1,6 @@
 package com.example.vasarely.model
 
-data class UserData(val username : String,
-                    val techniqueReference: String,
-                    val genreReferences: List<String>,
-                    val moodReference: String)
+data class UserData(var username : String,
+                    var techniqueReference: String,
+                    var moodReference: String,
+                    var genreReferences: List<String>)

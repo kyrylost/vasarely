@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.MainScreenBinding
+import com.example.vasarely.viewmodel.AppViewModel
 
 class MainScreen: Fragment(R.layout.main_screen) {
 
+    private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: MainScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -21,6 +24,11 @@ class MainScreen: Fragment(R.layout.main_screen) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        appViewModel.userData.observe(viewLifecycleOwner) {
+            appViewModel.processData(it)
+        }
+
         _binding = MainScreenBinding.inflate(inflater, container, false)
         return binding.root
     }

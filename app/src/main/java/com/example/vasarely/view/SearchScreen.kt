@@ -3,6 +3,7 @@ package com.example.vasarely.view
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
+import com.example.vasarely.model.UserData
 import com.example.vasarely.viewmodel.AppViewModel
 
 class SearchScreen : Fragment(R.layout.search_screen) {
@@ -30,12 +32,14 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
             if (!preferencesAreSelected) {
-                val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
+                val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
             }
+            else appViewModel.getData()
+        }
 
-            appViewModel.getData()
-
+        appViewModel.userData.observe(viewLifecycleOwner) {
+            appViewModel.processData(it)
         }
 
         _binding = SearchScreenBinding.inflate(inflater, container, false)
@@ -91,8 +95,6 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             val action = SearchScreenDirections.actionSearchScreenToUserPersonalPageScreen()
             findNavController().navigate(action)
         }
-
-
 
     }
 

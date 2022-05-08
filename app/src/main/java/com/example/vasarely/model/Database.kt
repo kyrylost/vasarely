@@ -5,8 +5,10 @@ import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.util.*
 
 class Database {
 
@@ -18,12 +20,14 @@ class Database {
     private lateinit var currentUser: FirebaseUser
     private lateinit var currentUserDb: DatabaseReference
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
+    lateinit var userData: SingleLiveEvent<Any>
 
     fun initDatabase(application: Application) {
         this.application = application
 
         firebaseAuth = FirebaseAuth.getInstance()
         userMutableLiveData = SingleLiveEvent()
+        userData = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) {
@@ -35,7 +39,7 @@ class Database {
                 databaseReference = firebaseDatabase.reference.child("profiles")
                 currentUser = firebaseAuth.currentUser!!
                 currentUserDb = databaseReference.child((currentUser.uid))
-                currentUserDb.child("username").setValue(username)
+                currentUserDb.child("userData").child("username").setValue(username)
             }
 
         }.addOnFailureListener { exception ->
@@ -53,7 +57,7 @@ class Database {
                 currentUser = firebaseAuth.currentUser!!
                 currentUserDb = databaseReference.child((currentUser.uid))
 
-                currentUserDb.child("preferences").get().addOnSuccessListener {
+                currentUserDb.child("userData").child("preferences").get().addOnSuccessListener {
                     if (!it.exists()) {
                         userMutableLiveData.postValue(false)
                     }
@@ -82,7 +86,7 @@ class Database {
 
         val selectedGenres = mutableListOf<String>()
 
-        preferencesReference = currentUserDb.child("preferences")
+        preferencesReference = currentUserDb.child("userData").child("preferences")
 
         val techniqueReference = preferencesReference.child("technique")
         val moodReference = preferencesReference.child("mood")
@@ -115,12 +119,9 @@ class Database {
     }
 
     fun getData() {
-        currentUserDb.child("preferences").get().addOnSuccessListener {
+        currentUserDb.child("userData").get().addOnSuccessListener {
             Log.d("dataSnapshot", it.toString())
-        }
-
-        currentUserDb.child("username").get().addOnSuccessListener {
-            Log.d("username", it.toString())
+            userData.postValue(it.value)
         }
     }
 }

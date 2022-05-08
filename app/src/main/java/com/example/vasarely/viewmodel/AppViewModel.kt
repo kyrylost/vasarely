@@ -1,14 +1,23 @@
 package com.example.vasarely.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
+import com.example.vasarely.model.UserData
+import kotlinx.coroutines.Job
+import java.util.*
+import kotlin.collections.HashMap
 
 class AppViewModel: ViewModel() {
     private var database = Database()
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
+    lateinit var userData: SingleLiveEvent<Any>
+    lateinit var localData: UserData
 
+
+    fun isLocalDataInitialized() = ::localData.isInitialized
 
     private fun asBoolean(int: Int): Boolean {
         return (int == 1)
@@ -19,6 +28,7 @@ class AppViewModel: ViewModel() {
         database.initDatabase(application)
 
         userMutableLiveData = database.userMutableLiveData
+        userData = database.userData
     }
 
     fun register(email:String, password:String, username:String) = database.register(email, password, username)
@@ -51,5 +61,28 @@ class AppViewModel: ViewModel() {
 
     fun getData() {
         database.getData()
+    }
+
+    fun processData(data : Any) {
+        val username : String
+        val technique : String
+        val mood : String
+        val genres = mutableListOf<String>()
+
+        val dataHashMap = data as HashMap<*, *>
+
+        val preferenceHashMap = dataHashMap["preferences"] as HashMap<*, *>
+
+        username = dataHashMap["username"].toString()
+        technique = preferenceHashMap["technique"].toString()
+        mood = preferenceHashMap["mood"].toString()
+        val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
+        for (value in genresArrayList) {
+            genres.add(value as String)
+        }
+
+        localData = UserData(username, technique, mood, genres)
+
+
     }
 }

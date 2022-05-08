@@ -297,6 +297,8 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
                     depressedButtonClicked, funButtonClicked, clickS, clickP, clickL, clickM,
                     clickB, clickI, clickC, clickN, clickA, clickH)
 
+                appViewModel.getData()
+
                 val action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
                 findNavController().navigate(action)}
         }

@@ -3,89 +3,91 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <data>
-        <variable
-            name="viewmodel"
-            type="com.example.vasarely.viewmodel.AppViewModel"/>
-    </data>
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/fonts"
-        android:text="Уведіть новий юзернейм"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="25dp"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="274dp" />
+        android:paddingBottom="25dp"
+        app:cardCornerRadius="20dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/username_input_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="59dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="25dp"
-            android:visibility="visible"
-            app:boxBackgroundColor="#00FFFFFF"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="25dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/username_input"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/username_hint"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:fontFamily="@font/fonts"
+                android:text="Уведіть новий юзернейм"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="274dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="59dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:visibility="visible"
+                app:boxBackgroundColor="#00FFFFFF"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username_hint"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:visibility="visible" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:backgroundTint="@color/accent"
+                android:includeFontPadding="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="32dp"
                 android:paddingTop="16dp"
+                android:paddingRight="32dp"
                 android:paddingBottom="16dp"
-                android:visibility="visible" />
+                android:stateListAnimator="@null"
+                android:text="@string/save_button"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:boxBackgroundMode="outline"
+                app:cornerRadius="20dp"
+                tools:ignore="TouchTargetSizeCheck"
+                tools:layout_editor_absoluteX="200dp"
+                tools:layout_editor_absoluteY="369dp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="142dp"
-            android:layout_height="39dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="25dp"
-            android:backgroundTint="@color/accent"
-            android:includeFontPadding="false"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="6dp"
-            android:paddingRight="18dp"
-            android:paddingBottom="6dp"
-            android:stateListAnimator="@null"
-            android:text="Зберегти"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:boxBackgroundMode="outline"
-            app:cornerRadius="10dp"
-            tools:ignore="TouchTargetSizeCheck"
-            tools:layout_editor_absoluteX="200dp"
-            tools:layout_editor_absoluteY="369dp" />
-
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

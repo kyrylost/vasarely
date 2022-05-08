@@ -1,114 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     android:id="@+id/menu_user_personal_page">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="20dp">
 
-        <ImageButton
-            android:id="@+id/likedPostIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:backgroundTint="@color/white"
-            app:srcCompat="@drawable/like_icon"
-            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
-
-        <ImageButton
-            android:id="@+id/newPrefButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="65dp"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/fun_button"
-            android:minHeight="48dp"
-            app:srcCompat="@drawable/new_pref_icon"
-            tools:ignore="MissingConstraints" />
+            android:orientation="vertical"
+            android:paddingTop="2.5dp"
+            android:paddingBottom="2.5dp">
 
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="117dp"
-            android:backgroundTint="@color/white"
-            android:minHeight="48dp"
-            app:srcCompat="@drawable/settings_nickname_icon"
-            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="170dp"
-            android:backgroundTint="@color/white"
-            android:minHeight="48dp"
-            app:srcCompat="@drawable/key_icon"
-            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+                <ImageButton
+                    android:id="@+id/likedPostIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:backgroundTint="@color/white"
+                    app:srcCompat="@drawable/like_icon"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-        <ImageButton
-            android:id="@+id/logoutButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="220dp"
-            android:backgroundTint="@color/white"
-            app:srcCompat="@drawable/logout_icon"
-            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+                <TextView
+                    android:id="@+id/likedPostText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/Like_text" />
 
-        <TextView
-            android:id="@+id/likedPostText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginTop="29dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/Like_text" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/new_pref_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginTop="80dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/new_pref_text" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/settings_nickname_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginTop="133dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/settings_nickname_text" />
+                <ImageButton
+                    android:id="@+id/newPrefButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:backgroundTint="@color/white"
+                    android:minHeight="48dp"
+                    app:srcCompat="@drawable/new_pref_icon"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
-        <TextView
-            android:id="@+id/key_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginTop="185dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/key_text" />
+                <TextView
+                    android:id="@+id/new_pref_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/new_pref_text" />
 
-        <TextView
-            android:id="@+id/logout_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="90dp"
-            android:layout_marginTop="235dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/logout_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:backgroundTint="@color/white"
+                    android:minHeight="48dp"
+                    app:srcCompat="@drawable/settings_nickname_icon"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/settings_nickname_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings_nickname_text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:backgroundTint="@color/white"
+                    android:minHeight="48dp"
+                    app:srcCompat="@drawable/key_icon"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/key_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/key_text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/logoutButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:backgroundTint="@color/white"
+                    app:srcCompat="@drawable/logout_icon"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/logout_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/logout_text" />
+
+            </LinearLayout>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
