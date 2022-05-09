@@ -1,11 +1,13 @@
 package com.example.vasarely.view
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -34,6 +36,41 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
+        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+
+        binding.selectPrefText.typeface = montserratBoldFont
+
+
+        binding.firstCategory.typeface = montserratBoldFont
+        binding.firstCategoryMin.typeface = montserratRegularFont
+
+        binding.byHandButton.typeface = montserratRegularFont
+        binding.compGraphButton.typeface = montserratRegularFont
+
+
+        binding.secondCategory.typeface = montserratBoldFont
+        binding.secondCategoryMin.typeface = montserratRegularFont
+
+        binding.stillLifeButton.typeface = montserratRegularFont
+        binding.portraitButton.typeface = montserratRegularFont
+        binding.landscapeButton.typeface = montserratRegularFont
+        binding.marineButton.typeface = montserratRegularFont
+        binding.battlePaintingButton.typeface = montserratRegularFont
+        binding.interiorButton.typeface = montserratRegularFont
+        binding.caricatureButton.typeface = montserratRegularFont
+        binding.nudeButton.typeface = montserratRegularFont
+        binding.animeButton.typeface = montserratRegularFont
+        binding.horrorButton.typeface = montserratRegularFont
+
+
+        binding.thirdCategory.typeface = montserratBoldFont
+        binding.thirdCategoryMin.typeface = montserratRegularFont
+
+        binding.depressedButton.typeface = montserratRegularFont
+        binding.funButton.typeface = montserratRegularFont
+        binding.continueButton2.typeface = montserratRegularFont
 
         val workPerformances = mutableMapOf<Button, Int>(
             binding.byHandButton to 0,

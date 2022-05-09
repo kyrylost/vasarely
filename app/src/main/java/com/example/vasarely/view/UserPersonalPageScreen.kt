@@ -42,7 +42,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         super.onViewCreated(view, savedInstanceState)
 
         val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
-        //val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
         binding.username.typeface = montserratBoldFont
         binding.subs.typeface = montserratBoldFont
@@ -87,16 +87,21 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             val likedPostButton = popupView.findViewById<ImageButton>(R.id.likedPostIcon)
             val likedPostText = popupView.findViewById<TextView>(R.id.likedPostText)
+            likedPostText.typeface = montserratBoldFont
 
             val newPrefButton = popupView.findViewById<ImageButton>(R.id.newPrefButton)
             val newPrefText = popupView.findViewById<TextView>(R.id.new_pref_text)
+            newPrefText.typeface = montserratBoldFont
 
             val changeNicknameTextView = popupView.findViewById<TextView>(R.id.settings_nickname_text)
+            changeNicknameTextView.typeface = montserratBoldFont
 
             val changePasswordTextView = popupView.findViewById<TextView>(R.id.key_text)
+            changePasswordTextView.typeface = montserratBoldFont
 
             val logoutButton = popupView.findViewById<ImageButton>(R.id.logoutButton)
             val logoutText = popupView.findViewById<TextView>(R.id.logout_text)
+            logoutText.typeface = montserratBoldFont
 
             val dialogBuilder = AlertDialog.Builder(context)
             dialogBuilder.setView(popupView)
@@ -165,6 +170,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 val dialogBuilderPassword = AlertDialog.Builder(context)
                 dialogBuilderPassword.setView(passwordPopup)
 
+                val changePasswordText = passwordPopup.findViewById<TextView>(R.id.changePasswordPopupTextView)
+                val passwordInputPopup = passwordPopup.findViewById<TextInputEditText>(R.id.password_input)
+                val savePasswordButton = passwordPopup.findViewById<Button>(R.id.savePasswordPopup)
+                changePasswordText.typeface = montserratBoldFont
+                passwordInputPopup.typeface = montserratRegularFont
+                savePasswordButton.typeface = montserratBoldFont
+
                 val changePasswordDialog = dialogBuilderPassword.create()
                 changePasswordDialog.show()
             }
@@ -172,8 +184,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             changeNicknameTextView.setOnClickListener {
 
                 val nicknamePopup = layoutInflater.inflate(R.layout.nickname_change_popup, null)
-                val btnSaveNickname = nicknamePopup.findViewById<Button>(R.id.button)
+
+                val changeNicknameText = nicknamePopup.findViewById<TextView>(R.id.changeNicknamePopupTextView)
+                val btnSaveNickname = nicknamePopup.findViewById<Button>(R.id.savePasswordPopup)
                 val changeNick = nicknamePopup.findViewById<TextInputEditText>(R.id.username_input)
+                changeNicknameText.typeface = montserratBoldFont
+                btnSaveNickname.typeface = montserratBoldFont
+                changeNick.typeface = montserratRegularFont
 
                 val dialogBuilderNickname = AlertDialog.Builder(context)
                 dialogBuilderNickname.setView(nicknamePopup)
