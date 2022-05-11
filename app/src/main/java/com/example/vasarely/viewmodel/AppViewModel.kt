@@ -1,12 +1,10 @@
 package com.example.vasarely.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
 import com.example.vasarely.model.UserData
-import kotlinx.coroutines.Job
 import java.util.*
 import kotlin.collections.HashMap
 

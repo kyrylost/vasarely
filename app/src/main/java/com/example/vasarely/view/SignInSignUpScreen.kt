@@ -79,16 +79,16 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         binding.signupButton.visibility = GONE
 
         binding.signupText.setOnClickListener {
-            val textSingUp = binding.signupText;
-            val textSingIn = binding.signinText;
+            val textSingUp = binding.signupText
+            val textSingIn = binding.signinText
             val username = binding.usernameInput
             val usernametxt = binding.usernameInputLayout
             val password = binding.forgetPasswordText
             val btnSingUp = binding.signupButton
             val btnSingIn = binding.signinButton
 
-            textSingIn.setTextColor(Color.GRAY);
-            textSingUp.setTextColor(Color.parseColor("#0082DD"));
+            textSingIn.setTextColor(Color.GRAY)
+            textSingUp.setTextColor(Color.parseColor("#0082DD"))
             username.visibility = VISIBLE
             usernametxt.visibility = VISIBLE
             password.visibility = GONE
@@ -97,18 +97,18 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         }
 
         binding.signinText.setOnClickListener {
-            val textSingUp = binding.signupText;
-            val textSingIn = binding.signinText;
+            val textSingUp = binding.signupText
+            val textSingIn = binding.signinText
             val username = binding.usernameInput
-            val usernametxt = binding.usernameInputLayout
+            val usernameInput = binding.usernameInputLayout
             val password = binding.forgetPasswordText
             val btnSingUp = binding.signupButton
             val btnSingIn = binding.signinButton
 
-            textSingIn.setTextColor(Color.parseColor("#0082DD"));
-            textSingUp.setTextColor(Color.GRAY);
+            textSingIn.setTextColor(Color.parseColor("#0082DD"))
+            textSingUp.setTextColor(Color.GRAY)
             username.visibility = GONE
-            usernametxt.visibility = GONE
+            usernameInput.visibility = GONE
             password.visibility = VISIBLE
             btnSingIn.visibility = VISIBLE
             btnSingUp.visibility = GONE

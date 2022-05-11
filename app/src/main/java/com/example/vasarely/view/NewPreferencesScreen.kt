@@ -13,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.NewPreferencesScreenBinding
-import com.example.vasarely.databinding.UserPersonalPageScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
 
 class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
@@ -22,8 +21,8 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
     private var _binding: NewPreferencesScreenBinding? = null
     private val binding get() = _binding!!
 
-    private var min = 0;
-    private var min1 = 0;
+    private var min = 0
+    private var min1 = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,11 +71,11 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
         binding.funButton.typeface = montserratRegularFont
         binding.continueButton2.typeface = montserratRegularFont
 
-        val workPerformances = mutableMapOf<Button, Int>(
+        val workPerformances = mutableMapOf(
             binding.byHandButton to 0,
             binding.compGraphButton to 0
         )
-        val favouriteGenres = mutableMapOf<Button, Int>(
+        val favouriteGenres = mutableMapOf(
             binding.stillLifeButton to 0,
             binding.portraitButton to 0,
             binding.landscapeButton to 0,
@@ -88,7 +87,7 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
             binding.animeButton to 0,
             binding.horrorButton to 0
         )
-        val pictureMoods = mutableMapOf<Button, Int>(
+        val pictureMoods = mutableMapOf(
             binding.depressedButton to 0,
             binding.funButton to 0
         )
@@ -109,7 +108,7 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
         }
 
         fun buttonSelect(_button: Button) {
-            _button.setBackgroundColor(Color.parseColor("#0082DD"));
+            _button.setBackgroundColor(Color.parseColor("#0082DD"))
             _button.setTextColor(Color.WHITE)
         }
 
@@ -151,12 +150,12 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
                 min -= 1
             }
 
-            favouriteGenres[_button] = value;
+            favouriteGenres[_button] = value
         }
 
         fun onPictureMoodsClicked(_button: Button) {
             var value = pictureMoods[_button] ?: 0
-            value += 1;
+            value += 1
 
             if (value > 2)
                 value = 1

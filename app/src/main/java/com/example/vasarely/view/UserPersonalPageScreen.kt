@@ -72,13 +72,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
 
         binding.gridImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.accent));
-            binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.white));
+            binding.gridSelected.setBackgroundColor(resources.getColor(R.color.accent))
+            binding.columnSelected.setBackgroundColor(resources.getColor(R.color.white))
         }
 
         binding.columnImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(getResources().getColor(R.color.white));
-            binding.columnSelected.setBackgroundColor(getResources().getColor(R.color.accent));
+            binding.gridSelected.setBackgroundColor(resources.getColor(R.color.white))
+            binding.columnSelected.setBackgroundColor(resources.getColor(R.color.accent))
         }
 
         binding.menuImgBtn.setOnClickListener {

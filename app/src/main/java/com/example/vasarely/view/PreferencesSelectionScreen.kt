@@ -123,7 +123,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             depressedButtonClicked += 1
             if (depressedButtonClicked > 2) depressedButtonClicked = 1
             if (depressedButtonClicked != 2) {
-                depress.setBackgroundColor(Color.parseColor("#0082DD"));
+                depress.setBackgroundColor(Color.parseColor("#0082DD"))
                 depress.setTextColor(Color.WHITE)}
             else{
                 depress.setBackgroundColor(Color.parseColor("#00FFFFFF"))
@@ -135,7 +135,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             funButtonClicked += 1
             if (funButtonClicked > 2) depressedButtonClicked = 1
             if (funButtonClicked != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)}
             else{
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
@@ -145,10 +145,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
         binding.stillLifeButton.setOnClickListener {
             val funBut = binding.stillLifeButton
-            clickS += 1;
+            clickS += 1
             if (clickS > 2) clickS = 1
             if (clickS != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
             min +=1
             }else{
@@ -159,10 +159,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.portraitButton.setOnClickListener {
             val funBut = binding.portraitButton
-            clickP += 1;
+            clickP += 1
             if (clickP > 2) clickP = 1
             if (clickP != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -173,10 +173,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.landscapeButton.setOnClickListener {
             val funBut = binding.landscapeButton
-            clickL += 1;
+            clickL += 1
             if (clickL > 2) clickL = 1
             if (clickL != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -187,10 +187,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.marineButton.setOnClickListener {
             val funBut = binding.marineButton
-            clickM += 1;
+            clickM += 1
             if (clickM > 2) clickM = 1
             if (clickM != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -201,10 +201,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.battlePaintingButton.setOnClickListener {
             val funBut = binding.battlePaintingButton
-            clickB += 1;
+            clickB += 1
             if (clickB > 2) clickB = 1
             if (clickB != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -215,10 +215,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.interiorButton.setOnClickListener {
             val funBut = binding.interiorButton
-            clickI += 1;
+            clickI += 1
             if (clickI > 2) clickI = 1
             if (clickI != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -229,10 +229,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.caricatureButton.setOnClickListener {
             val funBut = binding.caricatureButton
-            clickC += 1;
+            clickC += 1
             if (clickC > 2) clickC = 1
             if (clickC != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -243,10 +243,10 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.nudeButton.setOnClickListener {
             val funBut = binding.nudeButton
-            clickN += 1;
+            clickN += 1
             if (clickN > 2) clickN = 1
             if (clickN != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             }else{
@@ -257,7 +257,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.animeButton.setOnClickListener {
             val funBut = binding.animeButton
-            clickA += 1;
+            clickA += 1
             if (clickA > 2) clickA = 1
             if (clickA != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
@@ -271,9 +271,9 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         }
         binding.horrorButton.setOnClickListener {
             val funBut = binding.horrorButton
-            clickH += 1;
+            clickH += 1
             if (clickH != 2) {
-                funBut.setBackgroundColor(Color.parseColor("#0082DD"));
+                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
                 min +=1
             } else{

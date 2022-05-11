@@ -5,10 +5,8 @@ import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import java.util.*
 
 class Database {
 
@@ -33,7 +31,7 @@ class Database {
     fun register(email: String, password: String, username: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             if (firebaseAuth.currentUser != null) {
-                userMutableLiveData.postValue(false) //firebaseAuth.currentUser
+                userMutableLiveData.postValue(false)
 
                 firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
                 databaseReference = firebaseDatabase.reference.child("profiles")
@@ -114,7 +112,7 @@ class Database {
         genresReference.setValue(selectedGenres)
     }
 
-    fun updateName(newNickname: String){
+    fun updateName(newNickname: String) {
         currentUserDb.child("username").setValue(newNickname)
     }
 
