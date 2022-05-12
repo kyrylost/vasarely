@@ -23,8 +23,6 @@ import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.io.IOException
 
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
@@ -34,9 +32,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private val binding get() = _binding!!
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
-    private var firebaseStore: FirebaseStorage? = null
-    private var storageReference: StorageReference? = null
     var addWork: ImageView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,11 +55,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
-        firebaseStore = FirebaseStorage.getInstance()
-        storageReference = FirebaseStorage.getInstance().reference
-        val popupAddwork = layoutInflater.inflate(R.layout.add_new_photo_popup, null)
 
-        addWork = popupAddwork.findViewById<ImageView>(R.id.AddWorkImage)
+        val popupAddWork = layoutInflater.inflate(R.layout.add_new_photo_popup, null)
+
+        addWork = popupAddWork.findViewById(R.id.AddWorkImage)
 
         binding.username.typeface = montserratBoldFont
         binding.subs.typeface = montserratBoldFont
@@ -246,42 +242,49 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             }
 
         }
+
+        //------------------------------------Adding Work-----------------------------------------//
         binding.addWork.setOnClickListener {
 
             var min1 = 0
             var min = 0
+
             launchGallery()
+
             val dialogBuilderAddWork = AlertDialog.Builder(context)
-            dialogBuilderAddWork.setView(popupAddwork)
+            dialogBuilderAddWork.setView(popupAddWork)
 
-            val changeNicknameDialog = dialogBuilderAddWork.create()
-            changeNicknameDialog.show()
+            val addWorkDialog = dialogBuilderAddWork.create()
+            addWorkDialog.show()
 
-            val btn = popupAddwork.findViewById<Button>(R.id.button)
-            btn.setOnClickListener {
-                val popupfirstcategory = layoutInflater.inflate(R.layout.first_category_popup, null)
-                val Next1 = popupfirstcategory.findViewById<Button>(R.id.Next1)
+            val addNewPhotoNextButton = popupAddWork.findViewById<Button>(R.id.addNewPhotoNextButton)
 
-                val popupsecondcategory = layoutInflater.inflate(R.layout.second_category_popup, null)
+            addNewPhotoNextButton.setOnClickListener {
 
-                val Next2 = popupsecondcategory.findViewById<Button>(R.id.Next2)
-                val textmin2 = popupsecondcategory.findViewById<TextView>(R.id.second_category_min)
+                val popupFirstCategory = layoutInflater.inflate(R.layout.first_category_popup, null)
+                val nextFirstCategory = popupFirstCategory.findViewById<Button>(R.id.Next1)
 
-                val popupthirdcategory = layoutInflater.inflate(R.layout.third_category_popup, null)
+                val popupSecondCategory = layoutInflater.inflate(R.layout.second_category_popup, null)
 
-                val byHand = popupfirstcategory.findViewById<Button>(R.id.by_hand_button)
-                val compGraph = popupfirstcategory.findViewById<Button>(R.id.comp_graph_button)
-                val textmin = popupfirstcategory.findViewById<TextView>(R.id.first_category_min)
+                val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
+                val textMinSecondCategory = popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
+
+                val popupThirdCategory = layoutInflater.inflate(R.layout.third_category_popup, null)
+
+                val byHand = popupFirstCategory.findViewById<Button>(R.id.by_hand_button)
+                val compGraph = popupFirstCategory.findViewById<Button>(R.id.comp_graph_button)
+                val textMinFirstCategory = popupFirstCategory.findViewById<TextView>(R.id.first_category_min)
 
                 var byHandClicked = 0
                 var computerGraphClicked = 0
 
-                changeNicknameDialog.dismiss()
-                val dialogBuilderFirstCategory = AlertDialog.Builder(context)
-                dialogBuilderFirstCategory.setView(popupfirstcategory)
+                addWorkDialog.dismiss()
 
-                val FirstCategoryDialog = dialogBuilderFirstCategory.create()
-                FirstCategoryDialog.show()
+                val dialogBuilderFirstCategory = AlertDialog.Builder(context)
+                dialogBuilderFirstCategory.setView(popupFirstCategory)
+
+                val firstCategoryDialog = dialogBuilderFirstCategory.create()
+                firstCategoryDialog.show()
 
                 byHand.setOnClickListener {
 
@@ -297,6 +300,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         min1 -= 1
                     }
                 }
+
                 compGraph.setOnClickListener {
 
                     computerGraphClicked += 1
@@ -312,9 +316,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         min1 -= 1
                     }
                 }
-                Next1.setOnClickListener {
+
+                nextFirstCategory.setOnClickListener {
                     if (min1 < 1) {
-                        textmin.setTextColor(Color.RED)
+                        textMinFirstCategory.setTextColor(Color.RED)
 
                     } else {
                         var clickS = 0
@@ -328,210 +333,211 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         var clickA = 0
                         var clickH = 0
 
-                        val portraitButton = popupsecondcategory.findViewById<Button>(R.id.portrait_button)
-                        val landscapeButton = popupsecondcategory.findViewById<Button>(R.id.landscape_button)
-                        val marineButton = popupsecondcategory.findViewById<Button>(R.id.marine_button)
-                        val battlePaintingButton = popupsecondcategory.findViewById<Button>(R.id.battle_painting_button)
-                        val interiorButton = popupsecondcategory.findViewById<Button>(R.id.interior_button)
-                        val caricatureButton = popupsecondcategory.findViewById<Button>(R.id.caricature_button)
-                        val nudeButton = popupsecondcategory.findViewById<Button>(R.id.nude_button)
-                        val animeButton = popupsecondcategory.findViewById<Button>(R.id.anime_button)
-                        val horrorButton = popupsecondcategory.findViewById<Button>(R.id.horror_button)
-                        val stillLifeButton = popupsecondcategory.findViewById<Button>(R.id.still_life_button)
+                        val portraitButton = popupSecondCategory.findViewById<Button>(R.id.portrait_button)
+                        val landscapeButton = popupSecondCategory.findViewById<Button>(R.id.landscape_button)
+                        val marineButton = popupSecondCategory.findViewById<Button>(R.id.marine_button)
+                        val battlePaintingButton = popupSecondCategory.findViewById<Button>(R.id.battle_painting_button)
+                        val interiorButton = popupSecondCategory.findViewById<Button>(R.id.interior_button)
+                        val caricatureButton = popupSecondCategory.findViewById<Button>(R.id.caricature_button)
+                        val nudeButton = popupSecondCategory.findViewById<Button>(R.id.nude_button)
+                        val animeButton = popupSecondCategory.findViewById<Button>(R.id.anime_button)
+                        val horrorButton = popupSecondCategory.findViewById<Button>(R.id.horror_button)
+                        val stillLifeButton = popupSecondCategory.findViewById<Button>(R.id.still_life_button)
 
-                        FirstCategoryDialog.dismiss()
+                        firstCategoryDialog.dismiss()
                         val dialogBuilderSecondCategory = AlertDialog.Builder(context)
-                        dialogBuilderSecondCategory.setView(popupsecondcategory)
+                        dialogBuilderSecondCategory.setView(popupSecondCategory)
 
-                        val SecondCategoryDialog = dialogBuilderSecondCategory.create()
-                        SecondCategoryDialog.show()
+                        val secondCategoryDialog = dialogBuilderSecondCategory.create()
+                        secondCategoryDialog.show()
 
                         stillLifeButton.setOnClickListener {
-                            val funBut = stillLifeButton
                             clickS += 1
                             if (clickS > 2) clickS = 1
                             if (clickS != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min-=1
+                                stillLifeButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                stillLifeButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                stillLifeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                stillLifeButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         portraitButton.setOnClickListener {
-                            val funBut = portraitButton
                             clickP += 1
                             if (clickP > 2) clickP = 1
                             if (clickP != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                portraitButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                portraitButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                portraitButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                portraitButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         landscapeButton.setOnClickListener {
-                            val funBut = landscapeButton
                             clickL += 1
                             if (clickL > 2) clickL = 1
                             if (clickL != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                landscapeButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                landscapeButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                landscapeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                landscapeButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         marineButton.setOnClickListener {
-                            val funBut = marineButton
                             clickM += 1
                             if (clickM > 2) clickM = 1
                             if (clickM != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                marineButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                marineButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                marineButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                marineButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         battlePaintingButton.setOnClickListener {
-                            val funBut = battlePaintingButton
                             clickB += 1
                             if (clickB > 2) clickB = 1
                             if (clickB != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                battlePaintingButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                battlePaintingButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                battlePaintingButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                battlePaintingButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         interiorButton.setOnClickListener {
-                            val funBut = interiorButton
                             clickI += 1
                             if (clickI > 2) clickI = 1
                             if (clickI != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                interiorButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                interiorButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                interiorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                interiorButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         caricatureButton.setOnClickListener {
-                            val funBut = caricatureButton
                             clickC += 1
                             if (clickC > 2) clickC = 1
                             if (clickC != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                caricatureButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                caricatureButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                caricatureButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                caricatureButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         nudeButton.setOnClickListener {
-                            val funBut = nudeButton
                             clickN += 1
                             if (clickN > 2) clickN = 1
                             if (clickN != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                nudeButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                nudeButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                nudeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                nudeButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         animeButton.setOnClickListener {
-                            val funBut = animeButton
                             clickA += 1
                             if (clickA > 2) clickA = 1
                             if (clickA != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            }else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                animeButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                animeButton.setTextColor(Color.WHITE)
+                                min += 1
+                            }else {
+                                animeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                animeButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
+
                         horrorButton.setOnClickListener {
-                            val funBut = horrorButton
                             clickH += 1
                             if (clickH != 2) {
-                                funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                funBut.setTextColor(Color.WHITE)
-                                min +=1
-                            } else{
-                                funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                funBut.setTextColor(Color.BLACK)
-                                min -=1
+                                horrorButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                horrorButton.setTextColor(Color.WHITE)
+                                min += 1
+                            } else {
+                                horrorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                horrorButton.setTextColor(Color.BLACK)
+                                min -= 1
                             }
                         }
-                        Next2.setOnClickListener{
+
+                        nextSecondCategory.setOnClickListener{
                             if (min < 2) {
-                                textmin2.setTextColor(Color.RED)
+                                textMinSecondCategory.setTextColor(Color.RED)
                             } else{
                                 var depressedButtonClicked = 0
                                 var funButtonClicked = 0
-                                val depressedButton = popupthirdcategory.findViewById<Button>(R.id.depressed_button)
-                                val funButton = popupthirdcategory.findViewById<Button>(R.id.fun_button)
-                                SecondCategoryDialog.dismiss()
+                                val depressedButton = popupThirdCategory.findViewById<Button>(R.id.depressed_button)
+                                val funButton = popupThirdCategory.findViewById<Button>(R.id.fun_button)
+                                secondCategoryDialog.dismiss()
                                 val dialogBuilderThirdCategory = AlertDialog.Builder(context)
-                                dialogBuilderThirdCategory.setView(popupthirdcategory)
+                                dialogBuilderThirdCategory.setView(popupThirdCategory)
 
-                                val ThirdCategoryDialog = dialogBuilderThirdCategory.create()
-                                ThirdCategoryDialog.show()
+                                val thirdCategoryDialog = dialogBuilderThirdCategory.create()
+                                thirdCategoryDialog.show()
+
                                 depressedButton.setOnClickListener {
-                                    val depress = depressedButton
                                     depressedButtonClicked += 1
                                     if (depressedButtonClicked > 2) depressedButtonClicked = 1
                                     if (depressedButtonClicked != 2) {
-                                        depress.setBackgroundColor(Color.parseColor("#0082DD"))
-                                        depress.setTextColor(Color.WHITE)}
-                                    else{
-                                        depress.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                        depress.setTextColor(Color.BLACK)
+                                        depressedButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                        depressedButton.setTextColor(Color.WHITE)
+                                    }
+                                    else {
+                                        depressedButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                        depressedButton.setTextColor(Color.BLACK)
                                     }
                                 }
+
                                 funButton.setOnClickListener {
-                                    val funBut = funButton
                                     funButtonClicked += 1
                                     if (funButtonClicked > 2) funButtonClicked = 1
                                     if (funButtonClicked != 2) {
-                                        funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                                        funBut.setTextColor(Color.WHITE)}
-                                    else{
-                                        funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                        funBut.setTextColor(Color.BLACK)
+                                        funButton.setBackgroundColor(Color.parseColor("#0082DD"))
+                                        funButton.setTextColor(Color.WHITE)
+                                    }
+                                    else {
+                                        funButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
+                                        funButton.setTextColor(Color.BLACK)
                                     }
                                 }
                             }
-                    }
-
+                        }
                     }
                 }
-
             }
         }
     }
+
     private fun launchGallery() {
         val intent = Intent()
         intent.type = "image/*"
@@ -542,21 +548,25 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if(data == null || data.data == null){
+            if(data == null || data.data == null) {
                 return
             }
 
             filePath = data.data
+
             try {
                 addWork?.setImageURI(filePath)
-            } catch (e: IOException) {
+                appViewModel.saveImageAndData(filePath!!)
+            }
+            catch (e: IOException) {
                 e.printStackTrace()
             }
+
         }
     }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            _binding = null
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
+}

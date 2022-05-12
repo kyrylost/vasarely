@@ -1,6 +1,7 @@
 package com.example.vasarely.viewmodel
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
@@ -80,7 +81,9 @@ class AppViewModel: ViewModel() {
         }
 
         localData = UserData(username, technique, mood, genres)
+    }
 
-
+    fun saveImageAndData(filePath : Uri) {
+        database.saveImage(filePath)
     }
 }

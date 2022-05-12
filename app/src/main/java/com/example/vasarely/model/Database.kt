@@ -1,14 +1,15 @@
 package com.example.vasarely.model
 
 import android.app.Application
-import android.app.ProgressDialog
-import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class Database {
 
@@ -19,6 +20,15 @@ class Database {
     private lateinit var preferencesReference: DatabaseReference
     private lateinit var currentUser: FirebaseUser
     private lateinit var currentUserDb: DatabaseReference
+
+    private lateinit var firebaseStore: FirebaseStorage
+    private lateinit var storageReference: StorageReference
+    //private lateinit var uploadsReference: StorageReference
+    private lateinit var imageReference: StorageReference
+
+    private var amountOfWorks = 999
+    private lateinit var uid: String
+
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
 
@@ -27,6 +37,12 @@ class Database {
         this.application = application
 
         firebaseAuth = FirebaseAuth.getInstance()
+
+        firebaseStore = FirebaseStorage.getInstance()
+        storageReference = firebaseStore.reference
+        //uploadsReference = storageReference.child("uploads/")
+
+
         userMutableLiveData = SingleLiveEvent()
         userData = SingleLiveEvent()
     }
@@ -40,7 +56,9 @@ class Database {
                 databaseReference = firebaseDatabase.reference.child("profiles")
                 currentUser = firebaseAuth.currentUser!!
                 currentUserDb = databaseReference.child((currentUser.uid))
+                uid = currentUser.uid
                 currentUserDb.child("userData").child("username").setValue(username)
+                currentUserDb.child("userData").child("worksAmount").setValue(-1)
             }
 
         }.addOnFailureListener { exception ->
@@ -57,6 +75,9 @@ class Database {
                 databaseReference = firebaseDatabase.reference.child("profiles")
                 currentUser = firebaseAuth.currentUser!!
                 currentUserDb = databaseReference.child((currentUser.uid))
+                uid = currentUser.uid
+
+                //currentUserDb.child("userData").child("worksAmount").setValue(-1)
 
                 currentUserDb.child("userData").child("preferences").get().addOnSuccessListener {
                     if (!it.exists()) {
@@ -123,8 +144,25 @@ class Database {
         currentUserDb.child("userData").get().addOnSuccessListener {
             Log.d("dataSnapshot", it.toString())
             userData.postValue(it.value)
+
+            val dataSnapshot = it.value as HashMap<*, *>
+            Log.d("check" ,dataSnapshot["worksAmount"].toString())
+            amountOfWorks = dataSnapshot["worksAmount"].toString().toInt()
         }
     }
 
+    fun saveImage(filePath : Uri) {
+        amountOfWorks += 1
+
+        imageReference = storageReference.child("uploads/$uid/$amountOfWorks")
+
+        currentUserDb.child("userData").child("worksAmount").setValue(amountOfWorks)
+
+        imageReference.putFile(filePath)
+    }
+
+    fun saveHashtags() {
+
+    }
 
 }
