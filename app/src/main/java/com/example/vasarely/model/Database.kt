@@ -1,6 +1,8 @@
 package com.example.vasarely.model
 
 import android.app.Application
+import android.app.ProgressDialog
+import android.content.Intent
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +21,7 @@ class Database {
     private lateinit var currentUserDb: DatabaseReference
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
+
 
     fun initDatabase(application: Application) {
         this.application = application
@@ -122,4 +125,6 @@ class Database {
             userData.postValue(it.value)
         }
     }
+
+
 }
