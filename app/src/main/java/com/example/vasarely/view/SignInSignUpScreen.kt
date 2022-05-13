@@ -11,6 +11,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -43,6 +44,11 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
                 val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
             }
+        }
+
+        // ______________________________________________________________________________________ //
+        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
         _binding = SignInSignUpScreenBinding.inflate(inflater, container, false)

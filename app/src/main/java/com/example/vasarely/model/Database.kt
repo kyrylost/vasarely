@@ -19,6 +19,7 @@ class Database {
     private lateinit var currentUserDb: DatabaseReference
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
+    lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
     fun initDatabase(application: Application) {
         this.application = application
@@ -26,6 +27,7 @@ class Database {
         firebaseAuth = FirebaseAuth.getInstance()
         userMutableLiveData = SingleLiveEvent()
         userData = SingleLiveEvent()
+        dataChangeExceptions = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) {
@@ -39,9 +41,9 @@ class Database {
                 currentUserDb = databaseReference.child((currentUser.uid))
                 currentUserDb.child("userData").child("username").setValue(username)
             }
-
+// ______________________________________________________________________________________________ //
         }.addOnFailureListener { exception ->
-            //dataChangeExceptions.postValue(exception)
+            dataChangeExceptions.postValue(exception.toString())
         }
     }
 

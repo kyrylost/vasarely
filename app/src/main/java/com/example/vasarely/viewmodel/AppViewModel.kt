@@ -13,6 +13,7 @@ class AppViewModel: ViewModel() {
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
     lateinit var localData: UserData
+    lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
 
     fun isLocalDataInitialized() = ::localData.isInitialized
@@ -27,6 +28,7 @@ class AppViewModel: ViewModel() {
 
         userMutableLiveData = database.userMutableLiveData
         userData = database.userData
+        dataChangeExceptions = database.dataChangeExceptions
     }
 
     fun register(email:String, password:String, username:String) = database.register(email, password, username)
