@@ -41,7 +41,6 @@ class Database {
                 currentUserDb = databaseReference.child((currentUser.uid))
                 currentUserDb.child("userData").child("username").setValue(username)
             }
-// ______________________________________________________________________________________________ //
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
         }
@@ -67,7 +66,7 @@ class Database {
                 }
             }
         }.addOnFailureListener { exception ->
-            //dataChangeExceptions.postValue(exception)
+            dataChangeExceptions.postValue(exception.toString())
         }
     }
 
@@ -92,13 +91,24 @@ class Database {
         val moodReference = preferencesReference.child("mood")
         val genresReference = preferencesReference.child("genres")
 
-        if (byHandSelected && computerGraphicsSelected) techniqueReference.setValue("ignore")
-        else if (byHandSelected) techniqueReference.setValue("byHand")
-        else techniqueReference.setValue("computerGraphics")
-
-        if (depressedButtonSelected) moodReference.setValue("depressed")
-        else if (funButtonSelected) moodReference.setValue("fun")
-        else moodReference.setValue("ignore")
+        if (byHandSelected && computerGraphicsSelected) techniqueReference.setValue("ignore").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+        else if (byHandSelected) techniqueReference.setValue("byHand").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+        else techniqueReference.setValue("computerGraphics").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+        if (depressedButtonSelected) moodReference.setValue("depressed").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+        else if (funButtonSelected) moodReference.setValue("fun").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+        else moodReference.setValue("ignore").addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
 
         if (stillLifeButtonSelected) selectedGenres.add("stillLife")
         if (portraitButtonSelected) selectedGenres.add("portrait")
@@ -111,17 +121,23 @@ class Database {
         if (animeButtonSelected) selectedGenres.add("anime")
         if (horrorButtonSelected) selectedGenres.add("horror")
 
-        genresReference.setValue(selectedGenres)
+        genresReference.setValue(selectedGenres).addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
     }
 
     fun updateName(newNickname: String) {
-        currentUserDb.child("username").setValue(newNickname)
+        currentUserDb.child("username").setValue(newNickname).addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
     }
 
     fun getData() {
         currentUserDb.child("userData").get().addOnSuccessListener {
             Log.d("dataSnapshot", it.toString())
             userData.postValue(it.value)
+        }.addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
         }
     }
 }
