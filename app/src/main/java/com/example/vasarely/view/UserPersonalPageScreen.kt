@@ -11,10 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,7 +29,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private val binding get() = _binding!!
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
-    var addWork: ImageView? = null
+    var addWorkPopupImage: ImageView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,28 +43,23 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         _binding = UserPersonalPageScreenBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.username.text = appViewModel.localData.username
 
         val montserratBoldFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
-        val popupAddWork = layoutInflater.inflate(R.layout.add_new_photo_popup, null)
-
-        addWork = popupAddWork.findViewById(R.id.AddWorkImage)
-
         binding.username.typeface = montserratBoldFont
         binding.subs.typeface = montserratBoldFont
         binding.follow.typeface = montserratBoldFont
         binding.addWork.typeface = montserratBoldFont
-
-        if (appViewModel.isLocalDataInitialized())
-            binding.username.text = appViewModel.localData.username
-
 
         //----------------------------Navigation between screens------------------------------------
         //to SearchScreen
@@ -246,8 +238,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         //------------------------------------Adding Work-----------------------------------------//
         binding.addWork.setOnClickListener {
 
+            val popupAddWork = layoutInflater.inflate(R.layout.add_new_photo_popup, null)
+
+            addWorkPopupImage = popupAddWork.findViewById(R.id.AddWorkImage)
+
             var min1 = 0
-            var min = 0
+            var min2 = 0
+            var min3 = 0
 
             launchGallery()
 
@@ -261,22 +258,30 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             addNewPhotoNextButton.setOnClickListener {
 
+                appViewModel.saveImageDescription(popupAddWork.findViewById<TextInputEditText>(R.id.username_input).text.toString())
+
                 val popupFirstCategory = layoutInflater.inflate(R.layout.first_category_popup, null)
                 val nextFirstCategory = popupFirstCategory.findViewById<Button>(R.id.Next1)
-
-                val popupSecondCategory = layoutInflater.inflate(R.layout.second_category_popup, null)
-
-                val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
-                val textMinSecondCategory = popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
-
-                val popupThirdCategory = layoutInflater.inflate(R.layout.third_category_popup, null)
-
                 val byHand = popupFirstCategory.findViewById<Button>(R.id.by_hand_button)
                 val compGraph = popupFirstCategory.findViewById<Button>(R.id.comp_graph_button)
                 val textMinFirstCategory = popupFirstCategory.findViewById<TextView>(R.id.first_category_min)
 
                 var byHandClicked = 0
                 var computerGraphClicked = 0
+
+                var clickS = 0
+                var clickP = 0
+                var clickL = 0
+                var clickM = 0
+                var clickB = 0
+                var clickI = 0
+                var clickC = 0
+                var clickN = 0
+                var clickA = 0
+                var clickH = 0
+
+                var depressedButtonClicked = 0
+                var funButtonClicked = 0
 
                 addWorkDialog.dismiss()
 
@@ -318,20 +323,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 }
 
                 nextFirstCategory.setOnClickListener {
-                    if (min1 < 1) {
+                    if (min1 != 1) {
                         textMinFirstCategory.setTextColor(Color.RED)
-
                     } else {
-                        var clickS = 0
-                        var clickP = 0
-                        var clickL = 0
-                        var clickM = 0
-                        var clickB = 0
-                        var clickI = 0
-                        var clickC = 0
-                        var clickN = 0
-                        var clickA = 0
-                        var clickH = 0
+
+                        val popupSecondCategory = layoutInflater.inflate(R.layout.second_category_popup, null)
+                        val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
+                        val textMinSecondCategory = popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
 
                         val portraitButton = popupSecondCategory.findViewById<Button>(R.id.portrait_button)
                         val landscapeButton = popupSecondCategory.findViewById<Button>(R.id.landscape_button)
@@ -345,6 +343,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         val stillLifeButton = popupSecondCategory.findViewById<Button>(R.id.still_life_button)
 
                         firstCategoryDialog.dismiss()
+
                         val dialogBuilderSecondCategory = AlertDialog.Builder(context)
                         dialogBuilderSecondCategory.setView(popupSecondCategory)
 
@@ -357,11 +356,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickS != 2) {
                                 stillLifeButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 stillLifeButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 stillLifeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 stillLifeButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -371,11 +370,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickP != 2) {
                                 portraitButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 portraitButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 portraitButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 portraitButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -385,11 +384,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickL != 2) {
                                 landscapeButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 landscapeButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 landscapeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 landscapeButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -399,11 +398,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickM != 2) {
                                 marineButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 marineButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 marineButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 marineButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -413,11 +412,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickB != 2) {
                                 battlePaintingButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 battlePaintingButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 battlePaintingButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 battlePaintingButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -427,11 +426,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickI != 2) {
                                 interiorButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 interiorButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 interiorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 interiorButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -441,11 +440,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickC != 2) {
                                 caricatureButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 caricatureButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 caricatureButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 caricatureButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -455,11 +454,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickN != 2) {
                                 nudeButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 nudeButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 nudeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 nudeButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -469,11 +468,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickA != 2) {
                                 animeButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 animeButton.setTextColor(Color.WHITE)
-                                min += 1
-                            }else {
+                                min2 += 1
+                            } else {
                                 animeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 animeButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
@@ -482,23 +481,26 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                             if (clickH != 2) {
                                 horrorButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                 horrorButton.setTextColor(Color.WHITE)
-                                min += 1
+                                min2 += 1
                             } else {
                                 horrorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                 horrorButton.setTextColor(Color.BLACK)
-                                min -= 1
+                                min2 -= 1
                             }
                         }
 
                         nextSecondCategory.setOnClickListener{
-                            if (min < 2) {
+                            if (min2 != 1) {
                                 textMinSecondCategory.setTextColor(Color.RED)
-                            } else{
-                                var depressedButtonClicked = 0
-                                var funButtonClicked = 0
+                            } else {
+
+                                val popupThirdCategory = layoutInflater.inflate(R.layout.third_category_popup, null)
                                 val depressedButton = popupThirdCategory.findViewById<Button>(R.id.depressed_button)
                                 val funButton = popupThirdCategory.findViewById<Button>(R.id.fun_button)
+                                val publishButton = popupThirdCategory.findViewById<Button>(R.id.Next3)
+
                                 secondCategoryDialog.dismiss()
+
                                 val dialogBuilderThirdCategory = AlertDialog.Builder(context)
                                 dialogBuilderThirdCategory.setView(popupThirdCategory)
 
@@ -506,15 +508,18 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                 thirdCategoryDialog.show()
 
                                 depressedButton.setOnClickListener {
+
                                     depressedButtonClicked += 1
                                     if (depressedButtonClicked > 2) depressedButtonClicked = 1
                                     if (depressedButtonClicked != 2) {
                                         depressedButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                         depressedButton.setTextColor(Color.WHITE)
+                                        min3 += 1
                                     }
                                     else {
                                         depressedButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                         depressedButton.setTextColor(Color.BLACK)
+                                        min3 -= 1
                                     }
                                 }
 
@@ -524,11 +529,25 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                     if (funButtonClicked != 2) {
                                         funButton.setBackgroundColor(Color.parseColor("#0082DD"))
                                         funButton.setTextColor(Color.WHITE)
+                                        min3 += 1
                                     }
                                     else {
                                         funButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                                         funButton.setTextColor(Color.BLACK)
+                                        min3 -= 1
                                     }
+                                }
+                                if (min3 <= 1)
+                                    publishButton.setOnClickListener {
+                                        appViewModel.saveImageData(byHandClicked,
+                                            depressedButtonClicked, funButtonClicked,
+                                            clickS, clickP, clickL, clickM, clickB,
+                                            clickI, clickC, clickN, clickA, clickH)
+
+                                        thirdCategoryDialog.dismiss()
+                                }
+                                else {
+                                    Toast.makeText(context,"Оберіть одну, або жодної!", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -555,8 +574,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             filePath = data.data
 
             try {
-                addWork?.setImageURI(filePath)
-                appViewModel.saveImageAndData(filePath!!)
+                addWorkPopupImage?.setImageURI(filePath)
+                appViewModel.saveImage(filePath!!)
             }
             catch (e: IOException) {
                 e.printStackTrace()

@@ -1,5 +1,6 @@
 package com.example.vasarely.view
 
+import android.app.ProgressDialog
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -28,7 +30,24 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         savedInstanceState: Bundle?
     ): View {
 
+        _binding = SearchScreenBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        fun showData() {
+            // Show data
+        }
+
+        val progressDialog = ProgressDialog(requireContext())
+
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+
+            appViewModel.setUserDBStatus()
+            if (progressDialog.isShowing) progressDialog.dismiss()
+
             if (!preferencesAreSelected) {
                 val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
@@ -38,14 +57,25 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
+
+            showData()
+
         }
 
-        _binding = SearchScreenBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        if (!appViewModel.isLocalDataInitialized()) {
+            if (appViewModel.isUserDBInitialized())
+                appViewModel.getData()
+            else {
+                progressDialog.setMessage("Зачекайте, триває завантаження...")
+                progressDialog.setCancelable(false)
+                progressDialog.show()
+            }
+        }
+        else showData()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+//        if (appViewModel.isLocalDataInitialized())
+//            // Do something
+//        else appViewModel.getData()
 
         //val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)

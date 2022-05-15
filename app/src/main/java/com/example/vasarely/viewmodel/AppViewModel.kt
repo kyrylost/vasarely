@@ -15,8 +15,16 @@ class AppViewModel: ViewModel() {
     lateinit var userData: SingleLiveEvent<Any>
     lateinit var localData: UserData
 
+    lateinit var userDB: String
+
 
     fun isLocalDataInitialized() = ::localData.isInitialized
+
+    fun isUserDBInitialized() = ::userDB.isInitialized
+
+    fun setUserDBStatus() {
+        userDB = "initialized"
+    }
 
     private fun asBoolean(int: Int): Boolean {
         return (int == 1)
@@ -30,42 +38,47 @@ class AppViewModel: ViewModel() {
         userData = database.userData
     }
 
-    fun register(email:String, password:String, username:String) = database.register(email, password, username)
+    fun register(email: String, password: String, username: String) =
+        database.register(email, password, username)
 
-    fun login(email:String, password:String) = database.login(email, password)
+    fun login(email: String, password: String) = database.login(email, password)
 
     fun logout() = database.logout()
 
-    fun savePreference(byHandSelected: Int, computerGraphicsSelected: Int,
-                       depressedButtonSelected: Int, funButtonSelected: Int,
-                       stillLifeButtonSelected: Int, portraitButtonSelected: Int,
-                       landscapeButtonSelected: Int, marineButtonSelected: Int,
-                       battlePaintingButtonSelected: Int, interiorButtonSelected: Int,
-                       caricatureButtonSelected: Int, nudeButtonSelected: Int,
-                       animeButtonSelected: Int, horrorButtonSelected: Int) {
+    fun savePreference(
+        byHandSelected: Int, computerGraphicsSelected: Int,
+        depressedButtonSelected: Int, funButtonSelected: Int,
+        stillLifeButtonSelected: Int, portraitButtonSelected: Int,
+        landscapeButtonSelected: Int, marineButtonSelected: Int,
+        battlePaintingButtonSelected: Int, interiorButtonSelected: Int,
+        caricatureButtonSelected: Int, nudeButtonSelected: Int,
+        animeButtonSelected: Int, horrorButtonSelected: Int
+    ) {
 
-        database.savePreference(asBoolean(byHandSelected), asBoolean(computerGraphicsSelected),
+        database.savePreference(
+            asBoolean(byHandSelected), asBoolean(computerGraphicsSelected),
             asBoolean(depressedButtonSelected), asBoolean(funButtonSelected),
             asBoolean(stillLifeButtonSelected), asBoolean(portraitButtonSelected),
             asBoolean(landscapeButtonSelected), asBoolean(marineButtonSelected),
             asBoolean(battlePaintingButtonSelected), asBoolean(interiorButtonSelected),
             asBoolean(caricatureButtonSelected), asBoolean(nudeButtonSelected),
-            asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected))
+            asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected)
+        )
 
     }
 
     fun updateName(newNickname: String) {
-         database.updateName(newNickname)
+        database.updateName(newNickname)
     }
 
     fun getData() {
         database.getData()
     }
 
-    fun processData(data : Any) {
-        val username : String
-        val technique : String
-        val mood : String
+    fun processData(data: Any) {
+        val username: String
+        val technique: String
+        val mood: String
         val genres = mutableListOf<String>()
 
         val dataHashMap = data as HashMap<*, *>
@@ -83,7 +96,31 @@ class AppViewModel: ViewModel() {
         localData = UserData(username, technique, mood, genres)
     }
 
-    fun saveImageAndData(filePath : Uri) {
+    fun saveImage(filePath: Uri) {
         database.saveImage(filePath)
+    }
+
+    fun saveImageDescription(description: String) {
+        database.saveImageDescription(description)
+    }
+
+    fun saveImageData(
+        byHandSelected: Int,
+        depressedButtonSelected: Int, funButtonSelected: Int,
+        stillLifeButtonSelected: Int, portraitButtonSelected: Int,
+        landscapeButtonSelected: Int, marineButtonSelected: Int,
+        battlePaintingButtonSelected: Int, interiorButtonSelected: Int,
+        caricatureButtonSelected: Int, nudeButtonSelected: Int,
+        animeButtonSelected: Int, horrorButtonSelected: Int) {
+
+        database.saveHashtags(
+            asBoolean(byHandSelected),
+            asBoolean(depressedButtonSelected), asBoolean(funButtonSelected),
+            asBoolean(stillLifeButtonSelected), asBoolean(portraitButtonSelected),
+            asBoolean(landscapeButtonSelected), asBoolean(marineButtonSelected),
+            asBoolean(battlePaintingButtonSelected), asBoolean(interiorButtonSelected),
+            asBoolean(caricatureButtonSelected), asBoolean(nudeButtonSelected),
+            asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected)
+        )
     }
 }

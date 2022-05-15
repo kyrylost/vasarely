@@ -34,6 +34,8 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
 
+            appViewModel.setUserDBStatus()
+
             if (preferencesAreSelected) {
                 appViewModel.getData()
                 val action = SignInSignUpScreenDirections.actionSignInSignUpScreenToSearchScreen()

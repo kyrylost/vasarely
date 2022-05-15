@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlin.properties.Delegates
 
 class Database {
 
@@ -23,10 +24,9 @@ class Database {
 
     private lateinit var firebaseStore: FirebaseStorage
     private lateinit var storageReference: StorageReference
-    //private lateinit var uploadsReference: StorageReference
     private lateinit var imageReference: StorageReference
 
-    private var amountOfWorks = 999
+    private var amountOfWorks by Delegates.notNull<Int>()
     private lateinit var uid: String
 
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
@@ -40,8 +40,6 @@ class Database {
 
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = firebaseStore.reference
-        //uploadsReference = storageReference.child("uploads/")
-
 
         userMutableLiveData = SingleLiveEvent()
         userData = SingleLiveEvent()
@@ -58,7 +56,7 @@ class Database {
                 currentUserDb = databaseReference.child((currentUser.uid))
                 uid = currentUser.uid
                 currentUserDb.child("userData").child("username").setValue(username)
-                currentUserDb.child("userData").child("worksAmount").setValue(-1)
+//                currentUserDb.child("userData").child("worksAmount").setValue(0)
             }
 
         }.addOnFailureListener { exception ->
@@ -76,8 +74,6 @@ class Database {
                 currentUser = firebaseAuth.currentUser!!
                 currentUserDb = databaseReference.child((currentUser.uid))
                 uid = currentUser.uid
-
-                //currentUserDb.child("userData").child("worksAmount").setValue(-1)
 
                 currentUserDb.child("userData").child("preferences").get().addOnSuccessListener {
                     if (!it.exists()) {
@@ -142,12 +138,21 @@ class Database {
 
     fun getData() {
         currentUserDb.child("userData").get().addOnSuccessListener {
+            Log.d("Success", "Everything is alright with data")
             Log.d("dataSnapshot", it.toString())
             userData.postValue(it.value)
 
             val dataSnapshot = it.value as HashMap<*, *>
             Log.d("check" ,dataSnapshot["worksAmount"].toString())
-            amountOfWorks = dataSnapshot["worksAmount"].toString().toInt()
+
+            amountOfWorks = if (dataSnapshot["worksAmount"] != null)
+                dataSnapshot["worksAmount"].toString().toInt()
+            else
+                0
+
+        }.addOnFailureListener {
+            Log.d("Fail", "Where the fuck is data")
+            getData()
         }
     }
 
@@ -161,7 +166,71 @@ class Database {
         imageReference.putFile(filePath)
     }
 
-    fun saveHashtags() {
+    fun saveImageDescription(description: String) {
+        currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("description").setValue(description)
+    }
+
+    fun saveHashtags(byHandSelected: Boolean,
+                     depressedButtonSelected: Boolean, funButtonSelected: Boolean,
+                     stillLifeButtonSelected: Boolean, portraitButtonSelected: Boolean,
+                     landscapeButtonSelected: Boolean, marineButtonSelected: Boolean,
+                     battlePaintingButtonSelected: Boolean, interiorButtonSelected: Boolean,
+                     caricatureButtonSelected: Boolean, nudeButtonSelected: Boolean,
+                     animeButtonSelected: Boolean, horrorButtonSelected: Boolean) {
+
+
+        if (depressedButtonSelected)
+            currentUserDb.child("profileData").child("posts")
+                .child("$amountOfWorks").child("hashtags")
+                .child("mood").setValue("depressed")
+        else if (funButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("mood").setValue("fun")
+        else currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("mood").setValue("ignore")
+
+
+        if (byHandSelected)
+            currentUserDb.child("profileData").child("posts")
+                .child("$amountOfWorks").child("hashtags")
+                .child("technique").setValue("byHand")
+        else currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("technique").setValue("computerGraphics")
+
+
+        if (stillLifeButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("stillLife")
+        if (portraitButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("portrait")
+        if (landscapeButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("landscape")
+        if (marineButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("marine")
+        if (battlePaintingButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("battlePainting")
+        if (interiorButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("interior")
+        if (caricatureButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("caricature")
+        if (nudeButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("nude")
+        if (animeButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("anime")
+        if (horrorButtonSelected) currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("genre").setValue("horror")
 
     }
 
