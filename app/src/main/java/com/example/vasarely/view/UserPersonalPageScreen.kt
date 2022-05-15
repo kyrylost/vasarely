@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,6 +33,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
+        }
+
+        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
         _binding = UserPersonalPageScreenBinding.inflate(inflater, container, false)

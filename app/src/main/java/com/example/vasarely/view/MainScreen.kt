@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -27,6 +28,10 @@ class MainScreen: Fragment(R.layout.main_screen) {
 
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
+        }
+
+        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
         _binding = MainScreenBinding.inflate(inflater, container, false)

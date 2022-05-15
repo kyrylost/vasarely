@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -38,6 +39,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
+        }
+
+        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
         _binding = SearchScreenBinding.inflate(inflater, container, false)
