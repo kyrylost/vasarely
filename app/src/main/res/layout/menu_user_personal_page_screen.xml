@@ -16,6 +16,14 @@
             android:paddingTop="2.5dp"
             android:paddingBottom="2.5dp">
 
+            <ImageButton
+                android:id="@+id/closeButtonSettingsPopup"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:contentDescription="@string/fun_button"
+                app:srcCompat="@drawable/close_btn" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

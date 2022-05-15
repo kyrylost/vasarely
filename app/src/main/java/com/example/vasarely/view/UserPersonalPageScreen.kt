@@ -114,6 +114,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val settingsDialog = dialogBuilder.create()
             settingsDialog.show()
 
+            val closeSettingsButton = popupView.findViewById<ImageButton>(R.id.closeButtonSettingsPopup)
+            closeSettingsButton.setOnClickListener{
+                settingsDialog.dismiss()
+            }
+
             logoutButton.setOnClickListener {
                 appViewModel.logout()
 
@@ -184,6 +189,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                 val changePasswordDialog = dialogBuilderPassword.create()
                 changePasswordDialog.show()
+
+                val closePasswordButton = popupView.findViewById<ImageButton>(R.id.closeButtonPasswordPopup)
+                closePasswordButton.setOnClickListener{
+                    settingsDialog.dismiss()
+                }
             }
 
             changeNicknameTextView.setOnClickListener {
@@ -202,6 +212,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                 val changeNicknameDialog = dialogBuilderNickname.create()
                 changeNicknameDialog.show()
+
+                val closeNicknameButton = popupView.findViewById<ImageButton>(R.id.closeButtonNicknamePopup)
+                closeNicknameButton.setOnClickListener{
+                    settingsDialog.dismiss()
+                }
 
                 btnSaveNickname.setOnClickListener {
                     val newNickname = changeNick.text.toString()
