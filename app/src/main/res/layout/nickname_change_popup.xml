@@ -15,28 +15,39 @@
             android:orientation="vertical"
             android:paddingBottom="25dp">
 
-            <ImageButton
-                android:id="@+id/closeButtonNicknamePopup"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@string/fun_button"
-                app:srcCompat="@drawable/close_btn" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/changeNicknamePopupTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="25dp"
-                android:fontFamily="@font/fonts"
-                android:text="Уведіть новий юзернейм"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="274dp" />
+                <TextView
+                    android:id="@+id/changeNicknamePopupTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:fontFamily="@font/fonts"
+                    android:text="Уведіть новий юзернейм"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="274dp" />
+
+                <ImageButton
+                    android:id="@+id/closeButtonNicknamePopup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@null"
+                    android:contentDescription="@string/fun_button"
+                    app:srcCompat="@drawable/close_btn"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/username_input_layout"
@@ -67,7 +78,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/savePasswordPopup"
+                android:id="@+id/Next1"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

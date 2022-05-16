@@ -1,5 +1,6 @@
 package com.example.vasarely.view
 
+import android.app.ProgressDialog
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
@@ -29,18 +30,6 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
-            if (!preferencesAreSelected) {
-                val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
-                findNavController().navigate(action)
-            }
-            else appViewModel.getData()
-        }
-
-        appViewModel.userData.observe(viewLifecycleOwner) {
-            appViewModel.processData(it)
-        }
-
         appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
@@ -51,6 +40,42 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fun showData() {
+            // Show data
+        }
+
+        val progressDialog = ProgressDialog(requireContext())
+
+        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+
+            appViewModel.setUserDBStatus()
+            if (progressDialog.isShowing) progressDialog.dismiss()
+
+            if (!preferencesAreSelected) {
+                val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
+                findNavController().navigate(action)
+            }
+            else appViewModel.getData()
+        }
+
+        appViewModel.userData.observe(viewLifecycleOwner) {
+            appViewModel.processData(it)
+
+            showData()
+
+        }
+
+        if (!appViewModel.isLocalDataInitialized()) {
+            if (appViewModel.isUserDBInitialized())
+                appViewModel.getData()
+            else {
+                progressDialog.setMessage("Зачекайте, триває завантаження...")
+                progressDialog.setCancelable(false)
+                progressDialog.show()
+            }
+        }
+        else showData()
 
         //val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)

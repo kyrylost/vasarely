@@ -16,14 +16,6 @@
             android:paddingTop="2.5dp"
             android:paddingBottom="2.5dp">
 
-            <ImageButton
-                android:id="@+id/closeButtonSettingsPopup"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@string/fun_button"
-                app:srcCompat="@drawable/close_btn" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +28,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="#00FFFFFF"
                     app:srcCompat="@drawable/like_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -48,6 +40,15 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center_vertical"
                     android:text="@string/Like_text" />
+
+                <ImageButton
+                    android:id="@+id/closeButtonSettingsPopup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:contentDescription="@string/fun_button"
+                    app:srcCompat="@drawable/close_btn"
+                    tools:ignore="TouchTargetSizeCheck" />
 
             </LinearLayout>
 
@@ -63,7 +64,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
                     app:srcCompat="@drawable/new_pref_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
@@ -92,7 +93,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
                     app:srcCompat="@drawable/settings_nickname_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
@@ -120,7 +121,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
                     app:srcCompat="@drawable/key_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
@@ -149,7 +150,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="#00FFFFFF"
                     app:srcCompat="@drawable/logout_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
