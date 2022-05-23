@@ -48,5 +48,6 @@
     <string name="key_text">Змінити пароль</string>
     <string name="logout_text">Вийти</string>
     <string name="save_button">Зберегти</string>
+    <string name="Search_hint">Glory to Ukraine!</string>
 
 </resources>
