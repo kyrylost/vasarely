@@ -7,10 +7,10 @@
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/main_screen.xml" value="0.1" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/search_screen.xml" value="0.3625" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/change_password_popup.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/change_password_popup.xml" value="0.25" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/main_screen.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/menu_user_personal_page_screen.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/menu_user_personal_page_screen.xml" value="0.21" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/new_preferences_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/nickname_change_popup.xml" value="0.25" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.17074275362318841" />
@@ -30,7 +30,9 @@
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.23505434782608695" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/font/fonts.xml" value="0.28020833333333334" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/add_new_photo_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/change_password_popup.xml" value="0.25267249757045673" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/first_category_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.24003623188405798" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/main_screen.xml" value="0.264" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/menu_user_personal_page_screen.xml" value="0.4" />
@@ -38,7 +40,9 @@
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/nickname_change_popup.xml" value="0.41876629018245004" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.176" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/search_screen.xml" value="0.4" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/second_category_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/third_category_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.264" />
       </map>

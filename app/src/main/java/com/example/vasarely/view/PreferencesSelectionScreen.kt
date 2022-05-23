@@ -114,7 +114,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             }else{
                 compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 compGraph.setTextColor(Color.BLACK)
-                min -= 1
+                min1 -= 1
             }
         }
 
@@ -133,7 +133,7 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
         binding.funButton.setOnClickListener {
             val funBut = binding.funButton
             funButtonClicked += 1
-            if (funButtonClicked > 2) depressedButtonClicked = 1
+            if (funButtonClicked > 2) funButtonClicked = 1
             if (funButtonClicked != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)}
