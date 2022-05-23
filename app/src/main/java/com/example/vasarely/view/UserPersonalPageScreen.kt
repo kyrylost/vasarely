@@ -4,17 +4,14 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
+import android.content.res.Resources
+import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -26,6 +23,7 @@ import com.example.vasarely.viewmodel.AppViewModel
 import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 
+
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
     private val appViewModel: AppViewModel by activityViewModels()
@@ -33,7 +31,23 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private val binding get() = _binding!!
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
-    var addWorkPopupImage: ImageView? = null
+    private var addWorkPopupImage: ImageView? = null
+
+    private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+        layoutParams<ViewGroup.MarginLayoutParams> {
+            left?.run { leftMargin = dpToPx(this) }
+            top?.run { topMargin = dpToPx(this) }
+            right?.run { rightMargin = dpToPx(this) }
+            bottom?.run { bottomMargin = dpToPx(this) }
+        }
+    }
+
+    private inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() -> Unit) {
+        if (layoutParams is T) block(layoutParams as T)
+    }
+
+    //private fun pxToDp(px: Float): Int = (px / Resources.getSystem().displayMetrics.density).toInt()
+    private fun dpToPx(dp: Float): Int = (dp * Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +73,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         binding.username.text = appViewModel.localData.username
 
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
         val montserratBoldFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont: Typeface? =
@@ -66,8 +82,103 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         binding.username.typeface = montserratBoldFont
         binding.subs.typeface = montserratBoldFont
+        binding.subsNumber.typeface = montserratRegularFont
         binding.follow.typeface = montserratBoldFont
+        binding.followNumber.typeface = montserratRegularFont
         binding.addWork.typeface = montserratBoldFont
+
+
+        fun showPosts() {
+            fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
+                val matrix = Matrix()
+                matrix.postRotate(angle)
+                return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+            }
+
+            val postsAmount = appViewModel.profileData.postsAmount
+            val lines: Double = postsAmount / 3.0
+            val lastLinePosts = ((lines * 10).toInt() % 10) / 3
+            Log.d("lines", lines.toString())
+            Log.d("lines", lines.toInt().toString())
+
+            Log.d("lastLinePosts", lastLinePosts.toString())
+
+            val imagesBitmaps = appViewModel.profileData.allUserPostsData
+            var currentPost = 0
+
+            for (line in 1..lines.toInt()) {
+                val horizontalLinearLayout = LinearLayout(context)
+                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+                for (postNumber in 1..3) {
+                    val postImageView = ImageView(context)
+
+                    val params = screenWidth / 3 - dpToPx(80F / 3)
+                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
+
+                    postImageView.layoutParams = postLinearLayoutParams
+                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+
+                    when (postNumber) {
+                        1 -> postImageView.margin(30F, 10F, 0F, 0F)
+                        2 -> postImageView.margin(10F, 10F, 0F, 0F)
+                        3 -> {
+                            if (line == lines.toInt() && lastLinePosts == 0)
+                                postImageView.margin(10F, 10F, 30F, 88F)
+                            else postImageView.margin(10F, 10F, 30F, 0F)
+                        }
+                    }
+
+                    Log.d("bytes",imagesBitmaps[currentPost].byteCount.toString())
+
+                    if (imagesBitmaps[currentPost].byteCount < 50135040)
+                        postImageView.setImageBitmap(imagesBitmaps[currentPost])
+                    else postImageView.setImageBitmap(rotateImage(imagesBitmaps[currentPost], 90f))
+                    currentPost += 1
+                    horizontalLinearLayout.addView(postImageView)
+                }
+                binding.postsLinearLayout.addView(horizontalLinearLayout)
+            }
+
+            if (lastLinePosts != 0){
+                val horizontalLinearLayout = LinearLayout(context)
+                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+                for (postNumber in 1..lastLinePosts) {
+                    val postImageView = ImageView(context)
+
+                    val params = screenWidth / 3 - dpToPx(80F / 3)
+                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
+
+                    postImageView.layoutParams = postLinearLayoutParams
+                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+
+                    when (postNumber) {
+                        1 -> {
+                            if (postNumber == lastLinePosts)
+                                postImageView.margin(30F, 10F, 0F, 88F)
+                            else postImageView.margin(30F, 10F, 0F, 0F)
+
+                        }
+                        2 -> postImageView.margin(10F, 10F, 0F, 88F)
+                    }
+
+                    Log.d("bytes",imagesBitmaps[currentPost].byteCount.toString())
+
+                    postImageView.setImageBitmap(rotateImage(imagesBitmaps[currentPost], 90f))
+                    currentPost += 1
+                    horizontalLinearLayout.addView(postImageView)
+                }
+                binding.postsLinearLayout.addView(horizontalLinearLayout)
+
+            }
+        }
+
+        if (appViewModel.isProfileDataInitialized()) showPosts()
+
+        appViewModel.allUserPosts.observe(viewLifecycleOwner) {
+            appViewModel.saveImagesToLocalDB(it).apply {//let
+                showPosts()
+            }
+        }
 
         //----------------------------Navigation between screens------------------------------------
         //to SearchScreen

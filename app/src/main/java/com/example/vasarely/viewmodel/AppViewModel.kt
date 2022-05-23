@@ -1,10 +1,13 @@
 package com.example.vasarely.viewmodel
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
+import com.example.vasarely.model.ProfileData
 import com.example.vasarely.model.UserData
 import java.util.*
 import kotlin.collections.HashMap
@@ -14,12 +17,16 @@ class AppViewModel: ViewModel() {
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
     lateinit var localData: UserData
+    lateinit var profileData: ProfileData
+    lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
     lateinit var userDB: String
 
 
     fun isLocalDataInitialized() = ::localData.isInitialized
+
+    fun isProfileDataInitialized() = ::profileData.isInitialized
 
     fun isUserDBInitialized() = ::userDB.isInitialized
 
@@ -37,6 +44,7 @@ class AppViewModel: ViewModel() {
 
         userMutableLiveData = database.userMutableLiveData
         userData = database.userData
+        allUserPosts = database.allUserPosts
         dataChangeExceptions = database.dataChangeExceptions
     }
 
@@ -124,5 +132,10 @@ class AppViewModel: ViewModel() {
             asBoolean(caricatureButtonSelected), asBoolean(nudeButtonSelected),
             asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected)
         )
+    }
+
+    fun saveImagesToLocalDB(imagesBitmapList: List<Bitmap>) {
+        Log.d("imagesBitmapList", imagesBitmapList.count().toString())
+        profileData = ProfileData(imagesBitmapList)
     }
 }

@@ -1,4 +1,7 @@
 package com.example.vasarely.model
 
-class ProfileData {
+import android.graphics.Bitmap
+
+data class ProfileData (var allUserPostsData : List<Bitmap>) {
+    val postsAmount = allUserPostsData.count()
 }

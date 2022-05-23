@@ -1,8 +1,9 @@
 package com.example.vasarely.model
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -10,7 +11,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlin.properties.Delegates
+import java.io.File
 
 class Database {
 
@@ -26,11 +27,12 @@ class Database {
     private lateinit var storageReference: StorageReference
     private lateinit var imageReference: StorageReference
 
-    private var amountOfWorks by Delegates.notNull<Int>()
+    private var amountOfWorks = 0
     private lateinit var uid: String
 
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
+    lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
 
@@ -44,6 +46,7 @@ class Database {
 
         userMutableLiveData = SingleLiveEvent()
         userData = SingleLiveEvent()
+        allUserPosts = SingleLiveEvent()
         dataChangeExceptions = SingleLiveEvent()
     }
 
@@ -58,7 +61,6 @@ class Database {
                 currentUserDb = databaseReference.child((currentUser.uid))
                 uid = currentUser.uid
                 currentUserDb.child("userData").child("username").setValue(username)
-//                currentUserDb.child("userData").child("worksAmount").setValue(0)
             }
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
@@ -68,7 +70,6 @@ class Database {
     fun login(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener{
             if(firebaseAuth.currentUser != null) {
-                //userMutableLiveData.postValue(true)
 
                 firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
                 databaseReference = firebaseDatabase.reference.child("profiles")
@@ -120,14 +121,16 @@ class Database {
         else techniqueReference.setValue("computerGraphics").addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
         }
-        if (depressedButtonSelected) moodReference.setValue("depressed").addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-        }
-        else if (funButtonSelected) moodReference.setValue("fun").addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-        }
-        else moodReference.setValue("ignore").addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
+        when {
+            depressedButtonSelected -> moodReference.setValue("depressed").addOnFailureListener { exception ->
+                dataChangeExceptions.postValue(exception.toString())
+            }
+            funButtonSelected -> moodReference.setValue("fun").addOnFailureListener { exception ->
+                dataChangeExceptions.postValue(exception.toString())
+            }
+            else -> moodReference.setValue("ignore").addOnFailureListener { exception ->
+                dataChangeExceptions.postValue(exception.toString())
+            }
         }
 
         if (stillLifeButtonSelected) selectedGenres.add("stillLife")
@@ -154,33 +157,41 @@ class Database {
 
     fun getData() {
         currentUserDb.child("userData").get().addOnSuccessListener {
-            Log.d("Success", "Everything is alright with data")
-            Log.d("dataSnapshot", it.toString())
             userData.postValue(it.value)
 
             val dataSnapshot = it.value as HashMap<*, *>
-            Log.d("check" ,dataSnapshot["worksAmount"].toString())
 
             amountOfWorks = if (dataSnapshot["worksAmount"] != null)
                 dataSnapshot["worksAmount"].toString().toInt()
             else
                 0
 
+            val allUserPostsList = mutableListOf<Bitmap>()
+            for (i in 1..amountOfWorks) {
+                val localFile = File.createTempFile("tempImage", "jpg")
+                imageReference = storageReference.child("uploads/$uid/$i")
+                imageReference.getFile(localFile).addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                    allUserPostsList.add(bitmap)
+                }
+            }
+
+            allUserPosts.postValue(allUserPostsList)
+
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
-            Log.d("Fail", "Where the fuck is data")
             getData()
         }
+
     }
 
     fun saveImage(filePath : Uri) {
         amountOfWorks += 1
-
         imageReference = storageReference.child("uploads/$uid/$amountOfWorks")
 
-        currentUserDb.child("userData").child("worksAmount").setValue(amountOfWorks)
-
-        imageReference.putFile(filePath)
+        imageReference.putFile(filePath).addOnSuccessListener {
+            currentUserDb.child("userData").child("worksAmount").setValue(amountOfWorks)
+        }
     }
 
     fun saveImageDescription(description: String) {
@@ -197,16 +208,17 @@ class Database {
                      animeButtonSelected: Boolean, horrorButtonSelected: Boolean) {
 
 
-        if (depressedButtonSelected)
-            currentUserDb.child("profileData").child("posts")
+        when {
+            depressedButtonSelected -> currentUserDb.child("profileData").child("posts")
                 .child("$amountOfWorks").child("hashtags")
                 .child("mood").setValue("depressed")
-        else if (funButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("mood").setValue("fun")
-        else currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("mood").setValue("ignore")
+            funButtonSelected -> currentUserDb.child("profileData").child("posts")
+                .child("$amountOfWorks").child("hashtags")
+                .child("mood").setValue("fun")
+            else -> currentUserDb.child("profileData").child("posts")
+                .child("$amountOfWorks").child("hashtags")
+                .child("mood").setValue("ignore")
+        }
 
 
         if (byHandSelected)
@@ -248,7 +260,5 @@ class Database {
         if (horrorButtonSelected) currentUserDb.child("profileData").child("posts")
             .child("$amountOfWorks").child("hashtags")
             .child("genre").setValue("horror")
-
     }
-
 }
