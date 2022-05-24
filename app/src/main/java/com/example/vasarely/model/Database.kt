@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -167,16 +168,17 @@ class Database {
                 0
 
             val allUserPostsList = mutableListOf<Bitmap>()
+
             for (i in 1..amountOfWorks) {
+                Log.d("i", i.toString())
                 val localFile = File.createTempFile("tempImage", "jpg")
                 imageReference = storageReference.child("uploads/$uid/$i")
                 imageReference.getFile(localFile).addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
                     allUserPostsList.add(bitmap)
+                    if (i == amountOfWorks) allUserPosts.postValue(allUserPostsList)
                 }
             }
-
-            allUserPosts.postValue(allUserPostsList)
 
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
