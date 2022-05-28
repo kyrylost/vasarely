@@ -16,41 +16,51 @@
             android:paddingTop="2.5dp"
             android:paddingBottom="2.5dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/likedPostIcon"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="2.5dp"
-                    android:layout_marginBottom="2.5dp"
-                    android:backgroundTint="#00FFFFFF"
-                    app:srcCompat="@drawable/like_icon"
-                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/likedPostText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:gravity="center_vertical"
-                    android:text="@string/Like_text" />
+                    <ImageButton
+                        android:id="@+id/likedPostIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="2.5dp"
+                        android:layout_marginBottom="2.5dp"
+                        android:backgroundTint="#00FFFFFF"
+                        app:srcCompat="@drawable/like_icon"
+                        tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/likedPostText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center_vertical"
+                        android:text="@string/Like_text" />
+
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/closeButtonSettingsPopup"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
                     android:background="@null"
                     android:contentDescription="@string/fun_button"
                     app:srcCompat="@drawable/close_btn"
                     tools:ignore="TouchTargetSizeCheck" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

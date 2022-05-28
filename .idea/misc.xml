@@ -7,7 +7,6 @@
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/main_screen.xml" value="0.1" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/search_screen.xml" value="0.3625" />
         <entry key="..\:/Users/FER/Desktop/Vasarely/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/change_password_popup.xml" value="0.25" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/main_screen.xml" value="0.17074275362318841" />
@@ -16,11 +15,9 @@
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/nickname_change_popup.xml" value="0.25" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/preferences_selection_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/search_screen.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/second_category_popup.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/Lenovo/Documents/GitHub/vasarely/app/src/main/res/layout/users_to_follow_screen.xml" value="0.2" />
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/drawable/button_by_hand.xml" value="0.1" />
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/activity_main.xml" value="0.23505434782608695" />
         <entry key="..\:/Users/Veronika/StudioProjects/vasarely/app/src/main/res/layout/main_screen.xml" value="0.23505434782608695" />
@@ -48,6 +45,7 @@
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/third_category_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.264" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/users_to_follow_screen.xml" value="0.25" />
       </map>
     </option>
   </component>
