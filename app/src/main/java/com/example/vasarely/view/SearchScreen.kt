@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +57,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
             }
-            else appViewModel.getData()
+            else {
+                appViewModel.getData()
+                appViewModel.recommendationsSearch()
+            }
         }
 
         appViewModel.userData.observe(viewLifecycleOwner) {
@@ -67,8 +71,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
         if (!appViewModel.isLocalDataInitialized()) {
-            if (appViewModel.isUserDBInitialized())
+            if (appViewModel.isUserDBInitialized()) {
                 appViewModel.getData()
+                appViewModel.recommendationsSearch()
+            }
             else {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")
                 progressDialog.setCancelable(false)

@@ -62,6 +62,8 @@ class Database {
                 currentUserDb = databaseReference.child((currentUser.uid))
                 uid = currentUser.uid
                 currentUserDb.child("userData").child("username").setValue(username)
+                currentUserDb.child("userData").child("worksAmount").setValue(0)
+                currentUserDb.child("profileData").child("posts").setValue(1)
             }
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
@@ -153,6 +155,51 @@ class Database {
     fun updateName(newNickname: String) {
         currentUserDb.child("username").setValue(newNickname).addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
+        }
+    }
+
+    fun recommendationsSearch() {
+        fun getPostData(allUserData: String) {
+
+        }
+        databaseReference.get().addOnSuccessListener {
+
+            for (snapshot in it.children) {
+                Log.d("snapshot", snapshot.toString())
+                for ((i, data) in snapshot.children.withIndex()) {
+                    if (i == 0) Log.d("Debug", "Profile!!!!!!")
+                    else Log.d("Debug", "User!!!!!!")
+                    Log.d("i", data.toString())
+                }
+
+            }
+
+//            val D = it
+//            Log.d("D", D.toString())
+//            val DS = it.value
+//            Log.d("DS", DS.toString())
+//            val DSH = DS as HashMap<*, *>
+//            Log.d("DSH", DSH.toString())
+
+            val dataSnapshot = it.value as HashMap<*, *>
+            for (allUserData in dataSnapshot) {
+
+                if (allUserData.key != uid) {
+                    val userAndProfileData = allUserData.value as HashMap<*, *>
+                    val userData = userAndProfileData.values
+                    for (i in userData) {
+                        if (i is HashMap<*, *>)
+                            if (i["worksAmount"] != null){
+                                //Log.d("i", (i["worksAmount"].toString()))
+                                //Log.d("ProfileData", userAndProfileData["profileData"].toString())
+                                getPostData(it.toString())
+                            }
+                    }
+                }
+            }
+
+        } .addOnFailureListener {
+            //
         }
     }
 

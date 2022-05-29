@@ -138,4 +138,11 @@ class AppViewModel: ViewModel() {
         Log.d("imagesBitmapList", imagesBitmapList.count().toString())
         profileData = ProfileData(imagesBitmapList)
     }
+
+    fun findPostsToRecommend(data: HashMap<*, *>) {
+
+    }
+    fun recommendationsSearch() {
+        database.recommendationsSearch()
+    }
 }
