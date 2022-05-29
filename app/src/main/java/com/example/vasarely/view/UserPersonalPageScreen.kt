@@ -130,9 +130,23 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                     Log.d("bytes",imagesBitmaps[currentPost].byteCount.toString())
 
+                    val newCurrentPost = currentPost
+                    postImageView.setOnClickListener {
+                        val dialogBuilder = AlertDialog.Builder(context)
+                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
+
+                        dialogBuilder.setView(popupView)
+                        val addNoteDialog = dialogBuilder.create()
+                        addNoteDialog.show()
+
+                        val postImg = popupView.findViewById<ImageView>(R.id.Post)
+                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
+                    }
+
                     if (imagesBitmaps[currentPost].byteCount < 50135040)
                         postImageView.setImageBitmap(imagesBitmaps[currentPost])
                     else postImageView.setImageBitmap(rotateImage(imagesBitmaps[currentPost], 90f))
+
                     currentPost += 1
                     horizontalLinearLayout.addView(postImageView)
                 }
@@ -689,6 +703,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 }
             }
         }
+
     }
 
     private fun launchGallery() {
