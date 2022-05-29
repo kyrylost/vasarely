@@ -13,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
 
 class Database {
 
@@ -165,11 +167,44 @@ class Database {
         databaseReference.get().addOnSuccessListener {
 
             for (snapshot in it.children) {
-                Log.d("snapshot", snapshot.toString())
-                for ((i, data) in snapshot.children.withIndex()) {
-                    if (i == 0) Log.d("Debug", "Profile!!!!!!")
-                    else Log.d("Debug", "User!!!!!!")
-                    Log.d("i", data.toString())
+                if (snapshot.key != uid) {
+                    Log.d("snapshot", snapshot.toString())
+                    val posts = mutableMapOf<Int, Any?>()
+                    for ((dataIndex, data) in snapshot.children.withIndex()) {
+                        if (dataIndex == 0) {
+                            Log.d("Debug", "Profile!!!!!!")
+                            for (post in data.children) {
+                                for (postNumberAndTags in post.children) {
+                                    Log.d("children", postNumberAndTags.toString())
+                                    val postNumberAndTagsHashMap = postNumberAndTags.value as HashMap<*, *>
+                                    val postTagsList = postNumberAndTagsHashMap.values
+                                    val tags = mutableListOf<String>()
+                                    for ((jIndex, j) in postTagsList.withIndex()) {
+                                        if (jIndex == 0) {
+                                            j as HashMap<*, *>
+                                            tags.add(j["mood"].toString())
+                                            tags.add(j["genre"].toString())
+                                            tags.add(j["technique"].toString())
+                                        }
+                                        else tags.add(j as String)
+                                    }
+                                    Log.d("abjsdkasdjkn", tags.toString())
+                                    posts[postNumberAndTags.key!!.toInt()] = tags
+                                }
+                                Log.d("posts", posts.toString())
+
+                            }
+                        }
+                        else {
+                            Log.d("Debug", "User!!!!!!")
+                            for (child in data.children) {
+                                if (child.key == "worksAmount" && child.value != 0) {
+                                    //
+                                }
+                            }
+                        }
+                        Log.d("i", data.toString())
+                    }
                 }
 
             }
