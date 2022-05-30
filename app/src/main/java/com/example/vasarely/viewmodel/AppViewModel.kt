@@ -19,6 +19,8 @@ class AppViewModel: ViewModel() {
     lateinit var localData: UserData
     lateinit var profileData: ProfileData
     lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
+    lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
+    lateinit var recommendedPost: SingleLiveEvent<Bitmap>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
     lateinit var userDB: String
@@ -45,7 +47,10 @@ class AppViewModel: ViewModel() {
         userMutableLiveData = database.userMutableLiveData
         userData = database.userData
         allUserPosts = database.allUserPosts
+        recommendationsToProcess = database.recommendationsToProcess
         dataChangeExceptions = database.dataChangeExceptions
+        recommendedPost = database.recommendation
+
     }
 
     fun register(email: String, password: String, username: String) =
@@ -65,14 +70,30 @@ class AppViewModel: ViewModel() {
         animeButtonSelected: Int, horrorButtonSelected: Int
     ) {
 
+        val selectedGenres = mutableListOf<String>()
+
+        val technique : String = if (asBoolean(byHandSelected) && asBoolean(computerGraphicsSelected)) "ignore"
+        else if (asBoolean(byHandSelected)) "byHand"
+        else "computerGraphics"
+
+        val mood : String = if (asBoolean(depressedButtonSelected) && asBoolean(funButtonSelected)) "ignore"
+        else if (asBoolean(funButtonSelected)) "fun"
+        else if (asBoolean(depressedButtonSelected)) "depressed"
+        else "ignore"
+
+        if (asBoolean(stillLifeButtonSelected)) selectedGenres.add("stillLife")
+        if (asBoolean(portraitButtonSelected)) selectedGenres.add("portrait")
+        if (asBoolean(landscapeButtonSelected)) selectedGenres.add("landscape")
+        if (asBoolean(marineButtonSelected)) selectedGenres.add("marine")
+        if (asBoolean(battlePaintingButtonSelected)) selectedGenres.add("battlePainting")
+        if (asBoolean(interiorButtonSelected)) selectedGenres.add("interior")
+        if (asBoolean(caricatureButtonSelected)) selectedGenres.add("caricature")
+        if (asBoolean(nudeButtonSelected)) selectedGenres.add("nude")
+        if (asBoolean(animeButtonSelected)) selectedGenres.add("anime")
+        if (asBoolean(horrorButtonSelected)) selectedGenres.add("horror")
+
         database.savePreference(
-            asBoolean(byHandSelected), asBoolean(computerGraphicsSelected),
-            asBoolean(depressedButtonSelected), asBoolean(funButtonSelected),
-            asBoolean(stillLifeButtonSelected), asBoolean(portraitButtonSelected),
-            asBoolean(landscapeButtonSelected), asBoolean(marineButtonSelected),
-            asBoolean(battlePaintingButtonSelected), asBoolean(interiorButtonSelected),
-            asBoolean(caricatureButtonSelected), asBoolean(nudeButtonSelected),
-            asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected)
+            technique, mood, selectedGenres
         )
 
     }
@@ -115,7 +136,7 @@ class AppViewModel: ViewModel() {
     }
 
     fun saveImageData(
-        byHandSelected: Int,
+        byHandSelected: Int ,
         depressedButtonSelected: Int, funButtonSelected: Int,
         stillLifeButtonSelected: Int, portraitButtonSelected: Int,
         landscapeButtonSelected: Int, marineButtonSelected: Int,
@@ -135,12 +156,38 @@ class AppViewModel: ViewModel() {
     }
 
     fun saveImagesToLocalDB(imagesBitmapList: List<Bitmap>) {
-        Log.d("imagesBitmapList", imagesBitmapList.count().toString())
         profileData = ProfileData(imagesBitmapList)
     }
 
-    fun findPostsToRecommend(data: HashMap<*, *>) {
+    fun findPostsToRecommend(postsData : List<Map<Int, Any?>>) {
+        var correspondsToPreference = 0
+        for (singlePostData in postsData) {
+            for (singlePostDataMap in singlePostData) {
+                val singlePostDataMapValue = singlePostDataMap.value as List<*>
+                val postMood = singlePostDataMapValue[0]
+                val postsGenre = singlePostDataMapValue[1]
+                val postTechnique = singlePostDataMapValue[2]
 
+                if (localData.moodReference == "ignore") correspondsToPreference += 25
+                else if (postMood == localData.moodReference) correspondsToPreference += 25
+
+                for (genre in localData.genreReferences) {
+                    if (genre == postsGenre) {
+                        correspondsToPreference += 50
+                    }
+                }
+
+                if (localData.techniqueReference == "ignore") correspondsToPreference += 25
+                else if (postTechnique == localData.techniqueReference) correspondsToPreference += 25
+
+
+                if (correspondsToPreference >= 50) {database.getImage(singlePostDataMapValue[4] as String,
+                    singlePostDataMap.key.toString())
+                Log.d("correspondsToPreference", "true")
+                }
+            }
+
+        }
     }
     fun recommendationsSearch() {
         database.recommendationsSearch()

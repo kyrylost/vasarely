@@ -2,6 +2,8 @@ package com.example.vasarely.view
 
 import android.app.ProgressDialog
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -24,6 +27,21 @@ class SearchScreen : Fragment(R.layout.search_screen) {
     private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
+
+    private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+        layoutParams<ViewGroup.MarginLayoutParams> {
+            left?.run { leftMargin = dpToPx(this) }
+            top?.run { topMargin = dpToPx(this) }
+            right?.run { rightMargin = dpToPx(this) }
+            bottom?.run { bottomMargin = dpToPx(this) }
+        }
+    }
+
+    private inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() -> Unit) {
+        if (layoutParams is T) block(layoutParams as T)
+    }
+
+    private fun dpToPx(dp: Float): Int = (dp * Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,11 +81,47 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             }
         }
 
+        appViewModel.recommendedPost
+            .observe(viewLifecycleOwner) { post ->
+
+                fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
+                    val matrix = Matrix()
+                    matrix.postRotate(angle)
+                    return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+                }
+
+
+                val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
+                val postImageView = ImageView(context)
+
+                val params = screenWidth - dpToPx(60F)
+                val postLinearLayoutParams = LinearLayout.LayoutParams(params, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+                postImageView.layoutParams = postLinearLayoutParams
+                postImageView.scaleType = ImageView.ScaleType.FIT_START
+
+                postImageView.adjustViewBounds = true
+
+                postImageView.margin(30F, 15F, 30F, 15F)
+
+                if (post.byteCount < 50135040)
+                    postImageView.setImageBitmap(post)
+                else postImageView.setImageBitmap(rotateImage(post, 90f))
+                binding.recs.addView(postImageView)
+        }
+
+
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
-
             showData()
+        }
 
+        appViewModel.recommendationsToProcess.observe(viewLifecycleOwner) {
+            if (appViewModel.isLocalDataInitialized()) {
+                appViewModel.findPostsToRecommend(it)
+            }
+            else Toast.makeText(requireContext(), "Can't show your recommendations now, try later", Toast.LENGTH_SHORT).show()
         }
 
         if (!appViewModel.isLocalDataInitialized()) {
@@ -97,27 +151,6 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         logoParams.height = searchInputLayoutHeight
         logo.layoutParams = logoParams
 
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-
-        var statusBarHeight = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            statusBarHeight = resources.getDimensionPixelSize(resourceId)
-        }
-
-        binding.inputCardView.measure(0,0)
-        binding.footerSearch.measure(0,0)
-
-        val inputCardViewHeight = binding.inputCardView.measuredHeight
-        val footerHeight = binding.footerSearch.measuredHeight
-
-        val scrollView : ScrollView = binding.scroll
-        val scrollViewParams: ViewGroup.LayoutParams = scrollView.layoutParams
-
-        scrollViewParams.height = screenHeight - footerHeight - inputCardViewHeight - statusBarHeight
-        scrollViewParams.width = screenWidth
-        scrollView.layoutParams = scrollViewParams
 
         //----------------------------Navigation between screens---------------------------------------
         binding.homeButton.setOnClickListener {

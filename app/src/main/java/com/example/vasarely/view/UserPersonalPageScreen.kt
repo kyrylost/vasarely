@@ -143,6 +143,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         if (imagesBitmaps[newCurrentPost].byteCount < 50135040)
                             postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
                         else postImg.setImageBitmap(rotateImage(imagesBitmaps[newCurrentPost], 90f))
+                        postImg.adjustViewBounds = true
                     }
 
                     if (imagesBitmaps[currentPost].byteCount < 50135040)
@@ -192,6 +193,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         if (imagesBitmaps[newCurrentPost].byteCount < 50135040)
                             postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
                         else postImg.setImageBitmap(rotateImage(imagesBitmaps[newCurrentPost], 90f))
+                        postImg.adjustViewBounds = true
                     }
 
                     if (imagesBitmaps[currentPost].byteCount < 50135040)

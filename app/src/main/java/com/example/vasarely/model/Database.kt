@@ -13,7 +13,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
-import java.util.*
 import kotlin.collections.HashMap
 
 class Database {
@@ -36,7 +35,10 @@ class Database {
     lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
     lateinit var userData: SingleLiveEvent<Any>
     lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
+    lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
+
+    lateinit var recommendation: SingleLiveEvent<Bitmap>
 
 
     fun initDatabase(application: Application) {
@@ -50,7 +52,10 @@ class Database {
         userMutableLiveData = SingleLiveEvent()
         userData = SingleLiveEvent()
         allUserPosts = SingleLiveEvent()
+        recommendationsToProcess = SingleLiveEvent()
         dataChangeExceptions = SingleLiveEvent()
+
+        recommendation = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) {
@@ -101,15 +106,7 @@ class Database {
         firebaseAuth.signOut()
     }
 
-    fun savePreference(byHandSelected: Boolean, computerGraphicsSelected: Boolean,
-                       depressedButtonSelected: Boolean, funButtonSelected: Boolean,
-                       stillLifeButtonSelected: Boolean, portraitButtonSelected: Boolean,
-                       landscapeButtonSelected: Boolean, marineButtonSelected: Boolean,
-                       battlePaintingButtonSelected: Boolean, interiorButtonSelected: Boolean,
-                       caricatureButtonSelected: Boolean, nudeButtonSelected: Boolean,
-                       animeButtonSelected: Boolean, horrorButtonSelected: Boolean) {
-
-        val selectedGenres = mutableListOf<String>()
+    fun savePreference(technique : String, mood : String, selectedGenres : List<String>) {
 
         preferencesReference = currentUserDb.child("userData").child("preferences")
 
@@ -117,37 +114,13 @@ class Database {
         val moodReference = preferencesReference.child("mood")
         val genresReference = preferencesReference.child("genres")
 
-        if (byHandSelected && computerGraphicsSelected) techniqueReference.setValue("ignore").addOnFailureListener { exception ->
+        techniqueReference.setValue(technique).addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
-        }
-        else if (byHandSelected) techniqueReference.setValue("byHand").addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-        }
-        else techniqueReference.setValue("computerGraphics").addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-        }
-        when {
-            depressedButtonSelected -> moodReference.setValue("depressed").addOnFailureListener { exception ->
-                dataChangeExceptions.postValue(exception.toString())
-            }
-            funButtonSelected -> moodReference.setValue("fun").addOnFailureListener { exception ->
-                dataChangeExceptions.postValue(exception.toString())
-            }
-            else -> moodReference.setValue("ignore").addOnFailureListener { exception ->
-                dataChangeExceptions.postValue(exception.toString())
-            }
         }
 
-        if (stillLifeButtonSelected) selectedGenres.add("stillLife")
-        if (portraitButtonSelected) selectedGenres.add("portrait")
-        if (landscapeButtonSelected) selectedGenres.add("landscape")
-        if (marineButtonSelected) selectedGenres.add("marine")
-        if (battlePaintingButtonSelected) selectedGenres.add("battlePainting")
-        if (interiorButtonSelected) selectedGenres.add("interior")
-        if (caricatureButtonSelected) selectedGenres.add("caricature")
-        if (nudeButtonSelected) selectedGenres.add("nude")
-        if (animeButtonSelected) selectedGenres.add("anime")
-        if (horrorButtonSelected) selectedGenres.add("horror")
+        moodReference.setValue(mood).addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
 
         genresReference.setValue(selectedGenres).addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
@@ -161,21 +134,15 @@ class Database {
     }
 
     fun recommendationsSearch() {
-        fun getPostData(allUserData: String) {
-
-        }
         databaseReference.get().addOnSuccessListener {
-
+            val recommendationsToProcessList = mutableListOf<Map<Int, Any?>>()
             for (snapshot in it.children) {
                 if (snapshot.key != uid) {
-                    Log.d("snapshot", snapshot.toString())
-                    val posts = mutableMapOf<Int, Any?>()
+                    val postsData = mutableMapOf<Int, Any?>()
                     for ((dataIndex, data) in snapshot.children.withIndex()) {
                         if (dataIndex == 0) {
-                            Log.d("Debug", "Profile!!!!!!")
                             for (post in data.children) {
                                 for (postNumberAndTags in post.children) {
-                                    Log.d("children", postNumberAndTags.toString())
                                     val postNumberAndTagsHashMap = postNumberAndTags.value as HashMap<*, *>
                                     val postTagsList = postNumberAndTagsHashMap.values
                                     val tags = mutableListOf<String>()
@@ -186,55 +153,44 @@ class Database {
                                             tags.add(j["genre"].toString())
                                             tags.add(j["technique"].toString())
                                         }
-                                        else tags.add(j as String)
+                                        else {
+                                            tags.add(j as String)
+                                            tags.add(snapshot.key as String)
+                                        }
                                     }
-                                    Log.d("abjsdkasdjkn", tags.toString())
-                                    posts[postNumberAndTags.key!!.toInt()] = tags
+                                    postsData[postNumberAndTags.key!!.toInt()] = tags
                                 }
-                                Log.d("posts", posts.toString())
-
                             }
                         }
+
                         else {
-                            Log.d("Debug", "User!!!!!!")
                             for (child in data.children) {
-                                if (child.key == "worksAmount" && child.value != 0) {
-                                    //
+                                if (child.key == "worksAmount" && child.value != 0L) {
+                                    recommendationsToProcessList.add(postsData)
+                                    Log.d("Posts", postsData.toString())
                                 }
                             }
                         }
-                        Log.d("i", data.toString())
-                    }
-                }
-
-            }
-
-//            val D = it
-//            Log.d("D", D.toString())
-//            val DS = it.value
-//            Log.d("DS", DS.toString())
-//            val DSH = DS as HashMap<*, *>
-//            Log.d("DSH", DSH.toString())
-
-            val dataSnapshot = it.value as HashMap<*, *>
-            for (allUserData in dataSnapshot) {
-
-                if (allUserData.key != uid) {
-                    val userAndProfileData = allUserData.value as HashMap<*, *>
-                    val userData = userAndProfileData.values
-                    for (i in userData) {
-                        if (i is HashMap<*, *>)
-                            if (i["worksAmount"] != null){
-                                //Log.d("i", (i["worksAmount"].toString()))
-                                //Log.d("ProfileData", userAndProfileData["profileData"].toString())
-                                getPostData(it.toString())
-                            }
                     }
                 }
             }
 
-        } .addOnFailureListener {
-            //
+            recommendationsToProcess.postValue(recommendationsToProcessList)
+
+        } .addOnFailureListener { exception ->
+            dataChangeExceptions.postValue(exception.toString())
+        }
+    }
+
+    fun getImage(uid : String, postNumber : String) {
+        val localFile = File.createTempFile("tempImage", "jpg")
+        Log.d("postNumber", postNumber)
+        val p = postNumber.toInt()
+        imageReference = storageReference.child("uploads/$uid/$p")
+        imageReference.getFile(localFile).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+            recommendation.postValue(bitmap)
+            Log.d("bitmap",bitmap.toString())
         }
     }
 

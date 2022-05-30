@@ -52,6 +52,8 @@
             app:boxCornerRadiusBottomStart="20dp"
             app:boxCornerRadiusTopEnd="20dp"
             app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/accent"
+            app:hintTextColor="@color/accent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -62,6 +64,7 @@
                 android:hint="Опис"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
+                android:textCursorDrawable="@null"
                 android:visibility="visible" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -69,8 +72,8 @@
         <Button
             android:id="@+id/addNewPhotoNextButton"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="142dp"
-            android:layout_height="39dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="30dp"
@@ -80,17 +83,16 @@
             android:insetBottom="0dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="6dp"
-            android:paddingRight="18dp"
-            android:paddingBottom="6dp"
-            android:stateListAnimator="@null"
+            android:paddingLeft="48dp"
+            android:paddingTop="16dp"
+            android:paddingRight="48dp"
+            android:paddingBottom="16dp"
             android:text="Далі"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:boxBackgroundMode="outline"
-            app:cornerRadius="10dp"
+            app:cornerRadius="20dp"
             tools:ignore="TouchTargetSizeCheck"
             tools:layout_editor_absoluteX="200dp"
             tools:layout_editor_absoluteY="369dp" />
