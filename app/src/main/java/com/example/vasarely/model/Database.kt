@@ -128,7 +128,7 @@ class Database {
     }
 
     fun updateName(newNickname: String) {
-        currentUserDb.child("username").setValue(newNickname).addOnFailureListener { exception ->
+        currentUserDb.child("userData").child("username").setValue(newNickname).addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
         }
     }
@@ -239,66 +239,17 @@ class Database {
             .child("$amountOfWorks").child("description").setValue(description)
     }
 
-    fun saveHashtags(byHandSelected: Boolean,
-                     depressedButtonSelected: Boolean, funButtonSelected: Boolean,
-                     stillLifeButtonSelected: Boolean, portraitButtonSelected: Boolean,
-                     landscapeButtonSelected: Boolean, marineButtonSelected: Boolean,
-                     battlePaintingButtonSelected: Boolean, interiorButtonSelected: Boolean,
-                     caricatureButtonSelected: Boolean, nudeButtonSelected: Boolean,
-                     animeButtonSelected: Boolean, horrorButtonSelected: Boolean) {
+    fun saveHashtags(technique : String, mood : String, genre : String) {
+        currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("mood").setValue(mood)
 
+        currentUserDb.child("profileData").child("posts")
+            .child("$amountOfWorks").child("hashtags")
+            .child("technique").setValue(technique)
 
-        when {
-            depressedButtonSelected -> currentUserDb.child("profileData").child("posts")
-                .child("$amountOfWorks").child("hashtags")
-                .child("mood").setValue("depressed")
-            funButtonSelected -> currentUserDb.child("profileData").child("posts")
-                .child("$amountOfWorks").child("hashtags")
-                .child("mood").setValue("fun")
-            else -> currentUserDb.child("profileData").child("posts")
-                .child("$amountOfWorks").child("hashtags")
-                .child("mood").setValue("ignore")
-        }
-
-
-        if (byHandSelected)
-            currentUserDb.child("profileData").child("posts")
-                .child("$amountOfWorks").child("hashtags")
-                .child("technique").setValue("byHand")
-        else currentUserDb.child("profileData").child("posts")
+        currentUserDb.child("profileData").child("posts")
             .child("$amountOfWorks").child("hashtags")
-            .child("technique").setValue("computerGraphics")
-
-
-        if (stillLifeButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("stillLife")
-        if (portraitButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("portrait")
-        if (landscapeButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("landscape")
-        if (marineButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("marine")
-        if (battlePaintingButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("battlePainting")
-        if (interiorButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("interior")
-        if (caricatureButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("caricature")
-        if (nudeButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("nude")
-        if (animeButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("anime")
-        if (horrorButtonSelected) currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue("horror")
+            .child("genre").setValue(genre)
     }
 }

@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_weight="1"
-                android:text="@string/second_category_min"
+                android:text="(лише 1)"
                 android:textColor="@color/design_default_color_on_secondary"
                 android:textSize="12sp" />
         </LinearLayout>

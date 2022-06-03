@@ -2,6 +2,8 @@ package com.example.vasarely.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +11,8 @@ import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
 import com.example.vasarely.model.ProfileData
 import com.example.vasarely.model.UserData
+import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -23,7 +27,13 @@ class AppViewModel: ViewModel() {
     lateinit var recommendedPost: SingleLiveEvent<Bitmap>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
 
+    lateinit var savingImageFilePath: SavingImageFilePath
+
     lateinit var userDB: String
+
+    var postsAmount = 0
+    var lines = 0.0
+    var lastLinePosts = 0
 
 
     fun isLocalDataInitialized() = ::localData.isInitialized
@@ -38,6 +48,22 @@ class AppViewModel: ViewModel() {
 
     private fun asBoolean(int: Int): Boolean {
         return (int == 1)
+    }
+
+
+    private fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
+        Log.d("rotateImage", "--------")
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+    }
+
+    private fun compressBitmap(bitmap: Bitmap, quality: Int) : Bitmap{
+        Log.d("compressBitmap", "--------")
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+        val byteArray = stream.toByteArray()
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
 
 
@@ -127,36 +153,100 @@ class AppViewModel: ViewModel() {
         localData = UserData(username, technique, mood, genres)
     }
 
-    fun saveImage(filePath: Uri) {
-        database.saveImage(filePath)
+    fun saveImageFilePath(filePath: Uri) {
+        savingImageFilePath = SavingImageFilePath(filePath)
     }
 
-    fun saveImageDescription(description: String) {
-        database.saveImageDescription(description)
-    }
-
-    fun saveImageData(
-        byHandSelected: Int ,
-        depressedButtonSelected: Int, funButtonSelected: Int,
+    @OptIn(DelicateCoroutinesApi::class)
+    fun saveImageAndData(
+        byHandSelected: Int, funButtonSelected: Int,
         stillLifeButtonSelected: Int, portraitButtonSelected: Int,
         landscapeButtonSelected: Int, marineButtonSelected: Int,
         battlePaintingButtonSelected: Int, interiorButtonSelected: Int,
         caricatureButtonSelected: Int, nudeButtonSelected: Int,
-        animeButtonSelected: Int, horrorButtonSelected: Int) {
+        animeButtonSelected: Int, horrorButtonSelected: Int,
+        description: String) {
 
-        database.saveHashtags(
-            asBoolean(byHandSelected),
-            asBoolean(depressedButtonSelected), asBoolean(funButtonSelected),
-            asBoolean(stillLifeButtonSelected), asBoolean(portraitButtonSelected),
-            asBoolean(landscapeButtonSelected), asBoolean(marineButtonSelected),
-            asBoolean(battlePaintingButtonSelected), asBoolean(interiorButtonSelected),
-            asBoolean(caricatureButtonSelected), asBoolean(nudeButtonSelected),
-            asBoolean(animeButtonSelected), asBoolean(horrorButtonSelected)
-        )
+        fun checkWhatGenreIsSelected(): String {
+            if (asBoolean(stillLifeButtonSelected)) return "stillLife"
+            if (asBoolean(portraitButtonSelected)) return "portrait"
+            if (asBoolean(landscapeButtonSelected)) return "landscape"
+            if (asBoolean(marineButtonSelected)) return "marine"
+            if (asBoolean(battlePaintingButtonSelected)) return "battlePainting"
+            if (asBoolean(interiorButtonSelected)) return "interior"
+            if (asBoolean(caricatureButtonSelected)) return "caricature"
+            if (asBoolean(nudeButtonSelected)) return "nude"
+            if (asBoolean(animeButtonSelected)) return "anime"
+            if (asBoolean(horrorButtonSelected)) return "horror"
+            return "null"
+        }
+
+        fun checkWhatTechniqueIsSelected(): String {
+            return if (asBoolean(byHandSelected)) "byHand"
+            else "computerGraphics"
+        }
+
+        fun checkWhatMoodIsSelected(): String {
+            return if (asBoolean(funButtonSelected)) "fun"
+            else "depressed"
+        }
+
+        GlobalScope.launch (Dispatchers.IO) {
+            val selectedGenre = async { checkWhatGenreIsSelected() }
+            val technique = async { checkWhatTechniqueIsSelected() }
+            val mood = async { checkWhatMoodIsSelected() }
+            database.saveImage(savingImageFilePath.filePath)
+            database.saveImageDescription(description)
+            database.saveHashtags(technique.await(), mood.await(), selectedGenre.await())
+        }
+
     }
 
-    fun saveImagesToLocalDB(imagesBitmapList: List<Bitmap>) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun saveImagesToLocalDB(imagesBitmapList: MutableList<Bitmap>) {
+        GlobalScope.launch (Dispatchers.IO) {
+            Log.d("VM", "Started")
+            for ((index, bitmap) in imagesBitmapList.withIndex()) {
+                val compressedBitmap = async { compressBitmap(bitmap, 5) }
+                imagesBitmapList[index] = compressedBitmap.await()
+                if (bitmap.byteCount < 50135040) {
+                    Log.d("bytesVM", imagesBitmapList[index].byteCount.toString())
+                }
+                else {
+                    val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                    imagesBitmapList[index] = rotatedBitmap.await()
+                }
+            } //Skipping frames here. Debug is needing.
+            // UPD with coroutines frames are not skipping, but image can stay uncompressed or unrotated
+
+            Log.d("processing", "finished") //add LiveData to observe in View and show rotated images
+        }
+
+
         profileData = ProfileData(imagesBitmapList)
+        postsAmount = profileData.postsAmount
+        lines = postsAmount / 3.0
+        lastLinePosts = ((lines * 10).toInt() % 10) / 3
+        Log.d("vm", "vs'o")
+    }
+
+    fun saveNewImageToLocalDB(imageBitmap: Bitmap) {
+        var imageBitmap = imageBitmap
+
+        imageBitmap = compressBitmap(imageBitmap, 50)
+        if (imageBitmap.byteCount < 50135040) {
+            Log.d("bytesVM", imageBitmap.byteCount.toString())
+        }
+        else {
+            imageBitmap = rotateImage(imageBitmap, 90f)
+        }
+
+        if (isProfileDataInitialized()) {
+            profileData.allUserPostsData.add(imageBitmap)
+            postsAmount++
+            lines = postsAmount / 3.0
+            lastLinePosts = ((lines * 10).toInt() % 10) / 3
+        }
     }
 
     fun findPostsToRecommend(postsData : List<Map<Int, Any?>>) {

@@ -7,7 +7,9 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.*
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -89,19 +91,9 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
 
         fun showPosts() {
-            fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
-                val matrix = Matrix()
-                matrix.postRotate(angle)
-                return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
-            }
-
-            val postsAmount = appViewModel.profileData.postsAmount
-            val lines: Double = postsAmount / 3.0
-            val lastLinePosts = ((lines * 10).toInt() % 10) / 3
-            Log.d("lines", lines.toString())
-            Log.d("lines", lines.toInt().toString())
-
-            Log.d("lastLinePosts", lastLinePosts.toString())
+            binding.postsLinearLayout.removeAllViews()
+            val lines = appViewModel.lines
+            val lastLinePosts = appViewModel.lastLinePosts
 
             val imagesBitmaps = appViewModel.profileData.allUserPostsData
             var currentPost = 0
@@ -140,15 +132,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         addNoteDialog.show()
 
                         val postImg = popupView.findViewById<ImageView>(R.id.Post)
-                        if (imagesBitmaps[newCurrentPost].byteCount < 50135040)
-                            postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                        else postImg.setImageBitmap(rotateImage(imagesBitmaps[newCurrentPost], 90f))
+                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
                         postImg.adjustViewBounds = true
                     }
 
-                    if (imagesBitmaps[currentPost].byteCount < 50135040)
-                        postImageView.setImageBitmap(imagesBitmaps[currentPost])
-                    else postImageView.setImageBitmap(rotateImage(imagesBitmaps[currentPost], 90f))
+                    postImageView.setImageBitmap(imagesBitmaps[currentPost])
 
                     currentPost += 1
                     horizontalLinearLayout.addView(postImageView)
@@ -178,7 +166,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         2 -> postImageView.margin(10F, 10F, 0F, 88F)
                     }
 
-                    Log.d("bytes",imagesBitmaps[currentPost].byteCount.toString())
+                    Log.d("bytesV",imagesBitmaps[currentPost].byteCount.toString())
 
                     val newCurrentPost = currentPost
                     postImageView.setOnClickListener {
@@ -190,16 +178,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         addNoteDialog.show()
 
                         val postImg = popupView.findViewById<ImageView>(R.id.Post)
-                        if (imagesBitmaps[newCurrentPost].byteCount < 50135040)
-                            postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                        else postImg.setImageBitmap(rotateImage(imagesBitmaps[newCurrentPost], 90f))
+                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
                         postImg.adjustViewBounds = true
                     }
 
-                    if (imagesBitmaps[currentPost].byteCount < 50135040)
-                        postImageView.setImageBitmap(imagesBitmaps[currentPost])
-                    else postImageView.setImageBitmap(rotateImage(imagesBitmaps[currentPost], 90f))
-                    
+                    postImageView.setImageBitmap(imagesBitmaps[newCurrentPost])
+
                     currentPost += 1
                     horizontalLinearLayout.addView(postImageView)
                 }
@@ -211,9 +195,9 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         if (appViewModel.isProfileDataInitialized()) showPosts()
 
         appViewModel.allUserPosts.observe(viewLifecycleOwner) {
-            appViewModel.saveImagesToLocalDB(it).apply {//let
+            Log.d("observed", "asd")
+            appViewModel.saveImagesToLocalDB(it as MutableList)
                 showPosts()
-            }
         }
 
         //----------------------------Navigation between screens------------------------------------
@@ -428,7 +412,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             addNewPhotoNextButton.setOnClickListener {
 
-                appViewModel.saveImageDescription(popupAddWork.findViewById<TextInputEditText>(R.id.username_input).text.toString())
+                val description = popupAddWork.findViewById<TextInputEditText>(R.id.username_input)
+                    .text.toString()
 
                 val popupFirstCategory = layoutInflater.inflate(R.layout.first_category_popup, null)
                 val nextFirstCategory = popupFirstCategory.findViewById<Button>(R.id.Next1)
@@ -459,6 +444,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 dialogBuilderFirstCategory.setView(popupFirstCategory)
 
                 val firstCategoryDialog = dialogBuilderFirstCategory.create()
+                firstCategoryDialog.setCancelable(false)
                 firstCategoryDialog.show()
 
                 byHand.setOnClickListener {
@@ -518,6 +504,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         dialogBuilderSecondCategory.setView(popupSecondCategory)
 
                         val secondCategoryDialog = dialogBuilderSecondCategory.create()
+                        secondCategoryDialog.setCancelable(false)
                         secondCategoryDialog.show()
 
                         stillLifeButton.setOnClickListener {
@@ -675,6 +662,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                 dialogBuilderThirdCategory.setView(popupThirdCategory)
 
                                 val thirdCategoryDialog = dialogBuilderThirdCategory.create()
+                                thirdCategoryDialog.setCancelable(false)
                                 thirdCategoryDialog.show()
 
                                 depressedButton.setOnClickListener {
@@ -707,17 +695,28 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                         min3 -= 1
                                     }
                                 }
-                                if (min3 <= 1)
-                                    publishButton.setOnClickListener {
-                                        appViewModel.saveImageData(byHandClicked,
-                                            depressedButtonClicked, funButtonClicked,
+                                publishButton.setOnClickListener {
+                                    if (min3 == 1) {
+                                        appViewModel.saveImageAndData(
+                                            byHandClicked, funButtonClicked,
                                             clickS, clickP, clickL, clickM, clickB,
-                                            clickI, clickC, clickN, clickA, clickH)
+                                            clickI, clickC, clickN, clickA, clickH,
+                                            description
+                                        )
+
+                                        //add on screen
+                                        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                                            ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
+                                        else
+                                            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+                                        appViewModel.saveNewImageToLocalDB(bitmap)
+                                        showPosts()
 
                                         thirdCategoryDialog.dismiss()
-                                }
-                                else {
-                                    Toast.makeText(context,"Оберіть одну, або жодної!", Toast.LENGTH_LONG).show()
+                                    }
+                                    else {
+                                        Toast.makeText(context,"Оберіть один!", Toast.LENGTH_LONG).show()
+                                    }
                                 }
                             }
                         }
@@ -725,7 +724,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 }
             }
         }
-
     }
 
     private fun launchGallery() {
@@ -738,7 +736,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if(data == null || data.data == null) {
+            if (data == null || data.data == null) {
                 return
             }
 
@@ -746,12 +744,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             try {
                 addWorkPopupImage?.setImageURI(filePath)
-                appViewModel.saveImage(filePath!!)
+                appViewModel.saveImageFilePath(filePath!!)
             }
             catch (e: IOException) {
                 e.printStackTrace()
             }
-
         }
     }
 
