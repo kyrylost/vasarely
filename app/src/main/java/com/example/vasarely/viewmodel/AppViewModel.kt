@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
+import android.util.Log.DEBUG
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.Database
@@ -26,6 +28,8 @@ class AppViewModel: ViewModel() {
     lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
     lateinit var recommendedPost: SingleLiveEvent<Bitmap>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
+
+    lateinit var postsProcessed: SingleLiveEvent<Bitmap>
 
     lateinit var savingImageFilePath: SavingImageFilePath
 
@@ -76,7 +80,7 @@ class AppViewModel: ViewModel() {
         recommendationsToProcess = database.recommendationsToProcess
         dataChangeExceptions = database.dataChangeExceptions
         recommendedPost = database.recommendation
-
+        postsProcessed = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) =
@@ -204,30 +208,34 @@ class AppViewModel: ViewModel() {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun saveImagesToLocalDB(imagesBitmapList: MutableList<Bitmap>) {
-        GlobalScope.launch (Dispatchers.IO) {
-            Log.d("VM", "Started")
-            for ((index, bitmap) in imagesBitmapList.withIndex()) {
-                val compressedBitmap = async { compressBitmap(bitmap, 5) }
-                imagesBitmapList[index] = compressedBitmap.await()
-                if (bitmap.byteCount < 50135040) {
-                    Log.d("bytesVM", imagesBitmapList[index].byteCount.toString())
-                }
-                else {
-                    val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
-                    imagesBitmapList[index] = rotatedBitmap.await()
-                }
-            } //Skipping frames here. Debug is needing.
-            // UPD with coroutines frames are not skipping, but image can stay uncompressed or unrotated
-
-            Log.d("processing", "finished") //add LiveData to observe in View and show rotated images
-        }
-
 
         profileData = ProfileData(imagesBitmapList)
         postsAmount = profileData.postsAmount
         lines = postsAmount / 3.0
         lastLinePosts = ((lines * 10).toInt() % 10) / 3
-        Log.d("vm", "vs'o")
+
+        GlobalScope.launch (Dispatchers.IO) {
+            Log.d("GlobalScope", "Launched")
+            for ((index, bitmap) in imagesBitmapList.withIndex()) {
+                val compressedBitmap = async { compressBitmap(bitmap, 50) }
+                profileData.allUserPostsData[index] = compressedBitmap.await()
+                if (bitmap.byteCount < 50135040) {
+                    if (index == imagesBitmapList.count() - 1)
+                        postsProcessed.postValue(compressedBitmap.await())
+                }
+                else {
+                    val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                    profileData.allUserPostsData[index] = rotatedBitmap.await()
+
+                    if (index == imagesBitmapList.count() - 1)
+                        postsProcessed.postValue(rotatedBitmap.await())
+                }
+            }
+
+            Log.d("processing", "finished")
+        }
+
+        Log.d("vm", "end")
     }
 
     fun saveNewImageToLocalDB(imageBitmap: Bitmap) {

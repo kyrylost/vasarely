@@ -2,6 +2,7 @@ package com.example.vasarely.view
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -15,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -197,7 +199,22 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         appViewModel.allUserPosts.observe(viewLifecycleOwner) {
             Log.d("observed", "asd")
             appViewModel.saveImagesToLocalDB(it as MutableList)
-                showPosts()
+
+            val progressBar = ProgressBar(requireContext())
+            progressBar.layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT)
+
+            progressBar.indeterminateDrawable.setColorFilter(ContextCompat.getColor(requireContext(),
+                R.color.accent), PorterDuff.Mode.MULTIPLY)
+
+            progressBar.margin(0F, 30F, 0F, 30F)
+
+            binding.postsLinearLayout.addView(progressBar)
+        }
+
+        appViewModel.postsProcessed.observe(viewLifecycleOwner) {
+            showPosts()
         }
 
         //----------------------------Navigation between screens------------------------------------
