@@ -2,11 +2,13 @@ package com.example.vasarely.view
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.ImageDecoder
+import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -76,6 +78,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.username.text = appViewModel.localData.username
+        if (appViewModel.isProfilePictureInitialized())
+            binding.avatarPlacer.setImageBitmap(appViewModel.localData.profilePicture)
 
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
 
@@ -234,6 +238,29 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val action =
                 UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
             findNavController().navigate(action)
+        }
+
+
+        binding.avatarPlacer.setOnClickListener {
+
+            val popupSetProfilePicture = layoutInflater.inflate(R.layout.add_profile_picture_popup, null)
+
+            val profilePictureImage = popupSetProfilePicture.findViewById<ImageView>(R.id.addProfilePictureImage)
+            val profilePictureButton = popupSetProfilePicture.findViewById<Button>(R.id.addProfilePictureButton)
+
+            launchGallery()
+
+            val dialogBuilderAddProfilePic = AlertDialog.Builder(context)
+            dialogBuilderAddProfilePic.setView(popupSetProfilePicture)
+
+            val addProfilePicDialog = dialogBuilderAddProfilePic.create()
+            addProfilePicDialog.show()
+
+
+            //launchGallery()
+            profilePictureButton.setOnClickListener {
+                appViewModel.saveProfilePicture(filePath!!)
+            }
         }
 
 
@@ -760,8 +787,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             filePath = data.data
 
             try {
-                addWorkPopupImage?.setImageURI(filePath)
                 appViewModel.saveImageFilePath(filePath!!)
+                addWorkPopupImage?.setImageURI(filePath)
             }
             catch (e: IOException) {
                 e.printStackTrace()

@@ -37,6 +37,7 @@ class Database {
     lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
     lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
+    lateinit var profilePicture: SingleLiveEvent<Bitmap>
 
     lateinit var recommendation: SingleLiveEvent<Bitmap>
 
@@ -56,6 +57,7 @@ class Database {
         dataChangeExceptions = SingleLiveEvent()
 
         recommendation = SingleLiveEvent()
+        profilePicture = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) {
@@ -186,7 +188,7 @@ class Database {
         val localFile = File.createTempFile("tempImage", "jpg")
         Log.d("postNumber", postNumber)
         val p = postNumber.toInt()
-        imageReference = storageReference.child("uploads/$uid/$p")
+        imageReference = storageReference.child("uploads/$uid/userPosts/$p")
         imageReference.getFile(localFile).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
             recommendation.postValue(bitmap)
@@ -197,6 +199,13 @@ class Database {
     fun getData() {
         currentUserDb.child("userData").get().addOnSuccessListener {
             userData.postValue(it.value)
+
+            val localFileProfilePicture = File.createTempFile("tempImage", "jpg")
+            imageReference = storageReference.child("uploads/$uid/profilePhoto/avatar")
+            imageReference.getFile(localFileProfilePicture).addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeFile(localFileProfilePicture.absolutePath)
+                profilePicture.postValue(bitmap)
+            }
 
             val dataSnapshot = it.value as HashMap<*, *>
 
@@ -210,7 +219,7 @@ class Database {
             for (i in 1..amountOfWorks) {
                 Log.d("i", i.toString())
                 val localFile = File.createTempFile("tempImage", "jpg")
-                imageReference = storageReference.child("uploads/$uid/$i")
+                imageReference = storageReference.child("uploads/$uid/userPosts/$i")
                 imageReference.getFile(localFile).addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
                     allUserPostsList.add(bitmap)
@@ -227,11 +236,16 @@ class Database {
 
     fun saveImage(filePath : Uri) {
         amountOfWorks += 1
-        imageReference = storageReference.child("uploads/$uid/$amountOfWorks")
+        imageReference = storageReference.child("uploads/$uid/userPosts/$amountOfWorks")
 
         imageReference.putFile(filePath).addOnSuccessListener {
             currentUserDb.child("userData").child("worksAmount").setValue(amountOfWorks)
         }
+    }
+
+    fun saveProfilePicture(filePath: Uri) {
+        imageReference = storageReference.child("uploads/$uid/profilePhoto/avatar")
+        imageReference.putFile(filePath)
     }
 
     fun saveImageDescription(description: String) {

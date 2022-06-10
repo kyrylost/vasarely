@@ -28,6 +28,7 @@ class AppViewModel: ViewModel() {
     lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
     lateinit var recommendedPost: SingleLiveEvent<Bitmap>
     lateinit var dataChangeExceptions: SingleLiveEvent<String>
+    lateinit var profilePicture: SingleLiveEvent<Bitmap>
 
     lateinit var postsProcessed: SingleLiveEvent<Bitmap>
 
@@ -45,6 +46,8 @@ class AppViewModel: ViewModel() {
     fun isProfileDataInitialized() = ::profileData.isInitialized
 
     fun isUserDBInitialized() = ::userDB.isInitialized
+
+    fun isProfilePictureInitialized() = localData.profilePictureIsInitialized()
 
     fun setUserDBStatus() {
         userDB = "initialized"
@@ -80,6 +83,7 @@ class AppViewModel: ViewModel() {
         recommendationsToProcess = database.recommendationsToProcess
         dataChangeExceptions = database.dataChangeExceptions
         recommendedPost = database.recommendation
+        profilePicture = database.profilePicture
         postsProcessed = SingleLiveEvent()
     }
 
@@ -156,6 +160,11 @@ class AppViewModel: ViewModel() {
 
         localData = UserData(username, technique, mood, genres)
     }
+
+    fun profilePhotoToLocalDB(bitmap: Bitmap) {
+        localData.profilePicture = bitmap
+    }
+
 
     fun saveImageFilePath(filePath: Uri) {
         savingImageFilePath = SavingImageFilePath(filePath)
@@ -289,5 +298,8 @@ class AppViewModel: ViewModel() {
     }
     fun recommendationsSearch() {
         database.recommendationsSearch()
+    }
+    fun saveProfilePicture(filePath: Uri) {
+        database.saveProfilePicture(filePath)
     }
 }

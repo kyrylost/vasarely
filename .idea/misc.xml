@@ -35,6 +35,7 @@
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/font/fonts.xml" value="0.28020833333333334" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/add_new_photo_popup.xml" value="0.25" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/add_profile_picture_popup.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/change_password_popup.xml" value="0.25267249757045673" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/first_category_popup.xml" value="0.6" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/liked_post_screen.xml" value="0.24003623188405798" />
@@ -49,7 +50,7 @@
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/sign_in_sign_up_screen.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/third_category_popup.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_page_screen.xml" value="0.25" />
-        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.2" />
+        <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/user_personal_page_screen.xml" value="0.264" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/layout/users_to_follow_screen.xml" value="0.25" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2155" />
         <entry key="..\:/Users/no-name/AndroidStudioProjects/Vasarely/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2155" />

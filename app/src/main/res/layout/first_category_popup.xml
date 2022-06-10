@@ -61,8 +61,10 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/by_hand_button"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#00FFFFFF"
@@ -84,8 +86,7 @@
                     app:cornerRadius="10dp"
                     app:strokeColor="@color/black"
                     app:strokeWidth="1dp"
-                    tools:ignore="TouchTargetSizeCheck"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <Button
                     android:id="@+id/comp_graph_button"

@@ -116,7 +116,11 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         appViewModel.userData.observe(viewLifecycleOwner) {
             appViewModel.processData(it)
-            showData()
+            //showData()
+        }
+
+        appViewModel.profilePicture.observe(viewLifecycleOwner) {
+            appViewModel.profilePhotoToLocalDB(it)
         }
 
         appViewModel.recommendationsToProcess.observe(viewLifecycleOwner) {
