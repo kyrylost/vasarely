@@ -20,6 +20,7 @@
             android:id="@+id/Post"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>

@@ -296,10 +296,16 @@ class AppViewModel: ViewModel() {
 
         }
     }
+
     fun recommendationsSearch() {
         database.recommendationsSearch()
     }
-    fun saveProfilePicture(filePath: Uri) {
-        database.saveProfilePicture(filePath)
+
+    fun saveProfilePicture() {
+        database.saveProfilePicture(savingImageFilePath.filePath)
+    }
+
+    fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
+        localData.profilePicture = bitmap
     }
 }

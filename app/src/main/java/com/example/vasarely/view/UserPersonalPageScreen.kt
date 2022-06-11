@@ -38,6 +38,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
     private var addWorkPopupImage: ImageView? = null
+    private var profilePictureImage: ImageView? = null
+    private var addingNewPhoto = true
 
     private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
         layoutParams<ViewGroup.MarginLayoutParams> {
@@ -139,7 +141,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                         val postImg = popupView.findViewById<ImageView>(R.id.Post)
                         postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                        postImg.adjustViewBounds = true
                     }
 
                     postImageView.setImageBitmap(imagesBitmaps[currentPost])
@@ -185,7 +186,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                         val postImg = popupView.findViewById<ImageView>(R.id.Post)
                         postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                        postImg.adjustViewBounds = true
                     }
 
                     postImageView.setImageBitmap(imagesBitmaps[newCurrentPost])
@@ -245,9 +245,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             val popupSetProfilePicture = layoutInflater.inflate(R.layout.add_profile_picture_popup, null)
 
-            val profilePictureImage = popupSetProfilePicture.findViewById<ImageView>(R.id.addProfilePictureImage)
+            profilePictureImage = popupSetProfilePicture.findViewById(R.id.addProfilePictureImage)
             val profilePictureButton = popupSetProfilePicture.findViewById<Button>(R.id.addProfilePictureButton)
 
+            addingNewPhoto = false
             launchGallery()
 
             val dialogBuilderAddProfilePic = AlertDialog.Builder(context)
@@ -256,10 +257,18 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val addProfilePicDialog = dialogBuilderAddProfilePic.create()
             addProfilePicDialog.show()
 
-
-            //launchGallery()
             profilePictureButton.setOnClickListener {
-                appViewModel.saveProfilePicture(filePath!!)
+                addProfilePicDialog.dismiss()
+
+                appViewModel.saveProfilePicture()
+
+                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
+                else
+                    MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+                appViewModel.saveProfilePictureToLocalDB(bitmap)
+
+                binding.avatarPlacer.setImageBitmap(appViewModel.localData.profilePicture)
             }
         }
 
@@ -444,6 +453,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             var min2 = 0
             var min3 = 0
 
+            addingNewPhoto = true
             launchGallery()
 
             val dialogBuilderAddWork = AlertDialog.Builder(context)
@@ -786,13 +796,25 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             filePath = data.data
 
-            try {
-                appViewModel.saveImageFilePath(filePath!!)
-                addWorkPopupImage?.setImageURI(filePath)
+            if (addingNewPhoto) {
+                try {
+                    appViewModel.saveImageFilePath(filePath!!)
+                    addWorkPopupImage?.setImageURI(filePath)
+                }
+                catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
-            catch (e: IOException) {
-                e.printStackTrace()
+            else {
+                try {
+                    appViewModel.saveImageFilePath(filePath!!)
+                    profilePictureImage?.setImageURI(filePath)
+                }
+                catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
+
         }
     }
 
