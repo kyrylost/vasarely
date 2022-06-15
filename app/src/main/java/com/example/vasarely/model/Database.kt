@@ -192,6 +192,7 @@ class Database {
         imageReference.getFile(localFile).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
             recommendation.postValue(bitmap)
+            localFile.delete()
             Log.d("bitmap",bitmap.toString())
         }
     }
@@ -205,6 +206,7 @@ class Database {
             imageReference.getFile(localFileProfilePicture).addOnSuccessListener {
                 val bitmap = BitmapFactory.decodeFile(localFileProfilePicture.absolutePath)
                 profilePicture.postValue(bitmap)
+                localFileProfilePicture.delete()
             }
 
             val dataSnapshot = it.value as HashMap<*, *>
@@ -223,6 +225,7 @@ class Database {
                 imageReference.getFile(localFile).addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
                     allUserPostsList.add(bitmap)
+                    localFile.delete()
                     if (i == amountOfWorks) allUserPosts.postValue(allUserPostsList)
                 }
             }

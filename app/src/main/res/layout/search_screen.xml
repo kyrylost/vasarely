@@ -72,6 +72,7 @@
                             android:layout_height="24dp"
                             android:layout_marginStart="12dp"
                             android:layout_marginTop="-36dp"
+                            android:contentDescription="@string/search"
                             app:srcCompat="@drawable/search_icon" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -81,6 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="30dp"
+                        android:contentDescription="@string/logo_content_des"
                         android:src="@drawable/logo"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -127,8 +129,8 @@
 
             <ImageButton
                 android:id="@+id/home_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="1dp"
@@ -141,12 +143,13 @@
                 app:layout_constraintStart_toEndOf="@+id/search_button"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/home_icon" />
+                app:srcCompat="@drawable/home_icon"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/user_page_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="15dp"
@@ -156,12 +159,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/user_icon" />
+                app:srcCompat="@drawable/user_icon"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/search_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
@@ -171,7 +175,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/search_icon_selected" />
+                app:srcCompat="@drawable/search_icon_selected"
+                tools:ignore="TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>

@@ -49,5 +49,11 @@
     <string name="logout_text">Вийти</string>
     <string name="save_button">Зберегти</string>
     <string name="Search_hint">Glory to Ukraine!</string>
+    <string name="subscribe">Стежити</string>
+    <string name="_0">0</string>
+    <string name="save">Зберегти</string>
+    <string name="select_new_pref">Вказати нові вподобання</string>
+    <string name="logo_content_des">logo</string>
+    <string name="search">Search</string>
 
 </resources>

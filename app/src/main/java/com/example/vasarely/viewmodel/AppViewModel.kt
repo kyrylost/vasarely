@@ -162,7 +162,12 @@ class AppViewModel: ViewModel() {
     }
 
     fun profilePhotoToLocalDB(bitmap: Bitmap) {
-        localData.profilePicture = bitmap
+        if (bitmap.byteCount < 50135040) {
+            localData.profilePicture = bitmap
+        }
+        else {
+            localData.profilePicture = rotateImage(bitmap, 90F)
+        }
     }
 
 
@@ -260,6 +265,15 @@ class AppViewModel: ViewModel() {
 
         if (isProfileDataInitialized()) {
             profileData.allUserPostsData.add(imageBitmap)
+            postsAmount++
+            lines = postsAmount / 3.0
+            lastLinePosts = ((lines * 10).toInt() % 10) / 3
+        }
+
+        else {
+            val bitmapList = mutableListOf<Bitmap>()
+            bitmapList.add(imageBitmap)
+            profileData = ProfileData(bitmapList)
             postsAmount++
             lines = postsAmount / 3.0
             lastLinePosts = ((lines * 10).toInt() % 10) / 3

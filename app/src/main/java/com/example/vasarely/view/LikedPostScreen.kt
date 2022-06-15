@@ -31,32 +31,11 @@ class LikedPostScreen : Fragment(R.layout.liked_post_screen) {
 
         val montserratBoldFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
-        val montserratRegularFont: Typeface? =
-            ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
+//        val montserratRegularFont: Typeface? =
+//            ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
-        binding.textView2.typeface = montserratBoldFont
+        binding.likedPostsText.typeface = montserratBoldFont
 
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-
-        var statusBarHeight = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = resources.getDimensionPixelSize(resourceId);
-        }
-
-        binding.likedPostCardView.measure(0,0)
-        binding.footerUser.measure(0,0)
-
-        val likedPostCardViewHeight = binding.likedPostCardView.measuredHeight
-        val footerHeight = binding.footerUser.measuredHeight
-
-        val scrollView : ScrollView = binding.scroll
-        val scrollViewParams: ViewGroup.LayoutParams = scrollView.layoutParams
-
-        scrollViewParams.height = screenHeight - footerHeight - likedPostCardViewHeight - statusBarHeight
-        scrollViewParams.width = screenWidth
-        scrollView.layoutParams = scrollViewParams
 
         //----------------------------Navigation between screens------------------------------------
         //to SearchScreen

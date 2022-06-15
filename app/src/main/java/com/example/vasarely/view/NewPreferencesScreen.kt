@@ -102,6 +102,11 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
             findNavController().navigate(action)
         }
 
+        binding.userPageButton.setOnClickListener{
+            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+            findNavController().navigate(action)
+        }
+
         binding.returnButton.setOnClickListener {
             val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
             findNavController().navigate(action)

@@ -555,7 +555,7 @@
                 android:paddingTop="16dp"
                 android:paddingRight="32dp"
                 android:paddingBottom="16dp"
-                android:text="Зберегти"
+                android:text="@string/save"
                 android:textAllCaps="false"
                 app:cornerRadius="20dp" />
 
@@ -572,30 +572,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey"
-                app:layout_constraintBottom_toTopOf="@+id/user_page_button3"
+                app:layout_constraintBottom_toTopOf="@+id/user_page_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/home_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="1dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="188dp"
+                android:layout_marginEnd="1dp"
                 android:layout_marginBottom="15dp"
                 android:background="@null"
                 android:contentDescription="@string/locate_to_home"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/user_page_button"
+                app:layout_constraintStart_toEndOf="@+id/search_button"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/home_icon" />
+                app:srcCompat="@drawable/home_icon"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
-                android:id="@+id/user_page_button3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:id="@+id/user_page_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="15dp"
@@ -605,12 +608,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/user_icon_selected" />
+                app:srcCompat="@drawable/user_icon_selected"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/search_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
@@ -620,7 +624,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/search_icon" />
+                app:srcCompat="@drawable/search_icon"
+                tools:ignore="TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -643,7 +648,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="23dp"
                 android:fontFamily="sans-serif-black"
-                android:text="Вказати нові вподобання"
+                android:text="@string/select_new_pref"
                 android:textColor="@color/design_default_color_on_secondary"
                 android:textSize="16sp"
                 android:textStyle="bold"
