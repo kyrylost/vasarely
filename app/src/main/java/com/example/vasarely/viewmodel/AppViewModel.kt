@@ -10,9 +10,7 @@ import android.util.Log.DEBUG
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.Database
-import com.example.vasarely.model.ProfileData
-import com.example.vasarely.model.UserData
+import com.example.vasarely.model.*
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -36,9 +34,19 @@ class AppViewModel: ViewModel() {
 
     lateinit var userDB: String
 
+    lateinit var foundedUser: SingleLiveEvent<MutableList<List<String>>>
+    lateinit var lastFoundedUsersData: LastFoundedUsersData
+    lateinit var selectedUserData: SelectedUserData
+    lateinit var foundedUserPosts: SingleLiveEvent<List<Bitmap>>
+    lateinit var foundedUserPostProcessed: SingleLiveEvent<Boolean>
+
+
     var postsAmount = 0
     var lines = 0.0
     var lastLinePosts = 0
+
+    var selectedUserLines = 0.0
+    var selectedUserLastLinePosts = 0
 
 
     fun isLocalDataInitialized() = ::localData.isInitialized
@@ -84,7 +92,10 @@ class AppViewModel: ViewModel() {
         dataChangeExceptions = database.dataChangeExceptions
         recommendedPost = database.recommendation
         profilePicture = database.profilePicture
+        foundedUser = database.foundedUser
         postsProcessed = SingleLiveEvent()
+        foundedUserPosts = database.foundedUserPosts
+        foundedUserPostProcessed = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) =
@@ -242,7 +253,7 @@ class AppViewModel: ViewModel() {
                     profileData.allUserPostsData[index] = rotatedBitmap.await()
 
                     if (index == imagesBitmapList.count() - 1)
-                        postsProcessed.postValue(rotatedBitmap.await())
+                        postsProcessed.postValue(rotatedBitmap.await()) //*????????????????????????????????
                 }
             }
 
@@ -321,5 +332,49 @@ class AppViewModel: ViewModel() {
 
     fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
         localData.profilePicture = bitmap
+    }
+
+    fun findByUsername(name: String) {
+        database.findByUsername(name.trimStart().trimEnd())
+    }
+
+    fun saveLastFoundedUsersData(usersList: List<List<String>>) {
+        lastFoundedUsersData = LastFoundedUsersData(usersList)
+    }
+
+    fun saveSelectedUser(id : Int) {
+        selectedUserData = SelectedUserData(lastFoundedUsersData.usersList[id])
+    }
+
+    fun getOtherUserPosts () {
+        database.getOtherUserPosts(selectedUserData[0], selectedUserData[2].toInt())
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun processFoundedUserPhotos(imagesBitmapList: MutableList<Bitmap>) {
+
+        selectedUserData.allFoundedUserPostsData = imagesBitmapList
+        selectedUserLines = selectedUserData[2].toDouble() / 3.0
+        selectedUserLastLinePosts = ((selectedUserLines * 10).toInt() % 10) / 3
+
+        GlobalScope.launch (Dispatchers.IO) {
+            for ((index, bitmap) in imagesBitmapList.withIndex()) {
+                val compressedBitmap = async { compressBitmap(bitmap, 50) }
+                selectedUserData.allFoundedUserPostsData[index] = compressedBitmap.await()
+                if (bitmap.byteCount < 50135040) {
+                    if (index == imagesBitmapList.count() - 1)
+                        foundedUserPostProcessed.postValue(true)
+                }
+                else {
+                    val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                    selectedUserData.allFoundedUserPostsData[index] = rotatedBitmap.await()
+
+                    if (index == imagesBitmapList.count() - 1)
+                        foundedUserPostProcessed.postValue(true)
+                }
+            }
+
+        }
+
     }
 }

@@ -10,13 +10,13 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/layoutUPS"
+        android:id="@+id/layoutUS"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ScrollView
-            android:id="@+id/UserPersonalScrollView"
+            android:id="@+id/userScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true">
@@ -40,20 +40,6 @@
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageButton
-                        android:id="@+id/menu_img_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginEnd="30dp"
-                        android:background="@null"
-                        android:contentDescription="@string/app_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/settings"
-                        tools:ignore="TouchTargetSizeCheck" />
 
                 </RelativeLayout>
 
@@ -83,7 +69,8 @@
                                 android:layout_height="match_parent"
                                 android:adjustViewBounds="true"
                                 android:scaleType="centerCrop"
-                                app:srcCompat="@drawable/add_profile_photo" />
+                                app:srcCompat="@drawable/profile_photo_placer"
+                                tools:ignore="ImageContrastCheck" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -225,7 +212,7 @@
                     tools:ignore="TextContrastCheck" />
 
                 <LinearLayout
-                    android:id="@+id/postsLinearLayout"
+                    android:id="@+id/userPostsLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

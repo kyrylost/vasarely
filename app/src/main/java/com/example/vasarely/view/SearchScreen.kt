@@ -4,25 +4,23 @@ import android.app.ProgressDialog
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.SearchViewModel
 
 class SearchScreen : Fragment(R.layout.search_screen) {
 
@@ -65,7 +63,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         fun showData() {
             // Show data
         }
-
+0
         val progressDialog = ProgressDialog(requireContext())
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
@@ -169,6 +167,37 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             findNavController().navigate(action)
         }
 
+
+        val svm = SearchViewModel()
+        binding.search.addTextChangedListener {
+            svm.getNameWithDelay(it.toString())
+        }
+        svm.name.observe(requireActivity()) {
+            appViewModel.findByUsername(it)
+            binding.textView2.text = it
+        }
+
+        appViewModel.foundedUser.observe(requireActivity()) { foundedUsers ->
+
+            appViewModel.saveLastFoundedUsersData(foundedUsers)
+            Log.d("it", foundedUsers.toString())
+
+            val popupMenu = PopupMenu(context, binding.search)
+            popupMenu.inflate(R.menu.founded_users_menu)
+
+            for ((userNumber, userData) in foundedUsers.withIndex()) {
+                popupMenu.menu.add(0,userNumber,0,userData[1])
+            }
+
+            popupMenu.show()
+
+            popupMenu.setOnMenuItemClickListener { selectedItem ->
+                appViewModel.saveSelectedUser(selectedItem.itemId)
+                val action = SearchScreenDirections.actionSearchScreenToUserPageScreen()
+                findNavController().navigate(action)
+                true
+            }
+        }
     }
 
     override fun onDestroy() {

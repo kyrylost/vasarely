@@ -8,11 +8,11 @@ import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.io.StreamTokenizer
 import kotlin.collections.HashMap
 
 class Database {
@@ -41,6 +41,10 @@ class Database {
 
     lateinit var recommendation: SingleLiveEvent<Bitmap>
 
+    lateinit var localDbCopy: LocalDbCopy
+    lateinit var foundedUser: SingleLiveEvent<MutableList<List<String>>>
+    lateinit var foundedUserPosts: SingleLiveEvent<List<Bitmap>>
+
 
     fun initDatabase(application: Application) {
         this.application = application
@@ -58,6 +62,9 @@ class Database {
 
         recommendation = SingleLiveEvent()
         profilePicture = SingleLiveEvent()
+
+        foundedUser = SingleLiveEvent()
+        foundedUserPosts = SingleLiveEvent()
     }
 
     fun register(email: String, password: String, username: String) {
@@ -137,6 +144,7 @@ class Database {
 
     fun recommendationsSearch() {
         databaseReference.get().addOnSuccessListener {
+            localDbCopy = LocalDbCopy(it)
             val recommendationsToProcessList = mutableListOf<Map<Int, Any?>>()
             for (snapshot in it.children) {
                 if (snapshot.key != uid) {
@@ -268,5 +276,54 @@ class Database {
         currentUserDb.child("profileData").child("posts")
             .child("$amountOfWorks").child("hashtags")
             .child("genre").setValue(genre)
+    }
+
+    fun findByUsername(name: String) {
+        val foundedUsersData = mutableListOf<List<String>>()
+
+        for (userData in localDbCopy.allData.children) {
+            Log.d("msdkmasd", userData.child("userData").child("username").value.toString())
+            val username = userData.child("userData").child("username").value.toString()
+
+            val nameLength = name.count()
+
+            if (username.lowercase() == name.lowercase()) {
+                val foundedUserData = mutableListOf<String>()
+                foundedUserData.add(userData.key.toString())
+                foundedUserData.add(username)
+                foundedUserData.add(userData.child("userData").child("worksAmount").value.toString())
+                foundedUsersData.addAll(0, listOf(foundedUserData))
+                //foundedUser.postValue(foundedUsersData)
+                Log.d("yes", userData.key.toString())
+            }
+
+            if (nameLength < username.count()) {
+                val usernameFirstN = (username.subSequence(0, nameLength)).toString()
+
+                if(usernameFirstN.lowercase() == name.lowercase()) {
+                    val foundedUserData = mutableListOf<String>()
+                    foundedUserData.add(userData.key.toString())
+                    foundedUserData.add(username)
+                    foundedUserData.add(userData.child("userData").child("worksAmount").value.toString())
+                    foundedUsersData.add(foundedUserData)
+                }
+            }
+
+        }
+        foundedUser.postValue(foundedUsersData)
+    }
+
+    fun getOtherUserPosts (uid : String, amountOfWorks : Int) {
+        val allUserPostsList = mutableListOf<Bitmap>()
+        for (i in 1..amountOfWorks) {
+            val localFile = File.createTempFile("tempImage", "jpg")
+            imageReference = storageReference.child("uploads/$uid/userPosts/$i")
+            imageReference.getFile(localFile).addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                allUserPostsList.add(bitmap)
+                localFile.delete()
+                if (i == amountOfWorks) foundedUserPosts.postValue(allUserPostsList)
+            }
+        }
     }
 }

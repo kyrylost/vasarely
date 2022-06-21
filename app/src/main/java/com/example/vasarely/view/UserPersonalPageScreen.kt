@@ -35,6 +35,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: UserPersonalPageScreenBinding? = null
     private val binding get() = _binding!!
+
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
     private var addWorkPopupImage: ImageView? = null
