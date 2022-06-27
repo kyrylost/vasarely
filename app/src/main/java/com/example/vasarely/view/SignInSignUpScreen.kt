@@ -31,7 +31,7 @@ class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
         savedInstanceState: Bundle?
 
     ): View {
-        appViewModel.initAppViewModel(Application())
+        //appViewModel.initAppViewModel()
 
         appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
 

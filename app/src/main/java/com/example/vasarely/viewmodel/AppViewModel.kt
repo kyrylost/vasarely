@@ -1,14 +1,13 @@
 package com.example.vasarely.viewmodel
 
-import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
-import android.util.Log.DEBUG
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.*
 import kotlinx.coroutines.*
@@ -16,42 +15,45 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.HashMap
 
+@OptIn(DelicateCoroutinesApi::class)
 class AppViewModel: ViewModel() {
     private var database = Database()
-    lateinit var userMutableLiveData: SingleLiveEvent<Boolean>
-    lateinit var userData: SingleLiveEvent<Any>
-    lateinit var localData: UserData
-    lateinit var profileData: ProfileData
-    lateinit var allUserPosts: SingleLiveEvent<List<Bitmap>>
-    lateinit var recommendationsToProcess: SingleLiveEvent<List<Map<Int, Any?>>>
-    lateinit var recommendedPost: SingleLiveEvent<Bitmap>
-    lateinit var dataChangeExceptions: SingleLiveEvent<String>
-    lateinit var profilePicture: SingleLiveEvent<Bitmap>
 
-    lateinit var postsProcessed: SingleLiveEvent<Bitmap>
+    var userMutableLiveData = database.userMutableLiveData
+    var userData = database.userData
+
+    lateinit var localData: UserData
+    lateinit var userPostsData: UserPostsData
+
+    var userPostsFound = SingleLiveEvent<Boolean>()
+    var postsProcessed = SingleLiveEvent<Boolean>()
+
+    var recommendedPost = database.recommendation
+    var dataChangeExceptions = database.dataChangeExceptions
+    var profilePicture = database.profilePicture
 
     lateinit var savingImageFilePath: SavingImageFilePath
 
     lateinit var userDB: String
 
-    lateinit var foundedUser: SingleLiveEvent<MutableList<List<String>>>
+    var foundedUser = database.foundedUser
     lateinit var lastFoundedUsersData: LastFoundedUsersData
-    lateinit var selectedUserData: SelectedUserData
-    lateinit var foundedUserPosts: SingleLiveEvent<List<Bitmap>>
-    lateinit var foundedUserPostProcessed: SingleLiveEvent<Boolean>
+    lateinit var foundedUserData: FoundedUserData
+    var foundedUserPosts = database.foundedUserPosts
+    var foundedUserPostProcessed = SingleLiveEvent<Boolean>()
 
 
     var postsAmount = 0
     var lines = 0.0
     var lastLinePosts = 0
 
-    var selectedUserLines = 0.0
-    var selectedUserLastLinePosts = 0
+    var foundedUserLines = 0.0
+    var foundedUserLastLinePosts = 0
 
 
     fun isLocalDataInitialized() = ::localData.isInitialized
 
-    fun isProfileDataInitialized() = ::profileData.isInitialized
+    fun isProfileDataInitialized() = ::userPostsData.isInitialized
 
     fun isUserDBInitialized() = ::userDB.isInitialized
 
@@ -82,21 +84,86 @@ class AppViewModel: ViewModel() {
     }
 
 
-    fun initAppViewModel(application: Application) {
-        database.initDatabase(application)
+    init {
+        viewModelScope.launch {
+            database.localDbCopyLiveEvent.observeForever {
+                Log.d("scope", "VM")
+                val recommendationsToProcessList = mutableListOf<Map<Int, Any?>>()
+                for (snapshot in it.children) {
+                    if (snapshot.key != database.uid) {
+                        val postsData = mutableMapOf<Int, Any?>()
+                        for ((dataIndex, data) in snapshot.children.withIndex()) {
+                            if (dataIndex == 0) {
+                                for (post in data.children) {
+                                    for (postNumberAndTags in post.children) {
+                                        val postNumberAndTagsHashMap = postNumberAndTags.value as HashMap<*, *>
+                                        val postTagsList = postNumberAndTagsHashMap.values
+                                        val tags = mutableListOf<String>()
+                                        for ((jIndex, j) in postTagsList.withIndex()) {
+                                            if (jIndex == 0) {
+                                                j as HashMap<*, *>
+                                                tags.add(j["mood"].toString())
+                                                tags.add(j["genre"].toString())
+                                                tags.add(j["technique"].toString())
+                                            }
+                                            else {
+                                                tags.add(j as String)
+                                                tags.add(snapshot.key as String)
+                                            }
+                                        }
+                                        postsData[postNumberAndTags.key!!.toInt()] = tags
+                                    }
+                                }
+                            }
 
-        userMutableLiveData = database.userMutableLiveData
-        userData = database.userData
-        allUserPosts = database.allUserPosts
-        recommendationsToProcess = database.recommendationsToProcess
-        dataChangeExceptions = database.dataChangeExceptions
-        recommendedPost = database.recommendation
-        profilePicture = database.profilePicture
-        foundedUser = database.foundedUser
-        postsProcessed = SingleLiveEvent()
-        foundedUserPosts = database.foundedUserPosts
-        foundedUserPostProcessed = SingleLiveEvent()
+                            else {
+                                for (child in data.children) {
+                                    if (child.key == "worksAmount" && child.value != 0L) {
+                                        recommendationsToProcessList.add(postsData)
+                                        Log.d("Posts", postsData.toString())
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                findPostsToRecommend(recommendationsToProcessList)
+            }
+        }
+
+        database.allUserPosts.observeForever {
+            Log.d("it", it.count().toString())
+
+            userPostsFound.postValue(true)
+
+            val imagesBitmapList = it as MutableList
+
+            userPostsData = UserPostsData(imagesBitmapList)
+            postsAmount = userPostsData.postsAmount
+            Log.d("postsAmount", postsAmount.toString())
+            lines = postsAmount / 3.0
+            lastLinePosts = ((lines * 10).toInt() % 10) / 3
+
+            GlobalScope.launch (Dispatchers.IO) {
+                for ((index, bitmap) in imagesBitmapList.withIndex()) {
+                    val compressedBitmap = async { compressBitmap(bitmap, 50) }
+                    userPostsData.allUserPostsData[index] = compressedBitmap.await()
+                    if (bitmap.byteCount < 50135040) {
+                        if (index == imagesBitmapList.count() - 1)
+                            postsProcessed.postValue(true)
+                    }
+                    else {
+                        val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                        userPostsData.allUserPostsData[index] = rotatedBitmap.await()
+
+                        if (index == imagesBitmapList.count() - 1)
+                            postsProcessed.postValue(true) //*????????????????????????????????
+                    }
+                }
+            }
+        }
     }
+    
 
     fun register(email: String, password: String, username: String) =
         database.register(email, password, username)
@@ -104,6 +171,7 @@ class AppViewModel: ViewModel() {
     fun login(email: String, password: String) = database.login(email, password)
 
     fun logout() = database.logout()
+
 
     fun savePreference(
         byHandSelected: Int, computerGraphicsSelected: Int,
@@ -143,36 +211,16 @@ class AppViewModel: ViewModel() {
 
     }
 
-    fun updateName(newNickname: String) {
-        database.updateName(newNickname)
+
+    fun saveProfilePicture() {
+        database.saveProfilePicture(savingImageFilePath.filePath)
     }
 
-    fun getData() {
-        database.getData()
+    fun saveAddedProfilePictureToLocalDB(bitmap: Bitmap) {
+        localData.profilePicture = bitmap
     }
 
-    fun processData(data: Any) {
-        val username: String
-        val technique: String
-        val mood: String
-        val genres = mutableListOf<String>()
-
-        val dataHashMap = data as HashMap<*, *>
-
-        val preferenceHashMap = dataHashMap["preferences"] as HashMap<*, *>
-
-        username = dataHashMap["username"].toString()
-        technique = preferenceHashMap["technique"].toString()
-        mood = preferenceHashMap["mood"].toString()
-        val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
-        for (value in genresArrayList) {
-            genres.add(value as String)
-        }
-
-        localData = UserData(username, technique, mood, genres)
-    }
-
-    fun profilePhotoToLocalDB(bitmap: Bitmap) {
+    fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
         if (bitmap.byteCount < 50135040) {
             localData.profilePicture = bitmap
         }
@@ -231,51 +279,15 @@ class AppViewModel: ViewModel() {
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun saveImagesToLocalDB(imagesBitmapList: MutableList<Bitmap>) {
-
-        profileData = ProfileData(imagesBitmapList)
-        postsAmount = profileData.postsAmount
-        lines = postsAmount / 3.0
-        lastLinePosts = ((lines * 10).toInt() % 10) / 3
-
-        GlobalScope.launch (Dispatchers.IO) {
-            Log.d("GlobalScope", "Launched")
-            for ((index, bitmap) in imagesBitmapList.withIndex()) {
-                val compressedBitmap = async { compressBitmap(bitmap, 50) }
-                profileData.allUserPostsData[index] = compressedBitmap.await()
-                if (bitmap.byteCount < 50135040) {
-                    if (index == imagesBitmapList.count() - 1)
-                        postsProcessed.postValue(compressedBitmap.await())
-                }
-                else {
-                    val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
-                    profileData.allUserPostsData[index] = rotatedBitmap.await()
-
-                    if (index == imagesBitmapList.count() - 1)
-                        postsProcessed.postValue(rotatedBitmap.await()) //*????????????????????????????????
-                }
-            }
-
-            Log.d("processing", "finished")
-        }
-
-        Log.d("vm", "end")
-    }
-
     fun saveNewImageToLocalDB(imageBitmap: Bitmap) {
         var imageBitmap = imageBitmap
 
         imageBitmap = compressBitmap(imageBitmap, 50)
-        if (imageBitmap.byteCount < 50135040) {
-            Log.d("bytesVM", imageBitmap.byteCount.toString())
-        }
-        else {
+        if (imageBitmap.byteCount >= 50135040)
             imageBitmap = rotateImage(imageBitmap, 90f)
-        }
 
         if (isProfileDataInitialized()) {
-            profileData.allUserPostsData.add(imageBitmap)
+            userPostsData.allUserPostsData.add(imageBitmap)
             postsAmount++
             lines = postsAmount / 3.0
             lastLinePosts = ((lines * 10).toInt() % 10) / 3
@@ -284,14 +296,51 @@ class AppViewModel: ViewModel() {
         else {
             val bitmapList = mutableListOf<Bitmap>()
             bitmapList.add(imageBitmap)
-            profileData = ProfileData(bitmapList)
+            userPostsData = UserPostsData(bitmapList)
             postsAmount++
             lines = postsAmount / 3.0
             lastLinePosts = ((lines * 10).toInt() % 10) / 3
         }
     }
 
-    fun findPostsToRecommend(postsData : List<Map<Int, Any?>>) {
+
+    fun updateName(newNickname: String) {
+        database.updateName(newNickname)
+    }
+
+
+    fun getData() {
+        database.getData()
+    }
+
+    fun processData(data: Any) {
+        val username: String
+        val technique: String
+        val mood: String
+        val genres = mutableListOf<String>()
+
+        val dataHashMap = data as HashMap<*, *>
+
+        val preferenceHashMap = dataHashMap["preferences"] as HashMap<*, *>
+
+        username = dataHashMap["username"].toString()
+        technique = preferenceHashMap["technique"].toString()
+        mood = preferenceHashMap["mood"].toString()
+        val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
+        for (value in genresArrayList) {
+            genres.add(value as String)
+        }
+
+        localData = UserData(username, technique, mood, genres)
+    }
+
+
+    fun databaseRecommendationsSearch() {
+        database.recommendationsSearch()
+    }
+
+
+    private fun findPostsToRecommend(postsData : List<Map<Int, Any?>>) {
         var correspondsToPreference = 0
         for (singlePostData in postsData) {
             for (singlePostDataMap in singlePostData) {
@@ -322,17 +371,7 @@ class AppViewModel: ViewModel() {
         }
     }
 
-    fun recommendationsSearch() {
-        database.recommendationsSearch()
-    }
 
-    fun saveProfilePicture() {
-        database.saveProfilePicture(savingImageFilePath.filePath)
-    }
-
-    fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
-        localData.profilePicture = bitmap
-    }
 
     fun findByUsername(name: String) {
         database.findByUsername(name.trimStart().trimEnd())
@@ -342,39 +381,47 @@ class AppViewModel: ViewModel() {
         lastFoundedUsersData = LastFoundedUsersData(usersList)
     }
 
-    fun saveSelectedUser(id : Int) {
-        selectedUserData = SelectedUserData(lastFoundedUsersData.usersList[id])
+    fun saveFoundedUser(id : Int) {
+        foundedUserData = FoundedUserData(lastFoundedUsersData.usersList[id])
     }
 
+
     fun getOtherUserPosts () {
-        database.getOtherUserPosts(selectedUserData[0], selectedUserData[2].toInt())
+        database.getOtherUserPosts(foundedUserData[0], foundedUserData[2].toInt())
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun processFoundedUserPhotos(imagesBitmapList: MutableList<Bitmap>) {
 
-        selectedUserData.allFoundedUserPostsData = imagesBitmapList
-        selectedUserLines = selectedUserData[2].toDouble() / 3.0
-        selectedUserLastLinePosts = ((selectedUserLines * 10).toInt() % 10) / 3
+        foundedUserData.allFoundedUserPostsData = imagesBitmapList
+        foundedUserLines = foundedUserData[2].toDouble() / 3.0
+        foundedUserLastLinePosts = ((foundedUserLines * 10).toInt() % 10) / 3
 
         GlobalScope.launch (Dispatchers.IO) {
             for ((index, bitmap) in imagesBitmapList.withIndex()) {
                 val compressedBitmap = async { compressBitmap(bitmap, 50) }
-                selectedUserData.allFoundedUserPostsData[index] = compressedBitmap.await()
+                foundedUserData.allFoundedUserPostsData[index] = compressedBitmap.await()
                 if (bitmap.byteCount < 50135040) {
                     if (index == imagesBitmapList.count() - 1)
                         foundedUserPostProcessed.postValue(true)
                 }
                 else {
                     val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
-                    selectedUserData.allFoundedUserPostsData[index] = rotatedBitmap.await()
+                    foundedUserData.allFoundedUserPostsData[index] = rotatedBitmap.await()
 
                     if (index == imagesBitmapList.count() - 1)
                         foundedUserPostProcessed.postValue(true)
                 }
             }
-
         }
+    }
 
+
+    fun addFollower() {
+        database.addFollower(foundedUserData[0], foundedUserData[4])
+    }
+
+    fun addFollowing() {
+        //database.addFollowing(profileData.followingNumber)
     }
 }

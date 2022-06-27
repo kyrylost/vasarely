@@ -77,12 +77,11 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             }
             else {
                 appViewModel.getData()
-                appViewModel.recommendationsSearch()
+                appViewModel.databaseRecommendationsSearch()
             }
         }
 
-        appViewModel.recommendedPost
-            .observe(viewLifecycleOwner) { post ->
+        appViewModel.recommendedPost.observe(viewLifecycleOwner) { post ->
 
                 fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
                     val matrix = Matrix()
@@ -118,20 +117,20 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
         appViewModel.profilePicture.observe(viewLifecycleOwner) {
-            appViewModel.profilePhotoToLocalDB(it)
+            appViewModel.saveProfilePictureToLocalDB(it)
         }
 
-        appViewModel.recommendationsToProcess.observe(viewLifecycleOwner) {
-            if (appViewModel.isLocalDataInitialized()) {
-                appViewModel.findPostsToRecommend(it)
-            }
-            else Toast.makeText(requireContext(), "Can't show your recommendations now, try later", Toast.LENGTH_SHORT).show()
-        }
+//        appViewModel.recommendationsToProcess.observe(viewLifecycleOwner) {
+//            if (appViewModel.isLocalDataInitialized()) {
+//                appViewModel.findPostsToRecommend(it)
+//            }
+//            else Toast.makeText(requireContext(), "Can't show your recommendations now, try later", Toast.LENGTH_SHORT).show()
+//        }
 
         if (!appViewModel.isLocalDataInitialized()) {
             if (appViewModel.isUserDBInitialized()) {
                 appViewModel.getData()
-                appViewModel.recommendationsSearch()
+                appViewModel.databaseRecommendationsSearch()
             }
             else {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")
@@ -192,7 +191,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             popupMenu.show()
 
             popupMenu.setOnMenuItemClickListener { selectedItem ->
-                appViewModel.saveSelectedUser(selectedItem.itemId)
+                appViewModel.saveFoundedUser(selectedItem.itemId)
                 val action = SearchScreenDirections.actionSearchScreenToUserPageScreen()
                 findNavController().navigate(action)
                 true

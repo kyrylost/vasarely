@@ -6,9 +6,9 @@ data class UserData(var username : String,
                     var techniqueReference : String,
                     var moodReference : String,
                     var genreReferences : List<String>) {
-    fun profilePictureIsInitialized() =
-        ::profilePicture.isInitialized
-
 
     lateinit var profilePicture: Bitmap
+
+    fun profilePictureIsInitialized() =
+        ::profilePicture.isInitialized
 }

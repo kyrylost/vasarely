@@ -77,7 +77,6 @@
                     android:paddingTop="6dp"
                     android:paddingRight="18dp"
                     android:paddingBottom="6dp"
-                    android:stateListAnimator="@null"
                     android:text="@string/by_hand_button"
                     android:textAllCaps="false"
                     android:textColor="@color/black"

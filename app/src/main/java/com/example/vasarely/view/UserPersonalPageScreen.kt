@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -26,8 +27,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.TagsForPhoto
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
 import java.io.IOException
+import kotlin.coroutines.coroutineContext
 
 
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
@@ -92,10 +96,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
         binding.username.typeface = montserratBoldFont
-        binding.subs.typeface = montserratBoldFont
-        binding.subsNumber.typeface = montserratRegularFont
-        binding.follow.typeface = montserratBoldFont
-        binding.followNumber.typeface = montserratRegularFont
+        binding.followers.typeface = montserratBoldFont
+        binding.followersNumber.typeface = montserratRegularFont
+        binding.following.typeface = montserratBoldFont
+        binding.followingNumber.typeface = montserratRegularFont
         binding.addWork.typeface = montserratBoldFont
 
 
@@ -104,7 +108,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val lines = appViewModel.lines
             val lastLinePosts = appViewModel.lastLinePosts
 
-            val imagesBitmaps = appViewModel.profileData.allUserPostsData
+            val imagesBitmaps = appViewModel.userPostsData.allUserPostsData
             var currentPost = 0
 
             for (line in 1..lines.toInt()) {
@@ -129,7 +133,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         }
                     }
 
-                    Log.d("bytes",imagesBitmaps[currentPost].byteCount.toString())
 
                     val newCurrentPost = currentPost
                     postImageView.setOnClickListener {
@@ -174,7 +177,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         2 -> postImageView.margin(10F, 10F, 0F, 88F)
                     }
 
-                    Log.d("bytesV",imagesBitmaps[currentPost].byteCount.toString())
 
                     val newCurrentPost = currentPost
                     postImageView.setOnClickListener {
@@ -195,16 +197,14 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     horizontalLinearLayout.addView(postImageView)
                 }
                 binding.postsLinearLayout.addView(horizontalLinearLayout)
-
             }
         }
 
+
         if (appViewModel.isProfileDataInitialized()) showPosts()
 
-        appViewModel.allUserPosts.observe(viewLifecycleOwner) {
-            Log.d("observed", "asd")
-            appViewModel.saveImagesToLocalDB(it as MutableList)
 
+        appViewModel.userPostsFound.observe(viewLifecycleOwner) {
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -218,15 +218,15 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             binding.postsLinearLayout.addView(progressBar)
         }
 
+
         appViewModel.postsProcessed.observe(viewLifecycleOwner) {
             showPosts()
         }
 
-        //----------------------------Navigation between screens------------------------------------
+        //----------------------------Navigation between screens----------------------------------//
         //to SearchScreen
         binding.searchButton.setOnClickListener {
-            val action =
-                UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
+            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
             findNavController().navigate(action)
         }
         //to MainScreen
@@ -236,14 +236,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         }
 
         binding.menuImgBtn.setOnClickListener {
-            val action =
-                UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
             findNavController().navigate(action)
         }
 
 
         binding.avatarPlacer.setOnClickListener {
-
             val popupSetProfilePicture = layoutInflater.inflate(R.layout.add_profile_picture_popup, null)
 
             profilePictureImage = popupSetProfilePicture.findViewById(R.id.addProfilePictureImage)
@@ -267,7 +265,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
                 else
                     MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-                appViewModel.saveProfilePictureToLocalDB(bitmap)
+                appViewModel.saveAddedProfilePictureToLocalDB(bitmap)
 
                 binding.avatarPlacer.setImageBitmap(appViewModel.localData.profilePicture)
             }
@@ -330,8 +328,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                 settingsDialog.dismiss()
 
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
                 findNavController().navigate(action)
             }
 
@@ -347,38 +344,33 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                 settingsDialog.dismiss()
 
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
                 findNavController().navigate(action)
             }
 
             likedPostButton.setOnClickListener {
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
             }
 
             likedPostText.setOnClickListener {
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
             }
 
             newPrefButton.setOnClickListener {
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
             }
 
             newPrefText.setOnClickListener {
-                val action =
-                    UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
@@ -450,10 +442,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             addWorkPopupImage = popupAddWork.findViewById(R.id.AddWorkImage)
 
-            var min1 = 0
-            var min2 = 0
-            var min3 = 0
-
             addingNewPhoto = true
             launchGallery()
 
@@ -467,8 +455,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             addNewPhotoNextButton.setOnClickListener {
 
-                val description = popupAddWork.findViewById<TextInputEditText>(R.id.username_input)
-                    .text.toString()
+                val description = popupAddWork.findViewById<TextInputEditText>(R.id.username_input).text.toString()
 
                 val popupFirstCategory = layoutInflater.inflate(R.layout.first_category_popup, null)
                 val nextFirstCategory = popupFirstCategory.findViewById<Button>(R.id.Next1)
@@ -476,22 +463,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 val compGraph = popupFirstCategory.findViewById<Button>(R.id.comp_graph_button)
                 val textMinFirstCategory = popupFirstCategory.findViewById<TextView>(R.id.first_category_min)
 
-                var byHandClicked = 0
-                var computerGraphClicked = 0
-
-                var clickS = 0
-                var clickP = 0
-                var clickL = 0
-                var clickM = 0
-                var clickB = 0
-                var clickI = 0
-                var clickC = 0
-                var clickN = 0
-                var clickA = 0
-                var clickH = 0
-
-                var depressedButtonClicked = 0
-                var funButtonClicked = 0
+                val tagsForPhoto = TagsForPhoto()
 
                 addWorkDialog.dismiss()
 
@@ -502,42 +474,29 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 firstCategoryDialog.setCancelable(false)
                 firstCategoryDialog.show()
 
-                byHand.setOnClickListener {
 
-                    byHandClicked += 1
-                    if (byHandClicked > 2) byHandClicked = 1
-                    if (byHandClicked != 2) {
-                        byHand.setBackgroundColor(Color.parseColor("#0082DD"))
-                        byHand.setTextColor(Color.WHITE)
-                        min1 += 1
-                    } else {
-                        byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                        byHand.setTextColor(Color.BLACK)
-                        min1 -= 1
-                    }
+                byHand.setOnClickListener {
+                    tagsForPhoto.byHandClicked()
+                }
+                tagsForPhoto.byHandColorChanged.observe(viewLifecycleOwner) {
+                    byHand.setBackgroundColor(tagsForPhoto.byHandBGColor)
+                    byHand.setTextColor(tagsForPhoto.byHandTextColor)
                 }
 
                 compGraph.setOnClickListener {
-
-                    computerGraphClicked += 1
-                    if (computerGraphClicked > 2) computerGraphClicked = 1
-                    if (computerGraphClicked != 2) {
-                        compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
-                        compGraph.setTextColor(Color.WHITE)
-                        min1 += 1
-
-                    } else {
-                        compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                        compGraph.setTextColor(Color.BLACK)
-                        min1 -= 1
-                    }
+                    tagsForPhoto.computerGraphClicked()
+                }
+                tagsForPhoto.computerGraphColorChanged.observe(viewLifecycleOwner) {
+                    compGraph.setBackgroundColor(tagsForPhoto.computerGraphBGColor)
+                    compGraph.setTextColor(tagsForPhoto.computerGraphTextColor)
                 }
 
-                nextFirstCategory.setOnClickListener {
-                    if (min1 != 1) {
-                        textMinFirstCategory.setTextColor(Color.RED)
-                    } else {
 
+                nextFirstCategory.setOnClickListener {
+                    if (tagsForPhoto.minNumberOfTechniques != 1) {
+                        textMinFirstCategory.setTextColor(Color.RED)
+                    }
+                    else {
                         val popupSecondCategory = layoutInflater.inflate(R.layout.second_category_popup, null)
                         val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
                         val textMinSecondCategory = popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
@@ -563,149 +522,90 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         secondCategoryDialog.show()
 
                         stillLifeButton.setOnClickListener {
-                            clickS += 1
-                            if (clickS > 2) clickS = 1
-                            if (clickS != 2) {
-                                stillLifeButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                stillLifeButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                stillLifeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                stillLifeButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.stillLifeButtonClicked()
+                        }
+                        tagsForPhoto.stillLifeButtonColorChanged.observe(viewLifecycleOwner) {
+                            stillLifeButton.setBackgroundColor(tagsForPhoto.stillLifeButtonBGColor)
+                            stillLifeButton.setTextColor(tagsForPhoto.stillLifeButtonTextColor)
                         }
 
                         portraitButton.setOnClickListener {
-                            clickP += 1
-                            if (clickP > 2) clickP = 1
-                            if (clickP != 2) {
-                                portraitButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                portraitButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                portraitButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                portraitButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.portraitButtonClicked()
+                        }
+                        tagsForPhoto.portraitButtonColorChanged.observe(viewLifecycleOwner) {
+                            portraitButton.setBackgroundColor(tagsForPhoto.portraitButtonBGColor)
+                            portraitButton.setTextColor(tagsForPhoto.portraitButtonTextColor)
                         }
 
                         landscapeButton.setOnClickListener {
-                            clickL += 1
-                            if (clickL > 2) clickL = 1
-                            if (clickL != 2) {
-                                landscapeButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                landscapeButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                landscapeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                landscapeButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.landscapeButtonClicked()
+                        }
+                        tagsForPhoto.landscapeButtonColorChanged.observe(viewLifecycleOwner) {
+                            landscapeButton.setBackgroundColor(tagsForPhoto.landscapeButtonBGColor)
+                            landscapeButton.setTextColor(tagsForPhoto.landscapeButtonTextColor)
                         }
 
                         marineButton.setOnClickListener {
-                            clickM += 1
-                            if (clickM > 2) clickM = 1
-                            if (clickM != 2) {
-                                marineButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                marineButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                marineButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                marineButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.marineButtonClicked()
+                        }
+                        tagsForPhoto.marineButtonColorChanged.observe(viewLifecycleOwner) {
+                            marineButton.setBackgroundColor(tagsForPhoto.marineButtonBGColor)
+                            marineButton.setTextColor(tagsForPhoto.marineButtonTextColor)
                         }
 
                         battlePaintingButton.setOnClickListener {
-                            clickB += 1
-                            if (clickB > 2) clickB = 1
-                            if (clickB != 2) {
-                                battlePaintingButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                battlePaintingButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                battlePaintingButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                battlePaintingButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.battlePaintingButtonClicked()
+                        }
+                        tagsForPhoto.battlePaintingButtonColorChanged.observe(viewLifecycleOwner) {
+                            battlePaintingButton.setBackgroundColor(tagsForPhoto.battlePaintingButtonBGColor)
+                            battlePaintingButton.setTextColor(tagsForPhoto.battlePaintingButtonTextColor)
                         }
 
                         interiorButton.setOnClickListener {
-                            clickI += 1
-                            if (clickI > 2) clickI = 1
-                            if (clickI != 2) {
-                                interiorButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                interiorButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                interiorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                interiorButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.interiorButtonClicked()
+                        }
+                        tagsForPhoto.interiorButtonColorChanged.observe(viewLifecycleOwner) {
+                            interiorButton.setBackgroundColor(tagsForPhoto.interiorButtonBGColor)
+                            interiorButton.setTextColor(tagsForPhoto.interiorButtonTextColor)
                         }
 
                         caricatureButton.setOnClickListener {
-                            clickC += 1
-                            if (clickC > 2) clickC = 1
-                            if (clickC != 2) {
-                                caricatureButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                caricatureButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                caricatureButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                caricatureButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.caricatureButtonClicked()
+                        }
+                        tagsForPhoto.caricatureButtonColorChanged.observe(viewLifecycleOwner) {
+                            caricatureButton.setBackgroundColor(tagsForPhoto.caricatureButtonBGColor)
+                            caricatureButton.setTextColor(tagsForPhoto.caricatureButtonTextColor)
                         }
 
                         nudeButton.setOnClickListener {
-                            clickN += 1
-                            if (clickN > 2) clickN = 1
-                            if (clickN != 2) {
-                                nudeButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                nudeButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                nudeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                nudeButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.nudeButtonClicked()
+                        }
+                        tagsForPhoto.nudeButtonColorChanged.observe(viewLifecycleOwner) {
+                            nudeButton.setBackgroundColor(tagsForPhoto.nudeButtonBGColor)
+                            nudeButton.setTextColor(tagsForPhoto.nudeButtonTextColor)
                         }
 
                         animeButton.setOnClickListener {
-                            clickA += 1
-                            if (clickA > 2) clickA = 1
-                            if (clickA != 2) {
-                                animeButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                animeButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                animeButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                animeButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.animeButtonClicked()
+                        }
+                        tagsForPhoto.animeButtonColorChanged.observe(viewLifecycleOwner) {
+                            animeButton.setBackgroundColor(tagsForPhoto.animeButtonBGColor)
+                            animeButton.setTextColor(tagsForPhoto.animeButtonTextColor)
                         }
 
                         horrorButton.setOnClickListener {
-                            clickH += 1
-                            if (clickH != 2) {
-                                horrorButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                horrorButton.setTextColor(Color.WHITE)
-                                min2 += 1
-                            } else {
-                                horrorButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                horrorButton.setTextColor(Color.BLACK)
-                                min2 -= 1
-                            }
+                            tagsForPhoto.horrorButtonClicked()
+                        }
+                        tagsForPhoto.horrorButtonColorChanged.observe(viewLifecycleOwner) {
+                            horrorButton.setBackgroundColor(tagsForPhoto.horrorButtonBGColor)
+                            horrorButton.setTextColor(tagsForPhoto.horrorButtonTextColor)
                         }
 
                         nextSecondCategory.setOnClickListener{
-                            if (min2 != 1) {
+                            if (tagsForPhoto.minNumberOfGenres != 1) {
                                 textMinSecondCategory.setTextColor(Color.RED)
-                            } else {
-
+                            }
+                            else {
                                 val popupThirdCategory = layoutInflater.inflate(R.layout.third_category_popup, null)
                                 val depressedButton = popupThirdCategory.findViewById<Button>(R.id.depressed_button)
                                 val funButton = popupThirdCategory.findViewById<Button>(R.id.fun_button)
@@ -720,42 +620,37 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                 thirdCategoryDialog.setCancelable(false)
                                 thirdCategoryDialog.show()
 
-                                depressedButton.setOnClickListener {
-
-                                    depressedButtonClicked += 1
-                                    if (depressedButtonClicked > 2) depressedButtonClicked = 1
-                                    if (depressedButtonClicked != 2) {
-                                        depressedButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                        depressedButton.setTextColor(Color.WHITE)
-                                        min3 += 1
-                                    }
-                                    else {
-                                        depressedButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                        depressedButton.setTextColor(Color.BLACK)
-                                        min3 -= 1
-                                    }
-                                }
-
                                 funButton.setOnClickListener {
-                                    funButtonClicked += 1
-                                    if (funButtonClicked > 2) funButtonClicked = 1
-                                    if (funButtonClicked != 2) {
-                                        funButton.setBackgroundColor(Color.parseColor("#0082DD"))
-                                        funButton.setTextColor(Color.WHITE)
-                                        min3 += 1
-                                    }
-                                    else {
-                                        funButton.setBackgroundColor(Color.parseColor("#00FFFFFF"))
-                                        funButton.setTextColor(Color.BLACK)
-                                        min3 -= 1
-                                    }
+                                    tagsForPhoto.funButtonClicked()
                                 }
+                                tagsForPhoto.funButtonColorChanged.observe(viewLifecycleOwner) {
+                                    funButton.setBackgroundColor(tagsForPhoto.funButtonBGColor)
+                                    funButton.setTextColor(tagsForPhoto.funButtonTextColor)
+                                }
+
+                                depressedButton.setOnClickListener {
+                                    tagsForPhoto.depressedButtonClicked()
+                                }
+                                tagsForPhoto.depressedButtonColorChanged.observe(viewLifecycleOwner) {
+                                    depressedButton.setBackgroundColor(tagsForPhoto.depressedButtonBGColor)
+                                    depressedButton.setTextColor(tagsForPhoto.depressedButtonTextColor)
+                                }
+
                                 publishButton.setOnClickListener {
-                                    if (min3 == 1) {
+                                    if (tagsForPhoto.minNumberOfMoods == 1) {
                                         appViewModel.saveImageAndData(
-                                            byHandClicked, funButtonClicked,
-                                            clickS, clickP, clickL, clickM, clickB,
-                                            clickI, clickC, clickN, clickA, clickH,
+                                            tagsForPhoto.byHandClicked,
+                                            tagsForPhoto.funButtonClicked,
+                                            tagsForPhoto.stillLifeButtonClicked,
+                                            tagsForPhoto.portraitButtonClicked,
+                                            tagsForPhoto.landscapeButtonClicked,
+                                            tagsForPhoto.marineButtonClicked,
+                                            tagsForPhoto.battlePaintingButtonClicked,
+                                            tagsForPhoto.interiorButtonClicked,
+                                            tagsForPhoto.caricatureButtonClicked,
+                                            tagsForPhoto.nudeButtonClicked,
+                                            tagsForPhoto.animeButtonClicked,
+                                            tagsForPhoto.horrorButtonClicked,
                                             description
                                         )
 
@@ -788,6 +683,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {

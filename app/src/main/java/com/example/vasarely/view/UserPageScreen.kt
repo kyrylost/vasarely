@@ -53,28 +53,34 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
         val montserratBoldFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
         val montserratRegularFont: Typeface? =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
 
         binding.username.typeface = montserratBoldFont
-        binding.subs.typeface = montserratBoldFont
-        binding.subsNumber.typeface = montserratRegularFont
-        binding.follow.typeface = montserratBoldFont
-        binding.followNumber.typeface = montserratRegularFont
+        binding.followers.typeface = montserratBoldFont
+        binding.followersNumber.typeface = montserratRegularFont
+        binding.following.typeface = montserratBoldFont
+        binding.followingNumber.typeface = montserratRegularFont
         binding.subscribe.typeface = montserratBoldFont
+
+        binding.username.text = appViewModel.foundedUserData[1]
+        binding.followersNumber.text = appViewModel.foundedUserData[3]
+        binding.followingNumber.text = appViewModel.foundedUserData[4]
 
 
         fun showPosts() {
 
             binding.userPostsLinearLayout.removeAllViews()
-            val lines = appViewModel.selectedUserLines
-            val lastLinePosts = appViewModel.selectedUserLastLinePosts
+            val lines = appViewModel.foundedUserLines
+            val lastLinePosts = appViewModel.foundedUserLastLinePosts
 
 
-            val imagesBitmaps = appViewModel.selectedUserData.allFoundedUserPostsData
+            val imagesBitmaps = appViewModel.foundedUserData.allFoundedUserPostsData
             var currentPost = 0
 
             for (line in 1..lines.toInt()) {
@@ -184,9 +190,7 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             findNavController().navigate(action)
         }
 
-        binding.username.text = appViewModel.selectedUserData[1]
-
-        if (appViewModel.selectedUserData[2] != "0") {
+        if (appViewModel.foundedUserData[2] != "0") {
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -208,6 +212,12 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
 
         appViewModel.foundedUserPostProcessed.observe(viewLifecycleOwner) {
             showPosts()
+        }
+
+        binding.subscribe.setOnClickListener {
+            binding.followersNumber.text = (appViewModel.foundedUserData[3].toInt() + 1).toString()
+            appViewModel.addFollower()
+            appViewModel.addFollowing()
         }
 
     }
