@@ -2,7 +2,6 @@ package com.example.vasarely.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
@@ -10,19 +9,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.model.*
+import com.google.firebase.appcheck.internal.util.Logger.TAG
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.math.log
 
 @OptIn(DelicateCoroutinesApi::class)
 class AppViewModel: ViewModel() {
     private var database = Database()
 
     var userMutableLiveData = database.userMutableLiveData
-    var userData = database.userData
+    //var userData = database.userData
 
-    lateinit var localData: UserData
+    lateinit var userData: UserData
     lateinit var userPostsData: UserPostsData
 
     var userPostsFound = SingleLiveEvent<Boolean>()
@@ -41,6 +42,7 @@ class AppViewModel: ViewModel() {
     lateinit var foundedUserData: FoundedUserData
     var foundedUserPosts = database.foundedUserPosts
     var foundedUserPostProcessed = SingleLiveEvent<Boolean>()
+    var foundedUserDataChanged = SingleLiveEvent<Boolean>()
 
 
     var postsAmount = 0
@@ -51,13 +53,13 @@ class AppViewModel: ViewModel() {
     var foundedUserLastLinePosts = 0
 
 
-    fun isLocalDataInitialized() = ::localData.isInitialized
+    fun isLocalDataInitialized() = ::userData.isInitialized
 
     fun isProfileDataInitialized() = ::userPostsData.isInitialized
 
     fun isUserDBInitialized() = ::userDB.isInitialized
 
-    fun isProfilePictureInitialized() = localData.profilePictureIsInitialized()
+    fun isProfilePictureInitialized() = userData.profilePictureIsInitialized()
 
     fun setUserDBStatus() {
         userDB = "initialized"
@@ -86,6 +88,10 @@ class AppViewModel: ViewModel() {
 
     init {
         viewModelScope.launch {
+            database.userData.observeForever {
+                processData(it)
+            }
+
             database.localDbCopyLiveEvent.observeForever {
                 Log.d("scope", "VM")
                 val recommendationsToProcessList = mutableListOf<Map<Int, Any?>>()
@@ -163,7 +169,7 @@ class AppViewModel: ViewModel() {
             }
         }
     }
-    
+
 
     fun register(email: String, password: String, username: String) =
         database.register(email, password, username)
@@ -208,7 +214,6 @@ class AppViewModel: ViewModel() {
         database.savePreference(
             technique, mood, selectedGenres
         )
-
     }
 
 
@@ -217,15 +222,15 @@ class AppViewModel: ViewModel() {
     }
 
     fun saveAddedProfilePictureToLocalDB(bitmap: Bitmap) {
-        localData.profilePicture = bitmap
+        userData.profilePicture = bitmap
     }
 
     fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
         if (bitmap.byteCount < 50135040) {
-            localData.profilePicture = bitmap
+            userData.profilePicture = bitmap
         }
         else {
-            localData.profilePicture = rotateImage(bitmap, 90F)
+            userData.profilePicture = rotateImage(bitmap, 90F)
         }
     }
 
@@ -313,10 +318,13 @@ class AppViewModel: ViewModel() {
         database.getData()
     }
 
-    fun processData(data: Any) {
+    private fun processData(data: Any) {
         val username: String
         val technique: String
         val mood: String
+        val followers: String
+        val following: String
+        var followingList = listOf<String>()
         val genres = mutableListOf<String>()
 
         val dataHashMap = data as HashMap<*, *>
@@ -326,12 +334,19 @@ class AppViewModel: ViewModel() {
         username = dataHashMap["username"].toString()
         technique = preferenceHashMap["technique"].toString()
         mood = preferenceHashMap["mood"].toString()
+        followers = dataHashMap["followers"].toString()
+        following = dataHashMap["following"].toString()
+        if (dataHashMap["followingList"].toString() != "empty")
+            followingList = dataHashMap["followingList"].toString().split(",")
+        Log.d("followingList", followingList.toString())
+
         val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
         for (value in genresArrayList) {
             genres.add(value as String)
         }
 
-        localData = UserData(username, technique, mood, genres)
+        userData = UserData(username, technique, mood, genres,
+            followers, following, followingList)
     }
 
 
@@ -349,17 +364,17 @@ class AppViewModel: ViewModel() {
                 val postsGenre = singlePostDataMapValue[1]
                 val postTechnique = singlePostDataMapValue[2]
 
-                if (localData.moodReference == "ignore") correspondsToPreference += 25
-                else if (postMood == localData.moodReference) correspondsToPreference += 25
+                if (userData.moodReference == "ignore") correspondsToPreference += 25
+                else if (postMood == userData.moodReference) correspondsToPreference += 25
 
-                for (genre in localData.genreReferences) {
+                for (genre in userData.genreReferences) {
                     if (genre == postsGenre) {
                         correspondsToPreference += 50
                     }
                 }
 
-                if (localData.techniqueReference == "ignore") correspondsToPreference += 25
-                else if (postTechnique == localData.techniqueReference) correspondsToPreference += 25
+                if (userData.techniqueReference == "ignore") correspondsToPreference += 25
+                else if (postTechnique == userData.techniqueReference) correspondsToPreference += 25
 
 
                 if (correspondsToPreference >= 50) {database.getImage(singlePostDataMapValue[4] as String,
@@ -382,19 +397,26 @@ class AppViewModel: ViewModel() {
     }
 
     fun saveFoundedUser(id : Int) {
-        foundedUserData = FoundedUserData(lastFoundedUsersData.usersList[id])
+        val selectedUser = lastFoundedUsersData.usersList[id]
+
+        var followersList = listOf<String>()
+        if (selectedUser[5] != "empty")
+            followersList = selectedUser[5].split(",")
+
+        foundedUserData = FoundedUserData(selectedUser[0], selectedUser[1], selectedUser[2].toInt(),
+            selectedUser[3].toInt(), selectedUser[4].toInt(), followersList)
     }
 
 
     fun getOtherUserPosts () {
-        database.getOtherUserPosts(foundedUserData[0], foundedUserData[2].toInt())
+        database.getOtherUserPosts(foundedUserData.uid, foundedUserData.worksAmount)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun processFoundedUserPhotos(imagesBitmapList: MutableList<Bitmap>) {
 
         foundedUserData.allFoundedUserPostsData = imagesBitmapList
-        foundedUserLines = foundedUserData[2].toDouble() / 3.0
+        foundedUserLines = foundedUserData.worksAmount.toDouble() / 3.0
         foundedUserLastLinePosts = ((foundedUserLines * 10).toInt() % 10) / 3
 
         GlobalScope.launch (Dispatchers.IO) {
@@ -417,11 +439,53 @@ class AppViewModel: ViewModel() {
     }
 
 
-    fun addFollower() {
-        database.addFollower(foundedUserData[0], foundedUserData[4])
+    fun follow() {
+        var allowFollowing = true
+        for (i in userData.followingList) {
+            if (i == foundedUserData.uid) allowFollowing = false
+        }
+
+        if (allowFollowing) {
+            val newFollowingListString: String
+            if (userData.followingList.isEmpty()) {
+                newFollowingListString = foundedUserData.uid
+                database.addFollowing(userData.following.toInt() + 1, newFollowingListString)
+                userData.addNewValue(foundedUserData.uid)
+                Log.d("ifEmpty", userData.followingList.toString())
+            }
+            else {
+                userData.addNewValue(foundedUserData.uid)
+                newFollowingListString = userData.followingList.joinToString(",")
+                database.addFollowing(userData.following.toInt() + 1, newFollowingListString)
+                Log.d("ifNotEmpty", userData.followingList.toString())
+            }
+
+            if (foundedUserData.followersList.isEmpty()) {
+                database.addFollower(foundedUserData.uid, foundedUserData.followers + 1)
+            }
+            else {
+                database.addFollower(foundedUserData.uid, foundedUserData.followers + 1,
+                    foundedUserData.followersList.joinToString(","))
+            }
+
+//            var followersListString = ""
+//            for (uid in foundedUserData.followersList) {
+//                if (uid!="" && uid!="empty") followersListString += "$uid,"
+//            }
+
+            changeUsersLocalDataAfterFollow()
+
+        }
     }
 
-    fun addFollowing() {
-        //database.addFollowing(profileData.followingNumber)
+    private fun changeUsersLocalDataAfterFollow () {
+        val currentFollowingNumber = userData.following.toInt()
+        userData.following = (currentFollowingNumber + 1).toString()
+        //userData.followingList = newFollowingList
+
+        val currentNumberOfFollowers = foundedUserData.followers
+        foundedUserData.followers = (currentNumberOfFollowers + 1)
+        //change followersList
+        foundedUserDataChanged.postValue(true)
     }
 }

@@ -13,12 +13,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -29,9 +27,7 @@ import com.example.vasarely.databinding.UserPersonalPageScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
 import com.example.vasarely.viewmodel.TagsForPhoto
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.CoroutineScope
 import java.io.IOException
-import kotlin.coroutines.coroutineContext
 
 
 class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
@@ -68,9 +64,9 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.userData.observe(viewLifecycleOwner) {
-            appViewModel.processData(it)
-        }
+//        appViewModel.userData.observe(viewLifecycleOwner) {
+//            appViewModel.processData(it)
+//        }
 
         appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
@@ -84,9 +80,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.username.text = appViewModel.localData.username
+        binding.username.text = appViewModel.userData.username
+        binding.followersNumber.text = appViewModel.userData.followers
+        binding.followingNumber.text = appViewModel.userData.following
+
         if (appViewModel.isProfilePictureInitialized())
-            binding.avatarPlacer.setImageBitmap(appViewModel.localData.profilePicture)
+            binding.avatarPlacer.setImageBitmap(appViewModel.userData.profilePicture)
 
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
 
@@ -267,7 +266,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
                 appViewModel.saveAddedProfilePictureToLocalDB(bitmap)
 
-                binding.avatarPlacer.setImageBitmap(appViewModel.localData.profilePicture)
+                binding.avatarPlacer.setImageBitmap(appViewModel.userData.profilePicture)
             }
         }
 

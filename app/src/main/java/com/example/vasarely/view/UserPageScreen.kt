@@ -68,9 +68,9 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
         binding.followingNumber.typeface = montserratRegularFont
         binding.subscribe.typeface = montserratBoldFont
 
-        binding.username.text = appViewModel.foundedUserData[1]
-        binding.followersNumber.text = appViewModel.foundedUserData[3]
-        binding.followingNumber.text = appViewModel.foundedUserData[4]
+        binding.username.text = appViewModel.foundedUserData.username
+        binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
+        binding.followingNumber.text = appViewModel.foundedUserData.getFollowing()
 
 
         fun showPosts() {
@@ -190,7 +190,7 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             findNavController().navigate(action)
         }
 
-        if (appViewModel.foundedUserData[2] != "0") {
+        if (appViewModel.foundedUserData.worksAmount != 0) {
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -214,11 +214,17 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             showPosts()
         }
 
-        binding.subscribe.setOnClickListener {
-            binding.followersNumber.text = (appViewModel.foundedUserData[3].toInt() + 1).toString()
-            appViewModel.addFollower()
-            appViewModel.addFollowing()
+        appViewModel.foundedUserDataChanged.observe(viewLifecycleOwner) {
+            binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
+
         }
+
+        binding.subscribe.setOnClickListener {
+            //binding.followersNumber.text = (appViewModel.foundedUserData[3].toInt() + 1).toString()
+            appViewModel.follow()
+        }
+
+
 
     }
 

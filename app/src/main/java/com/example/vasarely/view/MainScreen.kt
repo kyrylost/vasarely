@@ -26,9 +26,9 @@ class MainScreen: Fragment(R.layout.main_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.userData.observe(viewLifecycleOwner) {
-            appViewModel.processData(it)
-        }
+//        appViewModel.userData.observe(viewLifecycleOwner) {
+//            appViewModel.processData(it)
+//        }
 
         appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()

@@ -111,10 +111,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
 
-        appViewModel.userData.observe(viewLifecycleOwner) {
-            appViewModel.processData(it)
-            //showData()
-        }
+//        appViewModel.userData.observe(viewLifecycleOwner) {
+//            appViewModel.
+//            //showData()
+//        }
 
         appViewModel.profilePicture.observe(viewLifecycleOwner) {
             appViewModel.saveProfilePictureToLocalDB(it)

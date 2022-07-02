@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.vasarely.SingleLiveEvent
+import com.google.firebase.appcheck.internal.util.Logger.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -45,6 +47,21 @@ class Database {
     lateinit var uid: String
     private var amountOfWorks = 0
 
+    //var dataReference = MutableLiveData<DataSnapshot>()
+    private fun addDataEventListener(data: DatabaseReference) {
+        val dataChangedListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                localDbCopy = LocalDbCopy(dataSnapshot)
+                Log.d(TAG, dataSnapshot.toString())
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "loadData:onCancelled", databaseError.toException())
+            }
+        }
+        data.addValueEventListener(dataChangedListener)
+    }
+
 
     fun register(email: String, password: String, username: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
@@ -59,6 +76,8 @@ class Database {
 
                 currentUserDb.child("userData").child("followers").setValue(0)
                 currentUserDb.child("userData").child("following").setValue(0)
+                currentUserDb.child("userData").child("followersList").setValue("empty")
+                currentUserDb.child("userData").child("followingList").setValue("empty")
                 currentUserDb.child("userData").child("worksAmount").setValue(0)
                 currentUserDb.child("userData").child("username").setValue(username)
                 currentUserDb.child("profileData").child("posts").setValue(1)
@@ -74,6 +93,7 @@ class Database {
 
                 firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
                 databaseReference = firebaseDatabase.reference.child("profiles")
+                addDataEventListener(databaseReference)
                 currentUser = firebaseAuth.currentUser!!
                 uid = currentUser.uid
                 currentUserDb = databaseReference.child((uid))
@@ -227,39 +247,45 @@ class Database {
     fun findByUsername(name: String) {
         val foundedUsersData = mutableListOf<List<String>>()
 
-        for (userData in localDbCopy.allData.children) {
-            val username = userData.child("userData").child("username").value.toString()
+        if (::localDbCopy.isInitialized) {
+            for (userData in localDbCopy.allData.children) {
+                val username = userData.child("userData").child("username").value.toString()
 
-            val nameLength = name.count()
+                val nameLength = name.count()
 
-            if (username.lowercase() == name.lowercase()) {
-                val foundedUserData = mutableListOf<String>()
-                foundedUserData.add(userData.key.toString())
-                foundedUserData.add(username)
-                foundedUserData.add(userData.child("userData").child("worksAmount").value.toString())
-                foundedUserData.add(userData.child("userData").child("followers").value.toString())
-                foundedUserData.add(userData.child("userData").child("following").value.toString())
-                foundedUsersData.addAll(0, listOf(foundedUserData))
-                //foundedUser.postValue(foundedUsersData)
-                Log.d("yes", userData.key.toString())
-            }
-
-            if (nameLength < username.count()) {
-                val usernameFirstN = (username.subSequence(0, nameLength)).toString()
-
-                if(usernameFirstN.lowercase() == name.lowercase()) {
+                if (username.lowercase() == name.lowercase()) {
                     val foundedUserData = mutableListOf<String>()
                     foundedUserData.add(userData.key.toString())
                     foundedUserData.add(username)
                     foundedUserData.add(userData.child("userData").child("worksAmount").value.toString())
                     foundedUserData.add(userData.child("userData").child("followers").value.toString())
                     foundedUserData.add(userData.child("userData").child("following").value.toString())
-                    foundedUsersData.add(foundedUserData)
+                    foundedUserData.add(userData.child("userData").child("followersList").value.toString())
+                    foundedUsersData.addAll(0, listOf(foundedUserData))
+                    //foundedUser.postValue(foundedUsersData)
+                    Log.d("yes", userData.key.toString())
                 }
-            }
 
+                if (nameLength < username.count()) {
+                    val usernameFirstN = (username.subSequence(0, nameLength)).toString()
+
+                    if(usernameFirstN.lowercase() == name.lowercase()) {
+                        val foundedUserData = mutableListOf<String>()
+                        foundedUserData.add(userData.key.toString())
+                        foundedUserData.add(username)
+                        foundedUserData.add(userData.child("userData").child("worksAmount").value.toString())
+                        foundedUserData.add(userData.child("userData").child("followers").value.toString())
+                        foundedUserData.add(userData.child("userData").child("following").value.toString())
+                        foundedUserData.add(userData.child("userData").child("followersList").value.toString())
+                        foundedUsersData.add(foundedUserData)
+                    }
+                }
+
+            }
+            foundedUser.postValue(foundedUsersData)
         }
-        foundedUser.postValue(foundedUsersData)
+
+        else findByUsername(name)
     }
 
     fun getOtherUserPosts (uid : String, amountOfWorks : Int) {
@@ -277,7 +303,20 @@ class Database {
         }
     }
 
-    fun addFollower (uid : String, followersNumber : String) {
-        databaseReference.child(uid).child("userData").child(followersNumber)
+    fun addFollower (userUid : String, followersNumber : Int, followersUid : String = "") {
+        databaseReference.child(userUid).child("userData").child("followers").setValue(followersNumber)
+        if (followersUid == "") {
+            databaseReference.child(userUid).child("userData").child("followersList").setValue(uid)
+        }
+        else {
+            val newFollowersList = "$followersUid,$uid"
+            databaseReference.child(userUid).child("userData").child("followersList").setValue(newFollowersList)
+        }
+
+    }
+
+    fun addFollowing (followingNumber : Int, followingUsersUid: String) {
+        databaseReference.child(uid).child("userData").child("following").setValue(followingNumber)
+        databaseReference.child(uid).child("userData").child("followingList").setValue(followingUsersUid)
     }
 }
