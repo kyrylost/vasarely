@@ -6,15 +6,18 @@ import kotlinx.coroutines.*
 
 class SearchViewModel: ViewModel() {
     var name = MutableLiveData<String>()
-    var scopesList = mutableListOf<CoroutineScope>()
+    var stopWaiting = MutableLiveData<Boolean>()
+    private var getNameScopesList = mutableListOf<CoroutineScope>()
+    lateinit var waitScope : CoroutineScope
+
 
     @OptIn(DelicateCoroutinesApi::class)
     fun getNameWithDelay(it: String) {
 
         fun asyncGetNameWithDelay() : String {
-            val scopeNumber = scopesList.count()
+            val scopeNumber = getNameScopesList.count()
             if (scopeNumber != 1) {
-                scopesList[scopeNumber - 2].cancel()
+                getNameScopesList[scopeNumber - 2].cancel()
             }
 
             Thread.sleep(1300)
@@ -23,8 +26,17 @@ class SearchViewModel: ViewModel() {
 
         GlobalScope.launch (Dispatchers.IO) {
             val text = async {asyncGetNameWithDelay()}
-            scopesList.add(this)
+            getNameScopesList.add(this)
             name.postValue(text.await())
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun waitForEightSec() {
+        GlobalScope.launch (Dispatchers.IO) {
+            waitScope = this
+            Thread.sleep(8000)
+            stopWaiting.postValue(true)
         }
     }
 }

@@ -25,6 +25,7 @@ import com.example.vasarely.viewmodel.SearchViewModel
 class SearchScreen : Fragment(R.layout.search_screen) {
 
     private val appViewModel: AppViewModel by activityViewModels()
+    private val searchViewModel = SearchViewModel()
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -86,7 +87,8 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
                     val matrix = Matrix()
                     matrix.postRotate(angle)
-                    return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+                    return Bitmap.createBitmap(
+                        source, 0, 0, source.width, source.height, matrix, true)
                 }
 
 
@@ -95,7 +97,8 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 val postImageView = ImageView(context)
 
                 val params = screenWidth - dpToPx(60F)
-                val postLinearLayoutParams = LinearLayout.LayoutParams(params, LinearLayout.LayoutParams.WRAP_CONTENT)
+                val postLinearLayoutParams = LinearLayout.LayoutParams(
+                    params, LinearLayout.LayoutParams.WRAP_CONTENT)
 
                 postImageView.layoutParams = postLinearLayoutParams
                 postImageView.scaleType = ImageView.ScaleType.FIT_START
@@ -111,21 +114,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
 
-//        appViewModel.userData.observe(viewLifecycleOwner) {
-//            appViewModel.
-//            //showData()
-//        }
-
         appViewModel.profilePicture.observe(viewLifecycleOwner) {
             appViewModel.saveProfilePictureToLocalDB(it)
         }
 
-//        appViewModel.recommendationsToProcess.observe(viewLifecycleOwner) {
-//            if (appViewModel.isLocalDataInitialized()) {
-//                appViewModel.findPostsToRecommend(it)
-//            }
-//            else Toast.makeText(requireContext(), "Can't show your recommendations now, try later", Toast.LENGTH_SHORT).show()
-//        }
 
         if (!appViewModel.isLocalDataInitialized()) {
             if (appViewModel.isUserDBInitialized()) {
@@ -136,6 +128,14 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")
                 progressDialog.setCancelable(false)
                 progressDialog.show()
+
+                searchViewModel.waitForEightSec()
+                searchViewModel.stopWaiting.observe(viewLifecycleOwner) {
+                    progressDialog.dismiss()
+                    Toast.makeText(requireContext(), "Відсутній зв'язок з базою даних!", Toast.LENGTH_LONG).show()
+                }
+
+                //wait for 10 sec, if no send new request
             }
         }
         else showData()
@@ -155,7 +155,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         logo.layoutParams = logoParams
 
 
-        //----------------------------Navigation between screens---------------------------------------
+        //----------------------------Navigation between screens----------------------------------//
         binding.homeButton.setOnClickListener {
                 val action = SearchScreenDirections.actionSearchScreenToMainScreen()
                 findNavController().navigate(action)
@@ -167,19 +167,16 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
 
-        val svm = SearchViewModel()
+        //----------------------------User searching----------------------------------------------//
         binding.search.addTextChangedListener {
-            svm.getNameWithDelay(it.toString())
+            searchViewModel.getNameWithDelay(it.toString())
         }
-        svm.name.observe(requireActivity()) {
+        searchViewModel.name.observe(requireActivity()) {
             appViewModel.findByUsername(it)
-            binding.textView2.text = it
         }
 
         appViewModel.foundedUser.observe(requireActivity()) { foundedUsers ->
-
             appViewModel.saveLastFoundedUsersData(foundedUsers)
-            Log.d("it", foundedUsers.toString())
 
             val popupMenu = PopupMenu(context, binding.search)
             popupMenu.inflate(R.menu.founded_users_menu)

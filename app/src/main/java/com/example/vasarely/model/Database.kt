@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.appcheck.internal.util.Logger.TAG
 import com.google.firebase.auth.FirebaseAuth
@@ -17,12 +16,12 @@ import kotlin.collections.HashMap
 
 class Database {
 
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private lateinit var currentUser: FirebaseUser
     private lateinit var currentUserDb: DatabaseReference
     private lateinit var preferencesReference: DatabaseReference
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private var firebaseStore: FirebaseStorage = FirebaseStorage.getInstance()
     private var storageReference: StorageReference = firebaseStore.reference
@@ -70,6 +69,7 @@ class Database {
 
                 firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
                 databaseReference = firebaseDatabase.reference.child("profiles")
+                addDataEventListener(databaseReference)
                 currentUser = firebaseAuth.currentUser!!
                 uid = currentUser.uid
                 currentUserDb = databaseReference.child((uid))

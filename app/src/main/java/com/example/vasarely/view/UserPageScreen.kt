@@ -74,7 +74,6 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
 
 
         fun showPosts() {
-
             binding.userPostsLinearLayout.removeAllViews()
             val lines = appViewModel.foundedUserLines
             val lastLinePosts = appViewModel.foundedUserLastLinePosts
@@ -173,6 +172,18 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             }
         }
 
+        appViewModel.foundedUserPosts.observe(viewLifecycleOwner) {
+            appViewModel.processFoundedUserPhotos(it as MutableList<Bitmap>)
+        }
+
+        appViewModel.foundedUserPostProcessed.observe(viewLifecycleOwner) {
+            showPosts()
+        }
+
+        appViewModel.foundedUserDataChanged.observe(viewLifecycleOwner) {
+            binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
+        }
+
 
         //to SearchScreen
         binding.searchButton.setOnClickListener {
@@ -190,7 +201,13 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             findNavController().navigate(action)
         }
 
+        binding.subscribe.setOnClickListener {
+            appViewModel.follow()
+        }
+
         if (appViewModel.foundedUserData.worksAmount != 0) {
+            appViewModel.getOtherUserPosts()
+
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -203,28 +220,6 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             progressBar.margin(0F, 30F, 0F, 30F)
             binding.userPostsLinearLayout.addView(progressBar)
         }
-
-        appViewModel.getOtherUserPosts()
-
-        appViewModel.foundedUserPosts.observe(viewLifecycleOwner) {
-            appViewModel.processFoundedUserPhotos(it as MutableList<Bitmap>)
-        }
-
-        appViewModel.foundedUserPostProcessed.observe(viewLifecycleOwner) {
-            showPosts()
-        }
-
-        appViewModel.foundedUserDataChanged.observe(viewLifecycleOwner) {
-            binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
-
-        }
-
-        binding.subscribe.setOnClickListener {
-            //binding.followersNumber.text = (appViewModel.foundedUserData[3].toInt() + 1).toString()
-            appViewModel.follow()
-        }
-
-
 
     }
 

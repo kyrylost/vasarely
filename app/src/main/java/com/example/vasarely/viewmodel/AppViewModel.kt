@@ -468,11 +468,6 @@ class AppViewModel: ViewModel() {
                     foundedUserData.followersList.joinToString(","))
             }
 
-//            var followersListString = ""
-//            for (uid in foundedUserData.followersList) {
-//                if (uid!="" && uid!="empty") followersListString += "$uid,"
-//            }
-
             changeUsersLocalDataAfterFollow()
 
         }
@@ -481,11 +476,10 @@ class AppViewModel: ViewModel() {
     private fun changeUsersLocalDataAfterFollow () {
         val currentFollowingNumber = userData.following.toInt()
         userData.following = (currentFollowingNumber + 1).toString()
-        //userData.followingList = newFollowingList
 
         val currentNumberOfFollowers = foundedUserData.followers
         foundedUserData.followers = (currentNumberOfFollowers + 1)
-        //change followersList
+        //change followersList in future
         foundedUserDataChanged.postValue(true)
     }
 }

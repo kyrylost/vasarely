@@ -64,10 +64,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-//        appViewModel.userData.observe(viewLifecycleOwner) {
-//            appViewModel.processData(it)
-//        }
-
         appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
@@ -272,13 +268,13 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
 
         binding.gridImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(resources.getColor(R.color.accent))
-            binding.columnSelected.setBackgroundColor(resources.getColor(R.color.white))
+            binding.gridSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.accent))
+            binding.columnSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         }
 
         binding.columnImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(resources.getColor(R.color.white))
-            binding.columnSelected.setBackgroundColor(resources.getColor(R.color.accent))
+            binding.gridSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+            binding.columnSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.accent))
         }
 
         binding.menuImgBtn.setOnClickListener {
@@ -686,7 +682,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data == null || data.data == null) {
+            if ((data == null) || (data.data == null)) {
                 return
             }
 

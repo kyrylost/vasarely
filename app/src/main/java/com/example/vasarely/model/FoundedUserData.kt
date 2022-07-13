@@ -15,13 +15,4 @@ data class FoundedUserData(var uid : String, var username : String,
     fun getFollowing () : String {
         return following.toString()
     }
-
-
-//    operator fun get(id: Int): String {
-//        return foundedUserData[id]
-//    }
-//
-//    operator fun set(id: Int, newValue: String) {
-//        foundedUserData[id] = newValue
-//    }
 }

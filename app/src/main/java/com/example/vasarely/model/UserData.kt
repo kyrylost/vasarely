@@ -13,13 +13,6 @@ data class UserData(var username : String, var techniqueReference : String,
         ::profilePicture.isInitialized
 
     fun addNewValue(newValue: String) {
-        //if (followingList.isEmpty()) {
-            followingList += newValue
-        //}
-//        else {
-//            val mutableFollowingList = followingList as MutableList<String>
-//            mutableFollowingList.add(newValue)
-//            followingList = mutableFollowingList
-//        }
+        followingList += newValue
     }
 }
