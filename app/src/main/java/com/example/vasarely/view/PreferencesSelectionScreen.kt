@@ -12,12 +12,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.UserViewModel
 
 
 class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen) {
 
-    private val appViewModel: AppViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
     private var _binding: PreferencesSelectionScreenBinding? = null
     private val binding get() = _binding!!
 
@@ -293,11 +293,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
                 binding.secondCategoryMin.setTextColor(Color.RED)
             }
             else{
-                appViewModel.savePreference(byHandClicked, computerGraphClicked,
+                userViewModel.savePreference(byHandClicked, computerGraphClicked,
                     depressedButtonClicked, funButtonClicked, clickS, clickP, clickL, clickM,
                     clickB, clickI, clickC, clickN, clickA, clickH)
 
-                appViewModel.getData()
+                userViewModel.getData()
 
                 val action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
                 findNavController().navigate(action)}

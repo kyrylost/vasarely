@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -19,12 +18,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
 import com.example.vasarely.viewmodel.SearchViewModel
+import com.example.vasarely.viewmodel.UserViewModel
+import com.example.vasarely.viewmodel.UsersViewModel
 
 class SearchScreen : Fragment(R.layout.search_screen) {
 
-    private val appViewModel: AppViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
     private val searchViewModel = SearchViewModel()
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
@@ -50,7 +51,11 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+        userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
+        }
+
+        usersViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
@@ -67,9 +72,9 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 0
         val progressDialog = ProgressDialog(requireContext())
 
-        appViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+        userViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
 
-            appViewModel.setUserDBStatus()
+            userViewModel.setUserDBStatus()
             if (progressDialog.isShowing) progressDialog.dismiss()
 
             if (!preferencesAreSelected) {
@@ -77,8 +82,8 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 findNavController().navigate(action)
             }
             else {
-                appViewModel.getData()
-                appViewModel.databaseRecommendationsSearch()
+                userViewModel.getData()
+                -usersViewModel.retrieveAllData()
             }
         }
 

@@ -1,8 +1,8 @@
-package com.example.vasarely.model
+package com.example.vasarely.repository
 
 import android.graphics.Bitmap
 
-data class UserData(var username : String, var techniqueReference : String,
+data class UserData(var uid : String, var username : String, var techniqueReference : String,
                     var moodReference : String, var genreReferences : List<String>,
                     var followers : String, var following : String,
                     var followingList: List<String>) {

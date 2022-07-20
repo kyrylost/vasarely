@@ -1,6 +1,5 @@
 package com.example.vasarely.view
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -19,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SignInSignUpScreenBinding
 import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.UserViewModel
 
 class SignInSignUpScreen: Fragment(R.layout.sign_in_sign_up_screen) {
 

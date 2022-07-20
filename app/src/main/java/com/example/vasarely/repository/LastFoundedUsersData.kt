@@ -1,3 +1,3 @@
-package com.example.vasarely.model
+package com.example.vasarely.repository
 
 data class LastFoundedUsersData(var usersList: List<List<String>>)
