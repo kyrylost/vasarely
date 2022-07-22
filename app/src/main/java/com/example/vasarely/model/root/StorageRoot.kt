@@ -1,4 +1,4 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.root
 
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference

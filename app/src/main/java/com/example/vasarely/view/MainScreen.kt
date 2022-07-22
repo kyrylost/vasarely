@@ -12,7 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.MainScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.primary.AppViewModel
 
 class MainScreen: Fragment(R.layout.main_screen) {
 
@@ -30,7 +30,11 @@ class MainScreen: Fragment(R.layout.main_screen) {
 //            appViewModel.processData(it)
 //        }
 
-        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+        appViewModel.userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
+        }
+
+        appViewModel.usersViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 

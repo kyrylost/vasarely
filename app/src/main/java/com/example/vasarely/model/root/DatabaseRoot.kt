@@ -1,20 +1,11 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.root
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.repository.LocalDbCopy
 import com.google.firebase.appcheck.internal.util.Logger.TAG
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
-import java.io.File
-import kotlin.collections.HashMap
 
 open class DatabaseRoot {
 
@@ -25,6 +16,7 @@ open class DatabaseRoot {
     var dataChangeExceptions: SingleLiveEvent<String> = SingleLiveEvent()
 
     lateinit var localDbCopy: Deferred<LocalDbCopy>
+    var localDbCopyInitialized = SingleLiveEvent<Boolean>()
 
     //var dataReference = MutableLiveData<DataSnapshot>()
     @OptIn(DelicateCoroutinesApi::class)
@@ -50,6 +42,7 @@ open class DatabaseRoot {
         GlobalScope.launch {
             databaseReference.get().addOnSuccessListener {
                 localDbCopy = async { LocalDbCopy(it) }
+                localDbCopyInitialized.postValue(true)
                 addDataEventListener(databaseReference)
             } .addOnFailureListener { exception ->
                 dataChangeExceptions.postValue(exception.toString())

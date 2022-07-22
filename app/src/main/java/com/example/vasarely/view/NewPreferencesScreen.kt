@@ -13,7 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.NewPreferencesScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.primary.AppViewModel
 
 class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
 
@@ -241,7 +241,7 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
                 binding.secondCategoryMin.setTextColor(Color.RED)
             }
             else {
-                appViewModel.savePreference(workPerformances[binding.byHandButton] ?: 0,
+                appViewModel.userViewModel.savePreference(workPerformances[binding.byHandButton] ?: 0,
                     workPerformances[binding.compGraphButton] ?: 0,
                     pictureMoods[binding.depressedButton] ?: 0,
                     pictureMoods[binding.funButton] ?: 0,

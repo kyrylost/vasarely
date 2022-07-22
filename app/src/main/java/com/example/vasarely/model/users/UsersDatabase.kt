@@ -1,37 +1,32 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.users
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
+import com.example.vasarely.model.root.DatabaseRoot
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
 
 @OptIn(DelicateCoroutinesApi::class)
 class UsersDatabase : DatabaseRoot() {
 
-    var localDbCopyInitialized: SingleLiveEvent<DataSnapshot> = SingleLiveEvent() //change name
-    var foundedUserStorage = FoundedUserStorage()
+    var localDbCopyLiveEvent: SingleLiveEvent<DataSnapshot> = SingleLiveEvent() //change name
+    private var foundedUserStorage = FoundedUserStorage()
 
     var foundedUser = SingleLiveEvent<MutableList<List<String>>>()
     var foundedUserPosts = foundedUserStorage.foundedUserPosts
 
-//    var recommendation = usersStorage.recommendation
 
     init {
-//        suspend fun recommendationsSearch() {
-//            localDbCopyLiveEvent.postValue(localDbCopy.await().allData)
-//        }
-        GlobalScope.launch {
-            localDbCopyInitialized.postValue(localDbCopy.await().allData) //observe in search. then go to RecVM(giving userdata)
-            Log.d("localDbCopy init", "test")
+        localDbCopyInitialized.observeForever {
+            GlobalScope.launch {
+                localDbCopyLiveEvent.postValue(localDbCopy.await().allData) //observe in search. then go to RecVM(giving userdata)
+                Log.d("localDbCopy init", "test")
+            }
         }
     }
 
-//    fun getImage(userUid: String, postNumber: Int) = usersStorage.getImage(userUid, postNumber)
 
     fun getOtherUserPosts(uid : String, worksAmount : Int) = foundedUserStorage.getOtherUserPosts(uid, worksAmount)
 

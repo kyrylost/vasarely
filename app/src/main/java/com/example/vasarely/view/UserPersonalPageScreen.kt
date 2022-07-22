@@ -24,8 +24,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
-import com.example.vasarely.viewmodel.TagsForPhoto
+import com.example.vasarely.viewmodel.primary.AppViewModel
+import com.example.vasarely.viewmodel.secondary.TagsForPhoto
 import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 
@@ -64,7 +64,11 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        appViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+        appViewModel.userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+            Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
+        }
+
+        appViewModel.usersViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
@@ -76,12 +80,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.username.text = appViewModel.userData.username
-        binding.followersNumber.text = appViewModel.userData.followers
-        binding.followingNumber.text = appViewModel.userData.following
+        binding.username.text = appViewModel.userViewModel.userData.username
+        binding.followersNumber.text = appViewModel.userViewModel.userData.followers
+        binding.followingNumber.text = appViewModel.userViewModel.userData.following
 
-        if (appViewModel.isProfilePictureInitialized())
-            binding.avatarPlacer.setImageBitmap(appViewModel.userData.profilePicture)
+        if (appViewModel.userViewModel.isProfilePictureInitialized())
+            binding.avatarPlacer.setImageBitmap(appViewModel.userViewModel.userData.profilePicture)
 
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
 
@@ -100,10 +104,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         fun showPosts() {
             binding.postsLinearLayout.removeAllViews()
-            val lines = appViewModel.lines
-            val lastLinePosts = appViewModel.lastLinePosts
+            val lines = appViewModel.userViewModel.lines
+            val lastLinePosts = appViewModel.userViewModel.lastLinePosts
 
-            val imagesBitmaps = appViewModel.userPostsData.allUserPostsData
+            val imagesBitmaps = appViewModel.userViewModel.userPostsData.allUserPostsData
             var currentPost = 0
 
             for (line in 1..lines.toInt()) {
@@ -196,10 +200,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         }
 
 
-        if (appViewModel.isProfileDataInitialized()) showPosts()
+        if (appViewModel.userViewModel.isProfileDataInitialized()) showPosts()
 
 
-        appViewModel.userPostsFound.observe(viewLifecycleOwner) {
+        appViewModel.userViewModel.userPostsFound.observe(viewLifecycleOwner) {
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -214,7 +218,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         }
 
 
-        appViewModel.postsProcessed.observe(viewLifecycleOwner) {
+        appViewModel.userViewModel.postsProcessed.observe(viewLifecycleOwner) {
             showPosts()
         }
 
@@ -254,15 +258,15 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             profilePictureButton.setOnClickListener {
                 addProfilePicDialog.dismiss()
 
-                appViewModel.saveProfilePicture()
+                appViewModel.userViewModel.saveProfilePicture()
 
                 val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                     ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
                 else
                     MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-                appViewModel.saveAddedProfilePictureToLocalDB(bitmap)
+                appViewModel.userViewModel.saveAddedProfilePictureToLocalDB(bitmap)
 
-                binding.avatarPlacer.setImageBitmap(appViewModel.userData.profilePicture)
+                binding.avatarPlacer.setImageBitmap(appViewModel.userViewModel.userData.profilePicture)
             }
         }
 
@@ -312,7 +316,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             }
 
             logoutButton.setOnClickListener {
-                appViewModel.logout()
+                appViewModel.userViewModel.logout()
 
                 val sharedPref =
                     activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE)
@@ -328,7 +332,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             }
 
             logoutText.setOnClickListener {
-                appViewModel.logout()
+                appViewModel.userViewModel.logout()
 
                 val sharedPref =
                     activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE)
@@ -420,7 +424,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 btnSaveNickname.setOnClickListener {
                     val newNickname = changeNick.text.toString()
                     if (newNickname.isNotEmpty()) {
-                        appViewModel.updateName(newNickname)
+                        appViewModel.userViewModel.updateName(newNickname)
                         changeNicknameDialog.dismiss()
                     } else if (newNickname.isEmpty()) {
                         changeNick.error = getString(R.string.empty_username_error_message)
@@ -633,7 +637,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
                                 publishButton.setOnClickListener {
                                     if (tagsForPhoto.minNumberOfMoods == 1) {
-                                        appViewModel.saveImageAndData(
+                                        appViewModel.userViewModel.saveImageAndData(
                                             tagsForPhoto.byHandClicked,
                                             tagsForPhoto.funButtonClicked,
                                             tagsForPhoto.stillLifeButtonClicked,
@@ -654,7 +658,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                                             ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
                                         else
                                             MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-                                        appViewModel.saveNewImageToLocalDB(bitmap)
+                                        appViewModel.userViewModel.saveNewImageToLocalDB(bitmap)
                                         showPosts()
 
                                         thirdCategoryDialog.dismiss()
@@ -690,7 +694,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             if (addingNewPhoto) {
                 try {
-                    appViewModel.saveImageFilePath(filePath!!)
+                    appViewModel.userViewModel.saveImageFilePath(filePath!!)
                     addWorkPopupImage?.setImageURI(filePath)
                 }
                 catch (e: IOException) {
@@ -699,7 +703,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             }
             else {
                 try {
-                    appViewModel.saveImageFilePath(filePath!!)
+                    appViewModel.userViewModel.saveImageFilePath(filePath!!)
                     profilePictureImage?.setImageURI(filePath)
                 }
                 catch (e: IOException) {

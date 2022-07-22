@@ -1,23 +1,21 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.primary
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.UsersDatabase
-import com.example.vasarely.repository.FoundedUserData
-import com.example.vasarely.repository.LastFoundedUsersData
+import com.example.vasarely.model.users.UsersDatabase
+import com.example.vasarely.repository.users.FoundedUserData
+import com.example.vasarely.repository.users.LastFoundedUsersData
+import com.example.vasarely.viewmodel.secondary.ImageInterface
 import kotlinx.coroutines.*
-import java.io.ByteArrayOutputStream
 
-class UsersViewModel : ViewModel() {
+class UsersViewModel : ViewModel(), ImageInterface {
 
     var usersDatabase = UsersDatabase()
 
+    var localDbCopyLiveEvent = usersDatabase.localDbCopyLiveEvent
+
     var dataChangeExceptions = usersDatabase.dataChangeExceptions
-//    var recommendedPost = usersDatabase.recommendation
 
     var foundedUser = usersDatabase.foundedUser
     lateinit var lastFoundedUsersData: LastFoundedUsersData
@@ -28,21 +26,6 @@ class UsersViewModel : ViewModel() {
 
     var foundedUserLines = 0.0
     var foundedUserLastLinePosts = 0
-
-    private fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
-        Log.d("rotateImage", "--------")
-        val matrix = Matrix()
-        matrix.postRotate(angle)
-        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
-    }
-
-    private fun compressBitmap(bitmap: Bitmap, quality: Int) : Bitmap {
-        Log.d("compressBitmap", "--------")
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        val byteArray = stream.toByteArray()
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
 
 
     fun retrieveAllData() { // retrievingAllData  (go to init?)

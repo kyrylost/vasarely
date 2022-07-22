@@ -1,9 +1,9 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.primary
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.vasarely.model.RecommendationsStorage
-import com.example.vasarely.repository.UserData
+import com.example.vasarely.model.users.RecommendationsStorage
+import com.example.vasarely.repository.user.UserData
 import com.google.firebase.database.DataSnapshot
 
 class RecommendationsViewModel() : ViewModel() {

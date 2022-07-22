@@ -1,30 +1,33 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.user
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import com.example.vasarely.SingleLiveEvent
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import java.io.File
 
-class UserDatabase() : UserAuth() {
+
+class UserDatabase : UserAuth() {
 
     lateinit var preferencesReference: DatabaseReference
 
-    var userStorage = UserStorage(uid)
+    private lateinit var userStorage: UserStorage
+    var userStorageInitialized = SingleLiveEvent<Boolean>()
 
     private var amountOfWorks = 0
 
     var userData: SingleLiveEvent<Any> = SingleLiveEvent()
 
-    var allUserPosts = userStorage.allUserPosts
-    var profilePicture = userStorage.profilePicture
+    var allUserPosts = SingleLiveEvent<List<Bitmap>>()
+    var profilePicture = SingleLiveEvent<Bitmap>()
+
+    init {
+        uidInit.observeForever { uid ->
+            userStorage = UserStorage(uid)
+            allUserPosts = userStorage.allUserPosts
+            profilePicture = userStorage.profilePicture
+            userStorageInitialized.postValue(true)
+        }
+    }
 
     fun saveProfilePicture(filePath: Uri) =
         userStorage.saveProfilePicture(filePath)

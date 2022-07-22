@@ -1,4 +1,4 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.primary
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,9 +6,9 @@ import com.example.vasarely.SingleLiveEvent
 
 class AppViewModel : ViewModel() {
 
-    private var userViewModel = UserViewModel()
-    private var usersViewModel = UsersViewModel()
-    private var recommendationsViewModel = RecommendationsViewModel()
+    var userViewModel = UserViewModel()
+    var usersViewModel = UsersViewModel()
+    var recommendationsViewModel = RecommendationsViewModel()
 
     var foundedUserDataChanged = SingleLiveEvent<Boolean>()
 
@@ -22,27 +22,35 @@ class AppViewModel : ViewModel() {
             val newFollowingListString: String
             if (userViewModel.userData.followingList.isEmpty()) {
                 newFollowingListString = usersViewModel.foundedUserData.uid
-                userViewModel.userDatabase.addFollowing(userViewModel.userData.following.toInt() + 1, newFollowingListString)
+                userViewModel.userDatabase.addFollowing(
+                    userViewModel.userData.following.toInt() + 1,
+                    newFollowingListString
+                )
                 userViewModel.userData.addNewValue(usersViewModel.foundedUserData.uid)
                 Log.d("ifEmpty", userViewModel.userData.followingList.toString())
-            }
-            else {
+            } else {
                 userViewModel.userData.addNewValue(usersViewModel.foundedUserData.uid)
                 newFollowingListString = userViewModel.userData.followingList.joinToString(",")
-                userViewModel.userDatabase.addFollowing(userViewModel.userData.following.toInt() + 1, newFollowingListString)
+                userViewModel.userDatabase.addFollowing(
+                    userViewModel.userData.following.toInt() + 1,
+                    newFollowingListString
+                )
                 Log.d("ifNotEmpty", userViewModel.userData.followingList.toString())
             }
 
             if (usersViewModel.foundedUserData.followersList.isEmpty()) {
-                usersViewModel.usersDatabase.addFollower(usersViewModel.foundedUserData.uid,
+                usersViewModel.usersDatabase.addFollower(
+                    usersViewModel.foundedUserData.uid,
                     usersViewModel.foundedUserData.followers + 1,
-                    userViewModel.userData.uid)
-            }
-            else {
-                usersViewModel.usersDatabase.addFollower(usersViewModel.foundedUserData.uid,
+                    userViewModel.userData.uid
+                )
+            } else {
+                usersViewModel.usersDatabase.addFollower(
+                    usersViewModel.foundedUserData.uid,
                     usersViewModel.foundedUserData.followers + 1,
                     userViewModel.userData.uid,
-                    usersViewModel.foundedUserData.followersList.joinToString(","))
+                    usersViewModel.foundedUserData.followersList.joinToString(",")
+                )
             }
 
             changeUsersLocalDataAfterFollow()
@@ -50,8 +58,8 @@ class AppViewModel : ViewModel() {
         }
     }
 
-    private fun changeUsersLocalDataAfterFollow () {
-        val currentFollowingNumber =userViewModel.userData.following.toInt()
+    private fun changeUsersLocalDataAfterFollow() {
+        val currentFollowingNumber = userViewModel.userData.following.toInt()
         userViewModel.userData.following = (currentFollowingNumber + 1).toString()
 
         val currentNumberOfFollowers = usersViewModel.foundedUserData.followers
@@ -59,7 +67,4 @@ class AppViewModel : ViewModel() {
         //change followersList in future
         foundedUserDataChanged.postValue(true)
     }
-
-
-
 }

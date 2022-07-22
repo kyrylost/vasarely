@@ -12,7 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
-import com.example.vasarely.viewmodel.UserViewModel
+import com.example.vasarely.viewmodel.primary.UserViewModel
 
 
 class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen) {

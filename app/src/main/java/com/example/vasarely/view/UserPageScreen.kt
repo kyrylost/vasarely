@@ -19,7 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPageScreenBinding
-import com.example.vasarely.viewmodel.AppViewModel
+import com.example.vasarely.viewmodel.primary.AppViewModel
 
 class UserPageScreen: Fragment(R.layout.user_page_screen) {
 
@@ -68,18 +68,18 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
         binding.followingNumber.typeface = montserratRegularFont
         binding.subscribe.typeface = montserratBoldFont
 
-        binding.username.text = appViewModel.foundedUserData.username
-        binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
-        binding.followingNumber.text = appViewModel.foundedUserData.getFollowing()
+        binding.username.text = appViewModel.usersViewModel.foundedUserData.username
+        binding.followersNumber.text = appViewModel.usersViewModel.foundedUserData.getFollowers()
+        binding.followingNumber.text = appViewModel.usersViewModel.foundedUserData.getFollowing()
 
 
         fun showPosts() {
             binding.userPostsLinearLayout.removeAllViews()
-            val lines = appViewModel.foundedUserLines
-            val lastLinePosts = appViewModel.foundedUserLastLinePosts
+            val lines = appViewModel.usersViewModel.foundedUserLines
+            val lastLinePosts = appViewModel.usersViewModel.foundedUserLastLinePosts
 
 
-            val imagesBitmaps = appViewModel.foundedUserData.allFoundedUserPostsData
+            val imagesBitmaps = appViewModel.usersViewModel.foundedUserData.allFoundedUserPostsData
             var currentPost = 0
 
             for (line in 1..lines.toInt()) {
@@ -172,16 +172,16 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             }
         }
 
-        appViewModel.foundedUserPosts.observe(viewLifecycleOwner) {
-            appViewModel.processFoundedUserPhotos(it as MutableList<Bitmap>)
+        appViewModel.usersViewModel.foundedUserPosts.observe(viewLifecycleOwner) {
+            appViewModel.usersViewModel.processFoundedUserPhotos(it as MutableList<Bitmap>)
         }
 
-        appViewModel.foundedUserPostProcessed.observe(viewLifecycleOwner) {
+        appViewModel.usersViewModel.foundedUserPostProcessed.observe(viewLifecycleOwner) {
             showPosts()
         }
 
         appViewModel.foundedUserDataChanged.observe(viewLifecycleOwner) {
-            binding.followersNumber.text = appViewModel.foundedUserData.getFollowers()
+            binding.followersNumber.text = appViewModel.usersViewModel.foundedUserData.getFollowers()
         }
 
 
@@ -205,8 +205,8 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             appViewModel.follow()
         }
 
-        if (appViewModel.foundedUserData.worksAmount != 0) {
-            appViewModel.getOtherUserPosts()
+        if (appViewModel.usersViewModel.foundedUserData.worksAmount != 0) {
+            appViewModel.usersViewModel.getOtherUserPosts()
 
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(

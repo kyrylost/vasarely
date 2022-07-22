@@ -1,8 +1,9 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.users
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.vasarely.SingleLiveEvent
+import com.example.vasarely.model.root.StorageRoot
 import java.io.File
 
 class FoundedUserStorage : StorageRoot() {

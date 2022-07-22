@@ -1,4 +1,4 @@
-package com.example.vasarely.repository
+package com.example.vasarely.repository.users
 
 import android.graphics.Bitmap
 

@@ -1,4 +1,4 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.secondary
 
 import android.net.Uri
 

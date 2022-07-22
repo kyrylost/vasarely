@@ -1,6 +1,8 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.user
 
+import androidx.lifecycle.MutableLiveData
 import com.example.vasarely.SingleLiveEvent
+import com.example.vasarely.model.root.DatabaseRoot
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -13,6 +15,7 @@ open class UserAuth : DatabaseRoot() {
     lateinit var currentUserDb: DatabaseReference
 
     lateinit var uid: String
+    var uidInit = MutableLiveData<String>()
 
     var userMutableLiveData: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
@@ -22,9 +25,9 @@ open class UserAuth : DatabaseRoot() {
             if (firebaseAuth.currentUser != null) {
                 userMutableLiveData.postValue(false)
 
-                //addDataEventListener(databaseReference)
                 currentUser = firebaseAuth.currentUser!!
                 uid = currentUser.uid
+                uidInit.postValue(uid)
                 currentUserDb = databaseReference.child((uid))
 
                 currentUserDb.child("userData").child("followers").setValue(0)
@@ -44,11 +47,9 @@ open class UserAuth : DatabaseRoot() {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener{
             if(firebaseAuth.currentUser != null) {
 
-//                firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
-//                databaseReference = firebaseDatabase.reference.child("profiles")
-                //addDataEventListener(databaseReference)
                 currentUser = firebaseAuth.currentUser!!
                 uid = currentUser.uid
+                uidInit.postValue(uid)
                 currentUserDb = databaseReference.child((uid))
 
                 currentUserDb.child("userData").child("preferences").get().addOnSuccessListener {

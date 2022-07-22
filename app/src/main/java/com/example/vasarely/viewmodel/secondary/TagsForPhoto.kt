@@ -1,4 +1,4 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.secondary
 
 import android.graphics.Color
 import com.example.vasarely.SingleLiveEvent

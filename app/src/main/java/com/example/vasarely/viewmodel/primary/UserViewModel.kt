@@ -1,27 +1,24 @@
-package com.example.vasarely.viewmodel
+package com.example.vasarely.viewmodel.primary
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.UserDatabase
-import com.example.vasarely.repository.UserData
-import com.example.vasarely.repository.UserPostsData
+import com.example.vasarely.model.user.UserDatabase
+import com.example.vasarely.repository.user.UserData
+import com.example.vasarely.repository.user.UserPostsData
+import com.example.vasarely.viewmodel.secondary.ImageFilePath
+import com.example.vasarely.viewmodel.secondary.ImageInterface
 import kotlinx.coroutines.*
-import java.io.ByteArrayOutputStream
-import java.util.ArrayList
 
 @OptIn(DelicateCoroutinesApi::class)
-class UserViewModel : ViewModel() {
+class UserViewModel : ViewModel(), ImageInterface {
 
     var userDatabase = UserDatabase()
 
     var dataChangeExceptions = userDatabase.dataChangeExceptions
-
 
     var userMutableLiveData = userDatabase.userMutableLiveData
 
@@ -30,14 +27,14 @@ class UserViewModel : ViewModel() {
 
     lateinit var userData: UserData
     lateinit var userPostsData: UserPostsData
-    var profilePicture = userDatabase.profilePicture
+    var profilePicture = SingleLiveEvent<Bitmap>()
 
 
     var postsAmount = 0
     var lines = 0.0
     var lastLinePosts = 0
 
-    private lateinit var imageFilePath : ImageFilePath
+    private lateinit var imageFilePath: ImageFilePath
 
     lateinit var userDB: String
 
@@ -50,65 +47,53 @@ class UserViewModel : ViewModel() {
         userDB = "initialized"
     }
 
+    private fun asBoolean(int: Int): Boolean {
+        return int == 1
+    }
+
 
     init {
         viewModelScope.launch {
             userDatabase.userData.observeForever {
                 processData(it)
             }
-        }
 
-        userDatabase.allUserPosts.observeForever {
-            Log.d("it", it.count().toString())
+            userDatabase.userStorageInitialized.observeForever {
+                userDatabase.allUserPosts.observeForever {
+                    Log.d("it", it.count().toString())
 
-            userPostsFound.postValue(true)
+                    userPostsFound.postValue(true)
 
-            val imagesBitmapList = it as MutableList
+                    val imagesBitmapList = it as MutableList
 
-            userPostsData = UserPostsData(imagesBitmapList)
-            postsAmount = userPostsData.postsAmount
-            Log.d("postsAmount", postsAmount.toString())
-            lines = postsAmount / 3.0
-            lastLinePosts = ((lines * 10).toInt() % 10) / 3
+                    userPostsData = UserPostsData(imagesBitmapList)
+                    postsAmount = userPostsData.postsAmount
+                    Log.d("postsAmount", postsAmount.toString())
+                    lines = postsAmount / 3.0
+                    lastLinePosts = ((lines * 10).toInt() % 10) / 3
 
-            GlobalScope.launch (Dispatchers.IO) {
-                for ((index, bitmap) in imagesBitmapList.withIndex()) {
-                    val compressedBitmap = async { compressBitmap(bitmap, 50) }
-                    userPostsData.allUserPostsData[index] = compressedBitmap.await()
-                    if (bitmap.byteCount < 50135040) {
-                        if (index == imagesBitmapList.count() - 1)
-                            postsProcessed.postValue(true)
-                    }
-                    else {
-                        val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
-                        userPostsData.allUserPostsData[index] = rotatedBitmap.await()
+                    GlobalScope.launch(Dispatchers.IO) {
+                        for ((index, bitmap) in imagesBitmapList.withIndex()) {
+                            val compressedBitmap = async { compressBitmap(bitmap, 50) }
+                            userPostsData.allUserPostsData[index] = compressedBitmap.await()
+                            if (bitmap.byteCount < 50135040) {
+                                if (index == imagesBitmapList.count() - 1)
+                                    postsProcessed.postValue(true)
+                            } else {
+                                val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                                userPostsData.allUserPostsData[index] = rotatedBitmap.await()
 
-                        if (index == imagesBitmapList.count() - 1)
-                            postsProcessed.postValue(true) //*????????????????????????????????
+                                if (index == imagesBitmapList.count() - 1)
+                                    postsProcessed.postValue(true) //*????????????????????????????????
+                            }
+                        }
                     }
                 }
+
+                profilePicture = userDatabase.profilePicture
             }
         }
-    }
 
-
-    private fun asBoolean(int: Int): Boolean {
-        return (int == 1)
-    }
-
-    private fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
-        Log.d("rotateImage", "--------")
-        val matrix = Matrix()
-        matrix.postRotate(angle)
-        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
-    }
-
-    private fun compressBitmap(bitmap: Bitmap, quality: Int) : Bitmap {
-        Log.d("compressBitmap", "--------")
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        val byteArray = stream.toByteArray()
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
 
 
@@ -140,8 +125,10 @@ class UserViewModel : ViewModel() {
             genres.add(value as String)
         }
 
-        userData = UserData(uid, username, technique, mood, genres,
-            followers, following, followingList)
+        userData = UserData(
+            uid, username, technique, mood, genres,
+            followers, following, followingList
+        )
     }
 
 
@@ -165,14 +152,16 @@ class UserViewModel : ViewModel() {
 
         val selectedGenres = mutableListOf<String>()
 
-        val technique : String = if (asBoolean(byHandSelected) && asBoolean(computerGraphicsSelected)) "ignore"
-        else if (asBoolean(byHandSelected)) "byHand"
-        else "computerGraphics"
+        val technique: String =
+            if (asBoolean(byHandSelected) && asBoolean(computerGraphicsSelected)) "ignore"
+            else if (asBoolean(byHandSelected)) "byHand"
+            else "computerGraphics"
 
-        val mood : String = if (asBoolean(depressedButtonSelected) && asBoolean(funButtonSelected)) "ignore"
-        else if (asBoolean(funButtonSelected)) "fun"
-        else if (asBoolean(depressedButtonSelected)) "depressed"
-        else "ignore"
+        val mood: String =
+            if (asBoolean(depressedButtonSelected) && asBoolean(funButtonSelected)) "ignore"
+            else if (asBoolean(funButtonSelected)) "fun"
+            else if (asBoolean(depressedButtonSelected)) "depressed"
+            else "ignore"
 
         if (asBoolean(stillLifeButtonSelected)) selectedGenres.add("stillLife")
         if (asBoolean(portraitButtonSelected)) selectedGenres.add("portrait")
@@ -201,8 +190,7 @@ class UserViewModel : ViewModel() {
     fun saveProfilePictureToLocalDB(bitmap: Bitmap) {
         if (bitmap.byteCount < 50135040) {
             userData.profilePicture = bitmap
-        }
-        else {
+        } else {
             userData.profilePicture = rotateImage(bitmap, 90F)
         }
     }
@@ -220,7 +208,8 @@ class UserViewModel : ViewModel() {
         battlePaintingButtonSelected: Int, interiorButtonSelected: Int,
         caricatureButtonSelected: Int, nudeButtonSelected: Int,
         animeButtonSelected: Int, horrorButtonSelected: Int,
-        description: String) {
+        description: String
+    ) {
 
         fun checkWhatGenreIsSelected(): String {
             if (asBoolean(stillLifeButtonSelected)) return "stillLife"
@@ -246,7 +235,7 @@ class UserViewModel : ViewModel() {
             else "depressed"
         }
 
-        GlobalScope.launch (Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             val selectedGenre = async { checkWhatGenreIsSelected() }
             val technique = async { checkWhatTechniqueIsSelected() }
             val mood = async { checkWhatMoodIsSelected() }
@@ -269,9 +258,7 @@ class UserViewModel : ViewModel() {
             postsAmount++
             lines = postsAmount / 3.0
             lastLinePosts = ((lines * 10).toInt() % 10) / 3
-        }
-
-        else {
+        } else {
             val bitmapList = mutableListOf<Bitmap>()
             bitmapList.add(imageBitmap)
             userPostsData = UserPostsData(bitmapList)

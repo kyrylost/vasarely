@@ -18,14 +18,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
-import com.example.vasarely.viewmodel.SearchViewModel
-import com.example.vasarely.viewmodel.UserViewModel
-import com.example.vasarely.viewmodel.UsersViewModel
+import com.example.vasarely.viewmodel.primary.AppViewModel
+import com.example.vasarely.viewmodel.secondary.SearchViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class SearchScreen : Fragment(R.layout.search_screen) {
 
-    private val userViewModel: UserViewModel by activityViewModels()
-    private val usersViewModel: UsersViewModel by activityViewModels()
+    private val appViewModel: AppViewModel by activityViewModels()
     private val searchViewModel = SearchViewModel()
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
@@ -51,11 +53,11 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         savedInstanceState: Bundle?
     ): View {
 
-        userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+        appViewModel.userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
-        usersViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
+        appViewModel.usersViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()
         }
 
@@ -63,6 +65,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,9 +75,9 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 0
         val progressDialog = ProgressDialog(requireContext())
 
-        userViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
+        appViewModel.userViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
 
-            userViewModel.setUserDBStatus()
+            appViewModel.userViewModel.setUserDBStatus()
             if (progressDialog.isShowing) progressDialog.dismiss()
 
             if (!preferencesAreSelected) {
@@ -82,12 +85,23 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 findNavController().navigate(action)
             }
             else {
-                userViewModel.getData()
-                -usersViewModel.retrieveAllData()
+                appViewModel.userViewModel.getData()
+                appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
             }
         }
 
-        appViewModel.recommendedPost.observe(viewLifecycleOwner) { post ->
+
+
+
+        appViewModel.usersViewModel.localDbCopyLiveEvent.observe(viewLifecycleOwner) {
+            appViewModel.recommendationsViewModel.getPostsData(
+                it, appViewModel.userViewModel.userData)
+        }
+
+
+
+
+        appViewModel.recommendationsViewModel.recommendedPost.observe(viewLifecycleOwner) { post ->
 
                 fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
                     val matrix = Matrix()
@@ -119,15 +133,15 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
 
-        appViewModel.profilePicture.observe(viewLifecycleOwner) {
-            appViewModel.saveProfilePictureToLocalDB(it)
+        appViewModel.userViewModel.profilePicture.observe(viewLifecycleOwner) {
+            appViewModel.userViewModel.saveProfilePictureToLocalDB(it)
         }
 
 
-        if (!appViewModel.isLocalDataInitialized()) {
-            if (appViewModel.isUserDBInitialized()) {
-                appViewModel.getData()
-                appViewModel.databaseRecommendationsSearch()
+        if (!appViewModel.userViewModel.isLocalDataInitialized()) {
+            if (appViewModel.userViewModel.isUserDBInitialized()) {
+                appViewModel.userViewModel.getData()
+                appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
             }
             else {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")
@@ -173,15 +187,19 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
 
         //----------------------------User searching----------------------------------------------//
+
         binding.search.addTextChangedListener {
             searchViewModel.getNameWithDelay(it.toString())
         }
-        searchViewModel.name.observe(requireActivity()) {
-            appViewModel.findByUsername(it)
+        searchViewModel.name.observe(viewLifecycleOwner) {
+            GlobalScope.launch {
+                appViewModel.usersViewModel.findByUsername(it)
+                this.cancel()
+            }
         }
 
-        appViewModel.foundedUser.observe(requireActivity()) { foundedUsers ->
-            appViewModel.saveLastFoundedUsersData(foundedUsers)
+        appViewModel.usersViewModel.foundedUser.observe(viewLifecycleOwner) { foundedUsers ->
+            appViewModel.usersViewModel.saveLastFoundedUsersData(foundedUsers)
 
             val popupMenu = PopupMenu(context, binding.search)
             popupMenu.inflate(R.menu.founded_users_menu)
@@ -193,7 +211,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             popupMenu.show()
 
             popupMenu.setOnMenuItemClickListener { selectedItem ->
-                appViewModel.saveFoundedUser(selectedItem.itemId)
+                appViewModel.usersViewModel.saveFoundedUser(selectedItem.itemId)
                 val action = SearchScreenDirections.actionSearchScreenToUserPageScreen()
                 findNavController().navigate(action)
                 true

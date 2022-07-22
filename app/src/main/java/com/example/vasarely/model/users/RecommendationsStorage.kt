@@ -1,8 +1,9 @@
-package com.example.vasarely.model
+package com.example.vasarely.model.users
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.vasarely.SingleLiveEvent
+import com.example.vasarely.model.root.StorageRoot
 import java.io.File
 
 class RecommendationsStorage  : StorageRoot() {
@@ -10,7 +11,6 @@ class RecommendationsStorage  : StorageRoot() {
 
     fun getImage(userUid : String, postNumber : Int) {
         val localFile = File.createTempFile("tempImage", "jpg")
-        //val p = postNumber.toInt()
         imageReference = storageReference.child("uploads/$userUid/userPosts/$postNumber")
         imageReference.getFile(localFile).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
