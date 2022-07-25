@@ -1,6 +1,7 @@
 package com.example.vasarely.view
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -85,6 +86,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 findNavController().navigate(action)
             }
             else {
+                val serviceIntent = Intent(context, NotificationService::class.java)
+                serviceIntent.putExtra("Uid", appViewModel.userViewModel.userDatabase.uid) //remove db ref
+                context?.startForegroundService(serviceIntent)
+
                 appViewModel.userViewModel.getData()
                 appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
             }
@@ -148,7 +153,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 progressDialog.setCancelable(false)
                 progressDialog.show()
 
-                searchViewModel.waitForEightSec()
+                //searchViewModel.waitForEightSec()
                 searchViewModel.stopWaiting.observe(viewLifecycleOwner) {
                     progressDialog.dismiss()
                     Toast.makeText(requireContext(), "Відсутній зв'язок з базою даних!", Toast.LENGTH_LONG).show()

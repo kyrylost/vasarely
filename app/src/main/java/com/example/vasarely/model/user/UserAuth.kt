@@ -19,7 +19,6 @@ open class UserAuth : DatabaseRoot() {
 
     var userMutableLiveData: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
-
     fun register(email: String, password: String, username: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             if (firebaseAuth.currentUser != null) {
@@ -69,5 +68,6 @@ open class UserAuth : DatabaseRoot() {
     fun logout() {
         firebaseAuth.signOut()
     }
+
 
 }

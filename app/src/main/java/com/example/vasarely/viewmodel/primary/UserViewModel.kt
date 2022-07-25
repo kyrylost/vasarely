@@ -29,8 +29,7 @@ class UserViewModel : ViewModel(), ImageInterface {
     lateinit var userPostsData: UserPostsData
     var profilePicture = SingleLiveEvent<Bitmap>()
 
-
-    var postsAmount = 0
+    private var postsAmount = 0
     var lines = 0.0
     var lastLinePosts = 0
 

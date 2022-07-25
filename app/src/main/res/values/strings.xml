@@ -55,5 +55,7 @@
     <string name="select_new_pref">Вказати нові вподобання</string>
     <string name="logo_content_des">logo</string>
     <string name="search">Search</string>
+    <string name="notification_title">Follower</string>
+    <string name="notification_message">You have a new follower</string>
 
 </resources>
