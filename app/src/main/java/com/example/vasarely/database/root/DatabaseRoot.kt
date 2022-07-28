@@ -1,8 +1,8 @@
-package com.example.vasarely.model.root
+package com.example.vasarely.database.root
 
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.repository.LocalDbCopy
+import com.example.vasarely.model.LocalDbCopy
 import com.google.firebase.appcheck.internal.util.Logger.TAG
 import com.google.firebase.database.*
 import kotlinx.coroutines.*

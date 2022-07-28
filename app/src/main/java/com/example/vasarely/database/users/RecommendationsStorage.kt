@@ -1,9 +1,9 @@
-package com.example.vasarely.model.users
+package com.example.vasarely.database.users
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.root.StorageRoot
+import com.example.vasarely.database.root.StorageRoot
 import java.io.File
 
 class RecommendationsStorage  : StorageRoot() {

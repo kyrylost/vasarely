@@ -1,4 +1,4 @@
-package com.example.vasarely.model.user
+package com.example.vasarely.database.user
 
 import android.graphics.Bitmap
 import android.net.Uri

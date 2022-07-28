@@ -57,5 +57,7 @@
     <string name="search">Search</string>
     <string name="notification_title">Follower</string>
     <string name="notification_message">You have a new follower</string>
+    <string name="buy_premium">Купити підписку</string>
+    <string name="buy_premium_text">Преміум акаунт</string>
 
 </resources>

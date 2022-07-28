@@ -3,9 +3,9 @@ package com.example.vasarely.viewmodel.primary
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.users.UsersDatabase
-import com.example.vasarely.repository.users.FoundedUserData
-import com.example.vasarely.repository.users.LastFoundedUsersData
+import com.example.vasarely.database.users.UsersDatabase
+import com.example.vasarely.model.users.FoundedUserData
+import com.example.vasarely.model.users.LastFoundedUsersData
 import com.example.vasarely.viewmodel.secondary.ImageInterface
 import kotlinx.coroutines.*
 

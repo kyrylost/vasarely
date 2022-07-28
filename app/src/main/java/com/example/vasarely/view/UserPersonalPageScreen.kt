@@ -283,26 +283,43 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
         binding.menuImgBtn.setOnClickListener {
 
-            val popupView = layoutInflater.inflate(R.layout.menu_user_personal_page_screen, null)
+            val popupView =
+                layoutInflater.inflate(R.layout.menu_user_personal_page_screen, null)
 
-            val likedPostButton = popupView.findViewById<ImageButton>(R.id.likedPostIcon)
-            val likedPostText = popupView.findViewById<TextView>(R.id.likedPostText)
+            val closeSettingsButton =
+                popupView.findViewById<ImageButton>(R.id.closeButtonSettingsPopup)
+
+            val likedPostButton =
+                popupView.findViewById<ImageButton>(R.id.likedPostIcon)
+            val likedPostText =
+                popupView.findViewById<TextView>(R.id.likedPostText)
             likedPostText.typeface = montserratBoldFont
 
-            val newPrefButton = popupView.findViewById<ImageButton>(R.id.newPrefButton)
-            val newPrefText = popupView.findViewById<TextView>(R.id.new_pref_text)
-            newPrefText.typeface = montserratBoldFont
+            val newPrefButton =
+                popupView.findViewById<ImageButton>(R.id.newPrefButton)
+            val newPrefText =
+                popupView.findViewById<TextView>(R.id.new_pref_text)
 
+            val changeNicknameButton =
+                popupView.findViewById<ImageView>(R.id.changeNicknameButton)
             val changeNicknameTextView =
                 popupView.findViewById<TextView>(R.id.settings_nickname_text)
-            changeNicknameTextView.typeface = montserratBoldFont
 
-            val changePasswordTextView = popupView.findViewById<TextView>(R.id.key_text)
-            changePasswordTextView.typeface = montserratBoldFont
+            val changePasswordButton =
+                popupView.findViewById<ImageView>(R.id.changePasswordButton)
+            val changePasswordTextView =
+                popupView.findViewById<TextView>(R.id.key_text)
 
-            val logoutButton = popupView.findViewById<ImageButton>(R.id.logoutButton)
-            val logoutText = popupView.findViewById<TextView>(R.id.logout_text)
-            logoutText.typeface = montserratBoldFont
+            val buyPremiumButton =
+                popupView.findViewById<ImageView>(R.id.buyPremiumButton)
+            val buyPremium =
+                popupView.findViewById<TextView>(R.id.subscription_text)
+
+            val logoutButton =
+                popupView.findViewById<ImageButton>(R.id.logoutButton)
+            val logoutText =
+                popupView.findViewById<TextView>(R.id.logout_text)
+
 
             val dialogBuilder = AlertDialog.Builder(context)
             dialogBuilder.setView(popupView)
@@ -310,113 +327,40 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             val settingsDialog = dialogBuilder.create()
             settingsDialog.show()
 
-            val closeSettingsButton = popupView.findViewById<ImageButton>(R.id.closeButtonSettingsPopup)
-            closeSettingsButton.setOnClickListener{
-                settingsDialog.dismiss()
-            }
 
-            logoutButton.setOnClickListener {
-                appViewModel.userViewModel.logout()
-
-                val sharedPref =
-                    activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE)
-                        ?: return@setOnClickListener
-                val editor = sharedPref.edit()
-                editor.putString("remember", "false")
-                editor.apply()
-
-                settingsDialog.dismiss()
-
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
-                findNavController().navigate(action)
-            }
-
-            logoutText.setOnClickListener {
-                appViewModel.userViewModel.logout()
-
-                val sharedPref =
-                    activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE)
-                        ?: return@setOnClickListener
-                val editor = sharedPref.edit()
-                editor.putString("remember", "false")
-                editor.apply()
-
-                settingsDialog.dismiss()
-
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSignInSignUpScreen()
-                findNavController().navigate(action)
-            }
-
-            likedPostButton.setOnClickListener {
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+            fun likedPostOnClick() {
+                val action = UserPersonalPageScreenDirections
+                        .actionUserPersonalPageScreenToLikedPostScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
             }
 
-            likedPostText.setOnClickListener {
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToLikedPostScreen()
+            fun newPreferenceOnClick() {
+                val action = UserPersonalPageScreenDirections
+                    .actionUserPersonalPageScreenToNewPreferencesScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
             }
 
-            newPrefButton.setOnClickListener {
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
-                findNavController().navigate(action)
+            fun changeNicknameOnClick() {
+                val nicknamePopup =
+                    layoutInflater.inflate(R.layout.nickname_change_popup, null)
 
-                settingsDialog.dismiss()
-            }
-
-            newPrefText.setOnClickListener {
-                val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
-                findNavController().navigate(action)
-
-                settingsDialog.dismiss()
-            }
-
-            changePasswordTextView.setOnClickListener {
-                val passwordPopup = layoutInflater.inflate(R.layout.change_password_popup, null)
-                val dialogBuilderPassword = AlertDialog.Builder(context)
-                dialogBuilderPassword.setView(passwordPopup)
-
-                val changePasswordText =
-                    passwordPopup.findViewById<TextView>(R.id.changePasswordPopupTextView)
-                val passwordInputPopup =
-                    passwordPopup.findViewById<TextInputEditText>(R.id.password_input)
-                val savePasswordButton = passwordPopup.findViewById<Button>(R.id.Next1)
-                changePasswordText.typeface = montserratBoldFont
-                passwordInputPopup.typeface = montserratRegularFont
-                savePasswordButton.typeface = montserratBoldFont
-
-                val changePasswordDialog = dialogBuilderPassword.create()
-                changePasswordDialog.show()
-
-                val closePasswordButton = passwordPopup.findViewById<ImageButton>(R.id.closeButtonPasswordPopup)
-                closePasswordButton.setOnClickListener{
-                    changePasswordDialog.dismiss()
-                }
-            }
-
-            changeNicknameTextView.setOnClickListener {
-
-                val nicknamePopup = layoutInflater.inflate(R.layout.nickname_change_popup, null)
-
-                val changeNicknameText =
-                    nicknamePopup.findViewById<TextView>(R.id.changeNicknamePopupTextView)
-                val btnSaveNickname = nicknamePopup.findViewById<Button>(R.id.Next1)
-                val changeNick = nicknamePopup.findViewById<TextInputEditText>(R.id.username_input)
-                changeNicknameText.typeface = montserratBoldFont
-                btnSaveNickname.typeface = montserratBoldFont
-                changeNick.typeface = montserratRegularFont
+                val btnSaveNickname =
+                    nicknamePopup.findViewById<Button>(R.id.setNewNicknameButton)
+                val closeNicknameButton =
+                    nicknamePopup.findViewById<ImageButton>(R.id.closeButtonNicknamePopup)
+                val changeNick =
+                    nicknamePopup.findViewById<TextInputEditText>(R.id.username_input)
 
                 val dialogBuilderNickname = AlertDialog.Builder(context)
                 dialogBuilderNickname.setView(nicknamePopup)
-
                 val changeNicknameDialog = dialogBuilderNickname.create()
                 changeNicknameDialog.show()
 
-                val closeNicknameButton = nicknamePopup.findViewById<ImageButton>(R.id.closeButtonNicknamePopup)
+
                 closeNicknameButton.setOnClickListener{
                     changeNicknameDialog.dismiss()
                 }
@@ -430,6 +374,107 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                         changeNick.error = getString(R.string.empty_username_error_message)
                     }
                 }
+            }
+
+            fun changePasswordOnClick() {
+                val passwordPopup =
+                    layoutInflater.inflate(R.layout.change_password_popup, null)
+
+                val passwordInputPopup =
+                    passwordPopup.findViewById<TextInputEditText>(R.id.password_input)
+                val closePasswordButton =
+                    passwordPopup.findViewById<ImageButton>(R.id.closeButtonPasswordPopup)
+                val savePasswordButton =
+                    passwordPopup.findViewById<Button>(R.id.setNewPasswordButton)
+
+                val dialogBuilderPassword = AlertDialog.Builder(context)
+                dialogBuilderPassword.setView(passwordPopup)
+                val changePasswordDialog = dialogBuilderPassword.create()
+                changePasswordDialog.show()
+
+
+                closePasswordButton.setOnClickListener{
+                    changePasswordDialog.dismiss()
+                }
+            }
+
+            fun buyPremiumOnClick() {
+                val action = UserPersonalPageScreenDirections
+                    .actionUserPersonalPageScreenToBuyPremiumScreen()
+                findNavController().navigate(action)
+
+                settingsDialog.dismiss()
+            }
+
+            fun logoutOnClick() {
+                appViewModel.userViewModel.logout()
+
+                val sharedPref =
+                    activity?.getSharedPreferences("userLoginData", Context.MODE_PRIVATE)
+                        ?: return
+                val editor = sharedPref.edit()
+                editor.putString("remember", "false")
+                editor.apply()
+
+                settingsDialog.dismiss()
+
+                val action = UserPersonalPageScreenDirections
+                    .actionUserPersonalPageScreenToSignInSignUpScreen()
+                findNavController().navigate(action)
+            }
+
+            // -------------- Close button onClick -------------- //
+            closeSettingsButton.setOnClickListener{
+                settingsDialog.dismiss()
+            }
+
+            // -------------- Liked post onClick -------------- //
+            likedPostButton.setOnClickListener {
+                likedPostOnClick()
+            }
+            likedPostText.setOnClickListener {
+                likedPostOnClick()
+            }
+
+            // -------------- New preference onClick -------------- //
+            newPrefButton.setOnClickListener {
+                newPreferenceOnClick()
+            }
+            newPrefText.setOnClickListener {
+                newPreferenceOnClick()
+            }
+
+            // -------------- Change nickname onClick -------------- //
+            changeNicknameButton.setOnClickListener {
+                changeNicknameOnClick()
+            }
+            changeNicknameTextView.setOnClickListener {
+                changeNicknameOnClick()
+            }
+
+            // -------------- Change password onClick -------------- //
+            changePasswordButton.setOnClickListener {
+                changePasswordOnClick()
+            }
+            changePasswordTextView.setOnClickListener {
+                changePasswordOnClick()
+            }
+
+            // -------------- Buy premium onClick -------------- //
+            buyPremiumButton.setOnClickListener {
+                buyPremiumOnClick()
+            }
+            buyPremium.setOnClickListener {
+                buyPremiumOnClick()
+            }
+
+            // -------------- Logout onClick -------------- //
+            logoutButton.setOnClickListener {
+                logoutOnClick()
+            }
+
+            logoutText.setOnClickListener {
+                logoutOnClick()
             }
 
         }

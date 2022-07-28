@@ -1,8 +1,8 @@
-package com.example.vasarely.model.user
+package com.example.vasarely.database.user
 
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.root.DatabaseRoot
+import com.example.vasarely.database.root.DatabaseRoot
 import com.google.firebase.appcheck.internal.util.Logger
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

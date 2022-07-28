@@ -9,7 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.vasarely.R
-import com.example.vasarely.model.user.FollowersAmountChangeListener
+import com.example.vasarely.database.user.FollowersAmountChangeListener
 
 
 class NotificationService : Service() {

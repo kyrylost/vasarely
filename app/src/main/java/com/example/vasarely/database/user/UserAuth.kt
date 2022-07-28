@@ -1,8 +1,8 @@
-package com.example.vasarely.model.user
+package com.example.vasarely.database.user
 
 import androidx.lifecycle.MutableLiveData
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.root.DatabaseRoot
+import com.example.vasarely.database.root.DatabaseRoot
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference

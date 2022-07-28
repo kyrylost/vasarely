@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.user.UserDatabase
-import com.example.vasarely.repository.user.UserData
-import com.example.vasarely.repository.user.UserPostsData
+import com.example.vasarely.database.user.UserDatabase
+import com.example.vasarely.model.user.UserData
+import com.example.vasarely.model.user.UserPostsData
 import com.example.vasarely.viewmodel.secondary.ImageFilePath
 import com.example.vasarely.viewmodel.secondary.ImageInterface
 import kotlinx.coroutines.*

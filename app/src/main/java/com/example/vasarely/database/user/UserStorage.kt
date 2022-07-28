@@ -1,11 +1,11 @@
-package com.example.vasarely.model.user
+package com.example.vasarely.database.user
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.root.StorageRoot
+import com.example.vasarely.database.root.StorageRoot
 import java.io.File
 
 class UserStorage(uid: String): StorageRoot() {

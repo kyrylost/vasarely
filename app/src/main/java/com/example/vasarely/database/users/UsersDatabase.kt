@@ -1,8 +1,8 @@
-package com.example.vasarely.model.users
+package com.example.vasarely.database.users
 
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
-import com.example.vasarely.model.root.DatabaseRoot
+import com.example.vasarely.database.root.DatabaseRoot
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

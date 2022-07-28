@@ -50,13 +50,14 @@
 
                 <ImageButton
                     android:id="@+id/closeButtonSettingsPopup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
                     android:background="@null"
                     android:contentDescription="@string/fun_button"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/close_btn"
                     tools:ignore="TouchTargetSizeCheck" />
 
@@ -69,13 +70,14 @@
 
                 <ImageButton
                     android:id="@+id/newPrefButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
                     android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/new_pref_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
@@ -97,14 +99,15 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/changeNicknameButton"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
                     android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/settings_nickname_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
@@ -125,14 +128,15 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imageButton4"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/changePasswordButton"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
                     android:backgroundTint="#00FFFFFF"
                     android:minHeight="48dp"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/key_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
@@ -150,17 +154,48 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/buyPremiumButton"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:adjustViewBounds="true"
+                    android:backgroundTint="#00FFFFFF"
+                    android:minHeight="48dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/premium_button"
+                    tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/subscription_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/buy_premium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/logoutButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="2.5dp"
                     android:layout_marginBottom="2.5dp"
                     android:backgroundTint="#00FFFFFF"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/logout_icon"
                     tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
 
