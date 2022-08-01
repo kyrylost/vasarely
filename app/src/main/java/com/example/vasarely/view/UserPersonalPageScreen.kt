@@ -8,7 +8,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.PorterDuff
-import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,14 +18,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
 import com.example.vasarely.viewmodel.primary.AppViewModel
-import com.example.vasarely.viewmodel.secondary.TagsForPhoto
+import com.example.vasarely.viewmodel.secondary.AddingWork
 import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 
@@ -88,19 +87,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             binding.avatarPlacer.setImageBitmap(appViewModel.userViewModel.userData.profilePicture)
 
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-
-        val montserratBoldFont: Typeface? =
-            ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
-        val montserratRegularFont: Typeface? =
-            ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
-
-        binding.username.typeface = montserratBoldFont
-        binding.followers.typeface = montserratBoldFont
-        binding.followersNumber.typeface = montserratRegularFont
-        binding.following.typeface = montserratBoldFont
-        binding.followingNumber.typeface = montserratRegularFont
-        binding.addWork.typeface = montserratBoldFont
-
 
         fun showPosts() {
             binding.postsLinearLayout.removeAllViews()
@@ -180,9 +166,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     val newCurrentPost = currentPost
                     postImageView.setOnClickListener {
                         val dialogBuilder = AlertDialog.Builder(context)
-                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
 
+                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
                         dialogBuilder.setView(popupView)
+
                         val addNoteDialog = dialogBuilder.create()
                         addNoteDialog.show()
 
@@ -293,7 +280,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 popupView.findViewById<ImageButton>(R.id.likedPostIcon)
             val likedPostText =
                 popupView.findViewById<TextView>(R.id.likedPostText)
-            likedPostText.typeface = montserratBoldFont
 
             val newPrefButton =
                 popupView.findViewById<ImageButton>(R.id.newPrefButton)
@@ -325,6 +311,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             dialogBuilder.setView(popupView)
 
             val settingsDialog = dialogBuilder.create()
+            settingsDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             settingsDialog.show()
 
 
@@ -358,6 +345,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 val dialogBuilderNickname = AlertDialog.Builder(context)
                 dialogBuilderNickname.setView(nicknamePopup)
                 val changeNicknameDialog = dialogBuilderNickname.create()
+                changeNicknameDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 changeNicknameDialog.show()
 
 
@@ -390,6 +378,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 val dialogBuilderPassword = AlertDialog.Builder(context)
                 dialogBuilderPassword.setView(passwordPopup)
                 val changePasswordDialog = dialogBuilderPassword.create()
+                changePasswordDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 changePasswordDialog.show()
 
 
@@ -482,7 +471,10 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         //------------------------------------Adding Work-----------------------------------------//
         binding.addWork.setOnClickListener {
 
+            val addingWork = AddingWork()
+
             val popupAddWork = layoutInflater.inflate(R.layout.add_new_photo_popup, null)
+            var description = ""
 
             addWorkPopupImage = popupAddWork.findViewById(R.id.AddWorkImage)
 
@@ -493,232 +485,271 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             dialogBuilderAddWork.setView(popupAddWork)
 
             val addWorkDialog = dialogBuilderAddWork.create()
+            addWorkDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             addWorkDialog.show()
 
             val addNewPhotoNextButton = popupAddWork.findViewById<Button>(R.id.addNewPhotoNextButton)
 
             addNewPhotoNextButton.setOnClickListener {
+                description =
+                    popupAddWork.findViewById<TextInputEditText>(
+                        R.id.username_input).text.toString()
 
-                val description = popupAddWork.findViewById<TextInputEditText>(R.id.username_input).text.toString()
-
-                val popupFirstCategory = layoutInflater.inflate(R.layout.first_category_popup, null)
-                val nextFirstCategory = popupFirstCategory.findViewById<Button>(R.id.Next1)
-                val byHand = popupFirstCategory.findViewById<Button>(R.id.by_hand_button)
-                val compGraph = popupFirstCategory.findViewById<Button>(R.id.comp_graph_button)
-                val textMinFirstCategory = popupFirstCategory.findViewById<TextView>(R.id.first_category_min)
-
-                val tagsForPhoto = TagsForPhoto()
+                val popupFirstCategory =
+                    layoutInflater.inflate(R.layout.first_category_popup, null)
+                val nextFirstCategory =
+                    popupFirstCategory.findViewById<Button>(R.id.Next1)
+                val byHand =
+                    popupFirstCategory.findViewById<Button>(R.id.by_hand_button)
+                val compGraph =
+                    popupFirstCategory.findViewById<Button>(R.id.comp_graph_button)
+                val textMinFirstCategory =
+                    popupFirstCategory.findViewById<TextView>(R.id.first_category_min)
 
                 addWorkDialog.dismiss()
 
                 val dialogBuilderFirstCategory = AlertDialog.Builder(context)
                 dialogBuilderFirstCategory.setView(popupFirstCategory)
-
                 val firstCategoryDialog = dialogBuilderFirstCategory.create()
+                firstCategoryDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 firstCategoryDialog.setCancelable(false)
                 firstCategoryDialog.show()
 
 
                 byHand.setOnClickListener {
-                    tagsForPhoto.byHandClicked()
+                    addingWork.byHandClicked()
                 }
-                tagsForPhoto.byHandColorChanged.observe(viewLifecycleOwner) {
-                    byHand.setBackgroundColor(tagsForPhoto.byHandBGColor)
-                    byHand.setTextColor(tagsForPhoto.byHandTextColor)
+                addingWork.byHandColorChanged.observe(viewLifecycleOwner) {
+                    byHand.setBackgroundColor(addingWork.byHandBGColor)
+                    byHand.setTextColor(addingWork.byHandTextColor)
                 }
 
                 compGraph.setOnClickListener {
-                    tagsForPhoto.computerGraphClicked()
+                    addingWork.computerGraphClicked()
                 }
-                tagsForPhoto.computerGraphColorChanged.observe(viewLifecycleOwner) {
-                    compGraph.setBackgroundColor(tagsForPhoto.computerGraphBGColor)
-                    compGraph.setTextColor(tagsForPhoto.computerGraphTextColor)
+                addingWork.computerGraphColorChanged.observe(viewLifecycleOwner) {
+                    compGraph.setBackgroundColor(addingWork.computerGraphBGColor)
+                    compGraph.setTextColor(addingWork.computerGraphTextColor)
                 }
 
 
                 nextFirstCategory.setOnClickListener {
-                    if (tagsForPhoto.minNumberOfTechniques != 1) {
-                        textMinFirstCategory.setTextColor(Color.RED)
+                    addingWork.isTechniqueSelected()
+                }
+
+                addingWork.techniqueNotSelected.observe(viewLifecycleOwner) {
+                    textMinFirstCategory.setTextColor(Color.RED)
+                }
+
+                addingWork.techniqueSelected.observe(viewLifecycleOwner) {
+                    firstCategoryDialog.dismiss()
+                }
+            }
+
+            addingWork.techniqueSelected.observe(viewLifecycleOwner) {
+
+                val popupSecondCategory =
+                    layoutInflater.inflate(R.layout.second_category_popup, null)
+                val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
+                val textMinSecondCategory =
+                    popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
+
+                val portraitButton =
+                    popupSecondCategory.findViewById<Button>(R.id.portrait_button)
+                val landscapeButton =
+                    popupSecondCategory.findViewById<Button>(R.id.landscape_button)
+                val marineButton =
+                    popupSecondCategory.findViewById<Button>(R.id.marine_button)
+                val battlePaintingButton =
+                    popupSecondCategory.findViewById<Button>(R.id.battle_painting_button)
+                val interiorButton =
+                    popupSecondCategory.findViewById<Button>(R.id.interior_button)
+                val caricatureButton =
+                    popupSecondCategory.findViewById<Button>(R.id.caricature_button)
+                val nudeButton =
+                    popupSecondCategory.findViewById<Button>(R.id.nude_button)
+                val animeButton =
+                    popupSecondCategory.findViewById<Button>(R.id.anime_button)
+                val horrorButton =
+                    popupSecondCategory.findViewById<Button>(R.id.horror_button)
+                val stillLifeButton =
+                    popupSecondCategory.findViewById<Button>(R.id.still_life_button)
+
+                val dialogBuilderSecondCategory = AlertDialog.Builder(context)
+                dialogBuilderSecondCategory.setView(popupSecondCategory)
+                val secondCategoryDialog = dialogBuilderSecondCategory.create()
+                secondCategoryDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                secondCategoryDialog.setCancelable(false)
+                secondCategoryDialog.show()
+
+                stillLifeButton.setOnClickListener {
+                    addingWork.stillLifeButtonClicked()
+                }
+                addingWork.stillLifeButtonColorChanged.observe(viewLifecycleOwner) {
+                    stillLifeButton.setBackgroundColor(addingWork.stillLifeButtonBGColor)
+                    stillLifeButton.setTextColor(addingWork.stillLifeButtonTextColor)
+                }
+
+                portraitButton.setOnClickListener {
+                    addingWork.portraitButtonClicked()
+                }
+                addingWork.portraitButtonColorChanged.observe(viewLifecycleOwner) {
+                    portraitButton.setBackgroundColor(addingWork.portraitButtonBGColor)
+                    portraitButton.setTextColor(addingWork.portraitButtonTextColor)
+                }
+
+                landscapeButton.setOnClickListener {
+                    addingWork.landscapeButtonClicked()
+                }
+                addingWork.landscapeButtonColorChanged.observe(viewLifecycleOwner) {
+                    landscapeButton.setBackgroundColor(addingWork.landscapeButtonBGColor)
+                    landscapeButton.setTextColor(addingWork.landscapeButtonTextColor)
+                }
+
+                marineButton.setOnClickListener {
+                    addingWork.marineButtonClicked()
+                }
+                addingWork.marineButtonColorChanged.observe(viewLifecycleOwner) {
+                    marineButton.setBackgroundColor(addingWork.marineButtonBGColor)
+                    marineButton.setTextColor(addingWork.marineButtonTextColor)
+                }
+
+                battlePaintingButton.setOnClickListener {
+                    addingWork.battlePaintingButtonClicked()
+                }
+                addingWork.battlePaintingButtonColorChanged.observe(viewLifecycleOwner) {
+                    battlePaintingButton.setBackgroundColor(addingWork.battlePaintingButtonBGColor)
+                    battlePaintingButton.setTextColor(addingWork.battlePaintingButtonTextColor)
+                }
+
+                interiorButton.setOnClickListener {
+                    addingWork.interiorButtonClicked()
+                }
+                addingWork.interiorButtonColorChanged.observe(viewLifecycleOwner) {
+                    interiorButton.setBackgroundColor(addingWork.interiorButtonBGColor)
+                    interiorButton.setTextColor(addingWork.interiorButtonTextColor)
+                }
+
+                caricatureButton.setOnClickListener {
+                    addingWork.caricatureButtonClicked()
+                }
+                addingWork.caricatureButtonColorChanged.observe(viewLifecycleOwner) {
+                    caricatureButton.setBackgroundColor(addingWork.caricatureButtonBGColor)
+                    caricatureButton.setTextColor(addingWork.caricatureButtonTextColor)
+                }
+
+                nudeButton.setOnClickListener {
+                    addingWork.nudeButtonClicked()
+                }
+                addingWork.nudeButtonColorChanged.observe(viewLifecycleOwner) {
+                    nudeButton.setBackgroundColor(addingWork.nudeButtonBGColor)
+                    nudeButton.setTextColor(addingWork.nudeButtonTextColor)
+                }
+
+                animeButton.setOnClickListener {
+                    addingWork.animeButtonClicked()
+                }
+                addingWork.animeButtonColorChanged.observe(viewLifecycleOwner) {
+                    animeButton.setBackgroundColor(addingWork.animeButtonBGColor)
+                    animeButton.setTextColor(addingWork.animeButtonTextColor)
+                }
+
+                horrorButton.setOnClickListener {
+                    addingWork.horrorButtonClicked()
+                }
+                addingWork.horrorButtonColorChanged.observe(viewLifecycleOwner) {
+                    horrorButton.setBackgroundColor(addingWork.horrorButtonBGColor)
+                    horrorButton.setTextColor(addingWork.horrorButtonTextColor)
+                }
+
+                nextSecondCategory.setOnClickListener {
+                    addingWork.isGenreSelected()
+                    addingWork.genreNotSelected.observe(viewLifecycleOwner) {
+                        textMinSecondCategory.setTextColor(Color.RED)
                     }
-                    else {
-                        val popupSecondCategory = layoutInflater.inflate(R.layout.second_category_popup, null)
-                        val nextSecondCategory = popupSecondCategory.findViewById<Button>(R.id.Next2)
-                        val textMinSecondCategory = popupSecondCategory.findViewById<TextView>(R.id.second_category_min)
-
-                        val portraitButton = popupSecondCategory.findViewById<Button>(R.id.portrait_button)
-                        val landscapeButton = popupSecondCategory.findViewById<Button>(R.id.landscape_button)
-                        val marineButton = popupSecondCategory.findViewById<Button>(R.id.marine_button)
-                        val battlePaintingButton = popupSecondCategory.findViewById<Button>(R.id.battle_painting_button)
-                        val interiorButton = popupSecondCategory.findViewById<Button>(R.id.interior_button)
-                        val caricatureButton = popupSecondCategory.findViewById<Button>(R.id.caricature_button)
-                        val nudeButton = popupSecondCategory.findViewById<Button>(R.id.nude_button)
-                        val animeButton = popupSecondCategory.findViewById<Button>(R.id.anime_button)
-                        val horrorButton = popupSecondCategory.findViewById<Button>(R.id.horror_button)
-                        val stillLifeButton = popupSecondCategory.findViewById<Button>(R.id.still_life_button)
-
-                        firstCategoryDialog.dismiss()
-
-                        val dialogBuilderSecondCategory = AlertDialog.Builder(context)
-                        dialogBuilderSecondCategory.setView(popupSecondCategory)
-
-                        val secondCategoryDialog = dialogBuilderSecondCategory.create()
-                        secondCategoryDialog.setCancelable(false)
-                        secondCategoryDialog.show()
-
-                        stillLifeButton.setOnClickListener {
-                            tagsForPhoto.stillLifeButtonClicked()
-                        }
-                        tagsForPhoto.stillLifeButtonColorChanged.observe(viewLifecycleOwner) {
-                            stillLifeButton.setBackgroundColor(tagsForPhoto.stillLifeButtonBGColor)
-                            stillLifeButton.setTextColor(tagsForPhoto.stillLifeButtonTextColor)
-                        }
-
-                        portraitButton.setOnClickListener {
-                            tagsForPhoto.portraitButtonClicked()
-                        }
-                        tagsForPhoto.portraitButtonColorChanged.observe(viewLifecycleOwner) {
-                            portraitButton.setBackgroundColor(tagsForPhoto.portraitButtonBGColor)
-                            portraitButton.setTextColor(tagsForPhoto.portraitButtonTextColor)
-                        }
-
-                        landscapeButton.setOnClickListener {
-                            tagsForPhoto.landscapeButtonClicked()
-                        }
-                        tagsForPhoto.landscapeButtonColorChanged.observe(viewLifecycleOwner) {
-                            landscapeButton.setBackgroundColor(tagsForPhoto.landscapeButtonBGColor)
-                            landscapeButton.setTextColor(tagsForPhoto.landscapeButtonTextColor)
-                        }
-
-                        marineButton.setOnClickListener {
-                            tagsForPhoto.marineButtonClicked()
-                        }
-                        tagsForPhoto.marineButtonColorChanged.observe(viewLifecycleOwner) {
-                            marineButton.setBackgroundColor(tagsForPhoto.marineButtonBGColor)
-                            marineButton.setTextColor(tagsForPhoto.marineButtonTextColor)
-                        }
-
-                        battlePaintingButton.setOnClickListener {
-                            tagsForPhoto.battlePaintingButtonClicked()
-                        }
-                        tagsForPhoto.battlePaintingButtonColorChanged.observe(viewLifecycleOwner) {
-                            battlePaintingButton.setBackgroundColor(tagsForPhoto.battlePaintingButtonBGColor)
-                            battlePaintingButton.setTextColor(tagsForPhoto.battlePaintingButtonTextColor)
-                        }
-
-                        interiorButton.setOnClickListener {
-                            tagsForPhoto.interiorButtonClicked()
-                        }
-                        tagsForPhoto.interiorButtonColorChanged.observe(viewLifecycleOwner) {
-                            interiorButton.setBackgroundColor(tagsForPhoto.interiorButtonBGColor)
-                            interiorButton.setTextColor(tagsForPhoto.interiorButtonTextColor)
-                        }
-
-                        caricatureButton.setOnClickListener {
-                            tagsForPhoto.caricatureButtonClicked()
-                        }
-                        tagsForPhoto.caricatureButtonColorChanged.observe(viewLifecycleOwner) {
-                            caricatureButton.setBackgroundColor(tagsForPhoto.caricatureButtonBGColor)
-                            caricatureButton.setTextColor(tagsForPhoto.caricatureButtonTextColor)
-                        }
-
-                        nudeButton.setOnClickListener {
-                            tagsForPhoto.nudeButtonClicked()
-                        }
-                        tagsForPhoto.nudeButtonColorChanged.observe(viewLifecycleOwner) {
-                            nudeButton.setBackgroundColor(tagsForPhoto.nudeButtonBGColor)
-                            nudeButton.setTextColor(tagsForPhoto.nudeButtonTextColor)
-                        }
-
-                        animeButton.setOnClickListener {
-                            tagsForPhoto.animeButtonClicked()
-                        }
-                        tagsForPhoto.animeButtonColorChanged.observe(viewLifecycleOwner) {
-                            animeButton.setBackgroundColor(tagsForPhoto.animeButtonBGColor)
-                            animeButton.setTextColor(tagsForPhoto.animeButtonTextColor)
-                        }
-
-                        horrorButton.setOnClickListener {
-                            tagsForPhoto.horrorButtonClicked()
-                        }
-                        tagsForPhoto.horrorButtonColorChanged.observe(viewLifecycleOwner) {
-                            horrorButton.setBackgroundColor(tagsForPhoto.horrorButtonBGColor)
-                            horrorButton.setTextColor(tagsForPhoto.horrorButtonTextColor)
-                        }
-
-                        nextSecondCategory.setOnClickListener{
-                            if (tagsForPhoto.minNumberOfGenres != 1) {
-                                textMinSecondCategory.setTextColor(Color.RED)
-                            }
-                            else {
-                                val popupThirdCategory = layoutInflater.inflate(R.layout.third_category_popup, null)
-                                val depressedButton = popupThirdCategory.findViewById<Button>(R.id.depressed_button)
-                                val funButton = popupThirdCategory.findViewById<Button>(R.id.fun_button)
-                                val publishButton = popupThirdCategory.findViewById<Button>(R.id.Next3)
-
-                                secondCategoryDialog.dismiss()
-
-                                val dialogBuilderThirdCategory = AlertDialog.Builder(context)
-                                dialogBuilderThirdCategory.setView(popupThirdCategory)
-
-                                val thirdCategoryDialog = dialogBuilderThirdCategory.create()
-                                thirdCategoryDialog.setCancelable(false)
-                                thirdCategoryDialog.show()
-
-                                funButton.setOnClickListener {
-                                    tagsForPhoto.funButtonClicked()
-                                }
-                                tagsForPhoto.funButtonColorChanged.observe(viewLifecycleOwner) {
-                                    funButton.setBackgroundColor(tagsForPhoto.funButtonBGColor)
-                                    funButton.setTextColor(tagsForPhoto.funButtonTextColor)
-                                }
-
-                                depressedButton.setOnClickListener {
-                                    tagsForPhoto.depressedButtonClicked()
-                                }
-                                tagsForPhoto.depressedButtonColorChanged.observe(viewLifecycleOwner) {
-                                    depressedButton.setBackgroundColor(tagsForPhoto.depressedButtonBGColor)
-                                    depressedButton.setTextColor(tagsForPhoto.depressedButtonTextColor)
-                                }
-
-                                publishButton.setOnClickListener {
-                                    if (tagsForPhoto.minNumberOfMoods == 1) {
-                                        appViewModel.userViewModel.saveImageAndData(
-                                            tagsForPhoto.byHandClicked,
-                                            tagsForPhoto.funButtonClicked,
-                                            tagsForPhoto.stillLifeButtonClicked,
-                                            tagsForPhoto.portraitButtonClicked,
-                                            tagsForPhoto.landscapeButtonClicked,
-                                            tagsForPhoto.marineButtonClicked,
-                                            tagsForPhoto.battlePaintingButtonClicked,
-                                            tagsForPhoto.interiorButtonClicked,
-                                            tagsForPhoto.caricatureButtonClicked,
-                                            tagsForPhoto.nudeButtonClicked,
-                                            tagsForPhoto.animeButtonClicked,
-                                            tagsForPhoto.horrorButtonClicked,
-                                            description
-                                        )
-
-                                        //add on screen
-                                        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                                            ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
-                                        else
-                                            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-                                        appViewModel.userViewModel.saveNewImageToLocalDB(bitmap)
-                                        showPosts()
-
-                                        thirdCategoryDialog.dismiss()
-                                    }
-                                    else {
-                                        Toast.makeText(context,"Оберіть один!", Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                            }
-                        }
+                    addingWork.genreSelected.observe(viewLifecycleOwner) {
+                        secondCategoryDialog.dismiss()
                     }
                 }
             }
+
+            addingWork.genreSelected.observe(viewLifecycleOwner) {
+                val popupThirdCategory =
+                    layoutInflater.inflate(R.layout.third_category_popup, null)
+                val depressedButton =
+                    popupThirdCategory.findViewById<Button>(R.id.depressed_button)
+                val funButton =
+                    popupThirdCategory.findViewById<Button>(R.id.fun_button)
+                val publishButton =
+                    popupThirdCategory.findViewById<Button>(R.id.Next3)
+
+
+                val dialogBuilderThirdCategory = AlertDialog.Builder(context)
+                dialogBuilderThirdCategory.setView(popupThirdCategory)
+                val thirdCategoryDialog = dialogBuilderThirdCategory.create()
+                thirdCategoryDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                thirdCategoryDialog.setCancelable(false)
+                thirdCategoryDialog.show()
+
+                funButton.setOnClickListener {
+                    addingWork.funButtonClicked()
+                }
+                addingWork.funButtonColorChanged.observe(viewLifecycleOwner) {
+                    funButton.setBackgroundColor(addingWork.funButtonBGColor)
+                    funButton.setTextColor(addingWork.funButtonTextColor)
+                }
+
+                depressedButton.setOnClickListener {
+                    addingWork.depressedButtonClicked()
+                }
+                addingWork.depressedButtonColorChanged.observe(viewLifecycleOwner) {
+                    depressedButton.setBackgroundColor(addingWork.depressedButtonBGColor)
+                    depressedButton.setTextColor(addingWork.depressedButtonTextColor)
+                }
+
+
+                publishButton.setOnClickListener {
+                    addingWork.isMoodSelected()
+
+                    addingWork.moodNotSelected.observe(viewLifecycleOwner) {
+                        Toast.makeText(context, "Оберіть один!", Toast.LENGTH_LONG).show()
+                    }
+                    addingWork.moodSelected.observe(viewLifecycleOwner) {
+                        thirdCategoryDialog.dismiss()
+                    }
+                }
+            }
+
+            addingWork.moodSelected.observe(viewLifecycleOwner) {
+                appViewModel.userViewModel.saveImageAndData(
+                    addingWork.byHandClicked,
+                    addingWork.funButtonClicked,
+                    addingWork.stillLifeButtonClicked,
+                    addingWork.portraitButtonClicked,
+                    addingWork.landscapeButtonClicked,
+                    addingWork.marineButtonClicked,
+                    addingWork.battlePaintingButtonClicked,
+                    addingWork.interiorButtonClicked,
+                    addingWork.caricatureButtonClicked,
+                    addingWork.nudeButtonClicked,
+                    addingWork.animeButtonClicked,
+                    addingWork.horrorButtonClicked,
+                    description
+                )
+
+                    //add on screen
+                    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                        ImageDecoder.decodeBitmap(
+                            ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
+                    else
+                        MediaStore.Images.Media.getBitmap(
+                            requireContext().contentResolver, filePath)
+
+                    appViewModel.userViewModel.saveNewImageToLocalDB(bitmap)
+                    showPosts()
+                }
+            }
         }
-    }
 
     private fun launchGallery() {
         val intent = Intent()

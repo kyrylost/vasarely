@@ -1,4 +1,4 @@
-package com.example.vasarely.view
+package com.example.vasarely.view.service
 
 import android.app.*
 import android.content.Context
@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.vasarely.R
 import com.example.vasarely.database.user.FollowersAmountChangeListener
+import com.example.vasarely.view.SearchScreen
 
 
 class NotificationService : Service() {

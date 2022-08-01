@@ -58,6 +58,7 @@
                             android:id="@+id/search"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_regular"
                             android:hint="@string/Search_hint"
                             android:paddingStart="42dp"
                             android:paddingTop="12dp"
@@ -102,14 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="78dp" >
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView" />
-                </LinearLayout>
+                    android:paddingBottom="78dp" />
             </ScrollView>
 
         </LinearLayout>

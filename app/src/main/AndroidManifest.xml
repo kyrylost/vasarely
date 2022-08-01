@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".view.NotificationService">
+            android:name=".view.service.NotificationService">
 
         </service>
 

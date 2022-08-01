@@ -1,12 +1,13 @@
 package com.example.vasarely.viewmodel.secondary
 
 import android.graphics.Color
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TagsForPhoto {
+class AddingWork : ViewModel() {
 
     var minNumberOfTechniques = 0
     var minNumberOfGenres = 0
@@ -85,9 +86,17 @@ class TagsForPhoto {
     var depressedButtonColorChanged = SingleLiveEvent<Boolean>()
 
 
-    @OptIn(DelicateCoroutinesApi::class)
+    var techniqueNotSelected = MutableLiveData<Boolean>()
+    var techniqueSelected = MutableLiveData<Boolean>()
+
+    var genreNotSelected = MutableLiveData<Boolean>()
+    var genreSelected = MutableLiveData<Boolean>()
+
+    var moodNotSelected = MutableLiveData<Boolean>()
+    var moodSelected = MutableLiveData<Boolean>()
+
     fun byHandClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (byHandClicked == 1) {
                 byHandClicked = 0
                 byHandBGColor = Color.parseColor("#00FFFFFF")
@@ -116,9 +125,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun computerGraphClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (computerGraphClicked == 1) {
                 computerGraphClicked = 0
                 computerGraphBGColor = Color.parseColor("#00FFFFFF")
@@ -239,9 +247,8 @@ class TagsForPhoto {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun stillLifeButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (stillLifeButtonClicked == 1) {
                 unclickStillLifeButton()
             }
@@ -292,9 +299,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun portraitButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (portraitButtonClicked == 1) {
                 unclickPortraitButton()
             }
@@ -345,9 +351,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun landscapeButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (landscapeButtonClicked == 1) {
                 unclickLandscapeButton()
             }
@@ -398,9 +403,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun marineButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (marineButtonClicked == 1) {
                 unclickMarineButton()
             }
@@ -451,9 +455,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun battlePaintingButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (battlePaintingButtonClicked == 1) {
                 unclickBattlePaintingButton()
             }
@@ -504,9 +507,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun interiorButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (interiorButtonClicked == 1) {
                 unclickInteriorButton()
             }
@@ -557,9 +559,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun caricatureButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (caricatureButtonClicked == 1) {
                 unclickCaricatureButton()
             }
@@ -610,9 +611,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun nudeButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (nudeButtonClicked == 1) {
                 unclickNudeButton()
             }
@@ -663,9 +663,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun animeButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (animeButtonClicked == 1) {
                 unclickAnimeButton()
             }
@@ -716,9 +715,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun horrorButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (horrorButtonClicked == 1) {
                 unclickHorrorButton()
             }
@@ -770,9 +768,8 @@ class TagsForPhoto {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun funButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (funButtonClicked == 1) {
                 funButtonClicked = 0
                 funButtonBGColor = Color.parseColor("#00FFFFFF")
@@ -801,9 +798,8 @@ class TagsForPhoto {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun depressedButtonClicked() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             if (depressedButtonClicked == 1) {
                 depressedButtonClicked = 0
                 depressedButtonBGColor = Color.parseColor("#00FFFFFF")
@@ -829,6 +825,35 @@ class TagsForPhoto {
                     funButtonColorChanged.postValue(true)
                 }
             }
+        }
+    }
+
+    fun isTechniqueSelected() {
+        viewModelScope.launch {
+            if (minNumberOfTechniques != 1)
+                techniqueNotSelected.value = true
+            else
+                techniqueSelected.value = true
+
+        }
+    }
+
+    fun isGenreSelected() {
+        viewModelScope.launch {
+            if (minNumberOfGenres != 1)
+                genreNotSelected.value = true
+            else
+                genreSelected.value = true
+
+        }
+    }
+
+    fun isMoodSelected() {
+        viewModelScope.launch {
+            if (minNumberOfMoods != 1)
+                moodNotSelected.value = true
+            else
+                moodSelected.value = true
         }
     }
 }

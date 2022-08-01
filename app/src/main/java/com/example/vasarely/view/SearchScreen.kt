@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.SearchScreenBinding
+import com.example.vasarely.view.service.NotificationService
 import com.example.vasarely.viewmodel.primary.AppViewModel
 import com.example.vasarely.viewmodel.secondary.SearchViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -164,10 +165,6 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
         else showData()
 
-        //val montserratBoldFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_bold)
-        val montserratRegularFont : Typeface? = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular)
-
-        binding.search.typeface = montserratRegularFont
 
         binding.searchInputLayout.measure(0,0)
         val searchInputLayoutHeight = binding.searchInputLayout.measuredHeight
