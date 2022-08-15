@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,7 +36,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private var _binding: UserPersonalPageScreenBinding? = null
     private val binding get() = _binding!!
 
-    private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
     private var addWorkPopupImage: ImageView? = null
     private var profilePictureImage: ImageView? = null
@@ -755,15 +755,17 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+        resultLauncher.launch(intent)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+    private var resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val data: Intent? = result.data
+
             if ((data == null) || (data.data == null)) {
-                return
+                return@registerForActivityResult
             }
 
             filePath = data.data
@@ -786,7 +788,6 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     e.printStackTrace()
                 }
             }
-
         }
     }
 

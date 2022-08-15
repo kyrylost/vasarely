@@ -244,7 +244,7 @@ class UserViewModel : ViewModel(), ImageInterface {
         }
 
     }
-
+//scope
     fun saveNewImageToLocalDB(imageBitmap: Bitmap) {
         var imageBitmap = imageBitmap
 
