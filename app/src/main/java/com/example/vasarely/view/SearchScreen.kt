@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -87,9 +88,9 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 findNavController().navigate(action)
             }
             else {
-                val serviceIntent = Intent(context, NotificationService::class.java)
-                serviceIntent.putExtra("Uid", appViewModel.userViewModel.userDatabase.uid) //remove db ref
-                context?.startForegroundService(serviceIntent)
+//                val serviceIntent = Intent(context, NotificationService::class.java)
+//                serviceIntent.putExtra("Uid", appViewModel.userViewModel.userDatabase.uid) //remove db ref
+//                context?.startForegroundService(serviceIntent)
 
                 appViewModel.userViewModel.getData()
                 appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
@@ -146,6 +147,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         if (!appViewModel.userViewModel.isLocalDataInitialized()) {
             if (appViewModel.userViewModel.isUserDBInitialized()) {
+                Log.d("SomeShit", "wefjiowjefiopwefiFUCK")
                 appViewModel.userViewModel.getData()
                 appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
             }

@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +23,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPersonalPageScreenBinding
+import com.example.vasarely.view.recycler.PostAdapter
 import com.example.vasarely.viewmodel.primary.AppViewModel
 import com.example.vasarely.viewmodel.secondary.AddingWork
 import com.google.android.material.textfield.TextInputEditText
@@ -86,104 +89,118 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         if (appViewModel.userViewModel.isProfilePictureInitialized())
             binding.avatarPlacer.setImageBitmap(appViewModel.userViewModel.userData.profilePicture)
 
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-
         fun showPosts() {
-            binding.postsLinearLayout.removeAllViews()
-            val lines = appViewModel.userViewModel.lines
-            val lastLinePosts = appViewModel.userViewModel.lastLinePosts
+            Log.d("showPosts" ,"Triggered")
+            binding.postsRecyclerView.apply {
+                val postAdapter =
+                    PostAdapter(
+                        appViewModel
+                            .userViewModel
+                            .userPostsData
+                            .allUserPostsData
+                    )
 
-            val imagesBitmaps = appViewModel.userViewModel.userPostsData.allUserPostsData
-            var currentPost = 0
-
-            for (line in 1..lines.toInt()) {
-                val horizontalLinearLayout = LinearLayout(context)
-                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
-                for (postNumber in 1..3) {
-                    val postImageView = ImageView(context)
-
-                    val params = screenWidth / 3 - dpToPx(80F / 3)
-                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
-
-                    postImageView.layoutParams = postLinearLayoutParams
-                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-
-                    when (postNumber) {
-                        1 -> postImageView.margin(30F, 10F, 0F, 0F)
-                        2 -> postImageView.margin(10F, 10F, 0F, 0F)
-                        3 -> {
-                            if (line == lines.toInt() && lastLinePosts == 0)
-                                postImageView.margin(10F, 10F, 30F, 88F)
-                            else postImageView.margin(10F, 10F, 30F, 0F)
-                        }
-                    }
-
-
-                    val newCurrentPost = currentPost
-                    postImageView.setOnClickListener {
-                        val dialogBuilder = AlertDialog.Builder(context)
-                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
-
-                        dialogBuilder.setView(popupView)
-                        val addNoteDialog = dialogBuilder.create()
-                        addNoteDialog.show()
-
-                        val postImg = popupView.findViewById<ImageView>(R.id.Post)
-                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                    }
-
-                    postImageView.setImageBitmap(imagesBitmaps[currentPost])
-
-                    currentPost += 1
-                    horizontalLinearLayout.addView(postImageView)
-                }
-                binding.postsLinearLayout.addView(horizontalLinearLayout)
+                layoutManager = GridLayoutManager(context, 3)
+                adapter = postAdapter
             }
 
-            if (lastLinePosts != 0){
-                val horizontalLinearLayout = LinearLayout(context)
-                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
-                for (postNumber in 1..lastLinePosts) {
-                    val postImageView = ImageView(context)
-
-                    val params = screenWidth / 3 - dpToPx(80F / 3)
-                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
-
-                    postImageView.layoutParams = postLinearLayoutParams
-                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-
-                    when (postNumber) {
-                        1 -> {
-                            if (postNumber == lastLinePosts)
-                                postImageView.margin(30F, 10F, 0F, 88F)
-                            else postImageView.margin(30F, 10F, 0F, 0F)
-
-                        }
-                        2 -> postImageView.margin(10F, 10F, 0F, 88F)
-                    }
 
 
-                    val newCurrentPost = currentPost
-                    postImageView.setOnClickListener {
-                        val dialogBuilder = AlertDialog.Builder(context)
-
-                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
-                        dialogBuilder.setView(popupView)
-
-                        val addNoteDialog = dialogBuilder.create()
-                        addNoteDialog.show()
-
-                        val postImg = popupView.findViewById<ImageView>(R.id.Post)
-                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
-                    }
-
-                    postImageView.setImageBitmap(imagesBitmaps[newCurrentPost])
-
-                    currentPost += 1
-                    horizontalLinearLayout.addView(postImageView)
-                }
-                binding.postsLinearLayout.addView(horizontalLinearLayout)
-            }
+//            binding.postsLinearLayout.removeAllViews()
+//            val lines = appViewModel.userViewModel.lines
+//            val lastLinePosts = appViewModel.userViewModel.lastLinePosts
+//
+//            val imagesBitmaps = appViewModel.userViewModel.userPostsData.allUserPostsData
+//            var currentPost = 0
+//
+//            for (line in 1..lines.toInt()) {
+//                val horizontalLinearLayout = LinearLayout(context)
+//                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+//                for (postNumber in 1..3) {
+//                    val postImageView = ImageView(context)
+//
+//                    val params = screenWidth / 3 - dpToPx(80F / 3)
+//                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
+//
+//                    postImageView.layoutParams = postLinearLayoutParams
+//                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+//
+//                    when (postNumber) {
+//                        1 -> postImageView.margin(30F, 10F, 0F, 0F)
+//                        2 -> postImageView.margin(10F, 10F, 0F, 0F)
+//                        3 -> {
+//                            if (line == lines.toInt() && lastLinePosts == 0)
+//                                postImageView.margin(10F, 10F, 30F, 88F)
+//                            else postImageView.margin(10F, 10F, 30F, 0F)
+//                        }
+//                    }
+//
+//
+//                    val newCurrentPost = currentPost
+//                    postImageView.setOnClickListener {
+//                        val dialogBuilder = AlertDialog.Builder(context)
+//                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
+//
+//                        dialogBuilder.setView(popupView)
+//                        val addNoteDialog = dialogBuilder.create()
+//                        addNoteDialog.show()
+//
+//                        val postImg = popupView.findViewById<ImageView>(R.id.Post)
+//                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
+//                    }
+//
+//                    postImageView.setImageBitmap(imagesBitmaps[currentPost])
+//
+//                    currentPost += 1
+//                    horizontalLinearLayout.addView(postImageView)
+//                }
+//                binding.postsLinearLayout.addView(horizontalLinearLayout)
+//            }
+//
+//            if (lastLinePosts != 0){
+//                val horizontalLinearLayout = LinearLayout(context)
+//                horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+//                for (postNumber in 1..lastLinePosts) {
+//                    val postImageView = ImageView(context)
+//
+//                    val params = screenWidth / 3 - dpToPx(80F / 3)
+//                    val postLinearLayoutParams = LinearLayout.LayoutParams(params, params)
+//
+//                    postImageView.layoutParams = postLinearLayoutParams
+//                    postImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+//
+//                    when (postNumber) {
+//                        1 -> {
+//                            if (postNumber == lastLinePosts)
+//                                postImageView.margin(30F, 10F, 0F, 88F)
+//                            else postImageView.margin(30F, 10F, 0F, 0F)
+//
+//                        }
+//                        2 -> postImageView.margin(10F, 10F, 0F, 88F)
+//                    }
+//
+//
+//                    val newCurrentPost = currentPost
+//                    postImageView.setOnClickListener {
+//                        val dialogBuilder = AlertDialog.Builder(context)
+//
+//                        val popupView = layoutInflater.inflate(R.layout.post_popup, null)
+//                        dialogBuilder.setView(popupView)
+//
+//                        val addNoteDialog = dialogBuilder.create()
+//                        addNoteDialog.show()
+//
+//                        val postImg = popupView.findViewById<ImageView>(R.id.Post)
+//                        postImg.setImageBitmap(imagesBitmaps[newCurrentPost])
+//                    }
+//
+//                    postImageView.setImageBitmap(imagesBitmaps[newCurrentPost])
+//
+//                    currentPost += 1
+//                    horizontalLinearLayout.addView(postImageView)
+//                }
+//                binding.postsLinearLayout.addView(horizontalLinearLayout)
+//            }
         }
 
 
@@ -201,7 +218,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             progressBar.margin(0F, 30F, 0F, 30F)
 
-            binding.postsLinearLayout.addView(progressBar)
+            //binding.postsLinearLayout.addView(progressBar)///////////////////////////////////////////////////////////////////////////////
         }
 
 
@@ -716,39 +733,41 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                     }
                     addingWork.moodSelected.observe(viewLifecycleOwner) {
                         thirdCategoryDialog.dismiss()
+
+                        appViewModel.userViewModel.saveImageAndData(
+                            addingWork.byHandClicked,
+                            addingWork.funButtonClicked,
+                            addingWork.stillLifeButtonClicked,
+                            addingWork.portraitButtonClicked,
+                            addingWork.landscapeButtonClicked,
+                            addingWork.marineButtonClicked,
+                            addingWork.battlePaintingButtonClicked,
+                            addingWork.interiorButtonClicked,
+                            addingWork.caricatureButtonClicked,
+                            addingWork.nudeButtonClicked,
+                            addingWork.animeButtonClicked,
+                            addingWork.horrorButtonClicked,
+                            description
+                        )
+
+                        //add on screen
+                        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                            ImageDecoder.decodeBitmap(
+                                ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
+                        else
+                            MediaStore.Images.Media.getBitmap(
+                                requireContext().contentResolver, filePath)
+
+                        appViewModel.userViewModel.saveNewImageToLocalDB(bitmap)
+                        showPosts()
+                    }
                     }
                 }
             }
 
-            addingWork.moodSelected.observe(viewLifecycleOwner) {
-                appViewModel.userViewModel.saveImageAndData(
-                    addingWork.byHandClicked,
-                    addingWork.funButtonClicked,
-                    addingWork.stillLifeButtonClicked,
-                    addingWork.portraitButtonClicked,
-                    addingWork.landscapeButtonClicked,
-                    addingWork.marineButtonClicked,
-                    addingWork.battlePaintingButtonClicked,
-                    addingWork.interiorButtonClicked,
-                    addingWork.caricatureButtonClicked,
-                    addingWork.nudeButtonClicked,
-                    addingWork.animeButtonClicked,
-                    addingWork.horrorButtonClicked,
-                    description
-                )
-
-                    //add on screen
-                    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                        ImageDecoder.decodeBitmap(
-                            ImageDecoder.createSource(requireContext().contentResolver, filePath!!))
-                    else
-                        MediaStore.Images.Media.getBitmap(
-                            requireContext().contentResolver, filePath)
-
-                    appViewModel.userViewModel.saveNewImageToLocalDB(bitmap)
-                    showPosts()
-                }
-            }
+//            addingWork.moodSelected.observe(viewLifecycleOwner) {
+//
+//            }
         }
 
     private fun launchGallery() {

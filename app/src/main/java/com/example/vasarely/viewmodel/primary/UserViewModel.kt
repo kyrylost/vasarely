@@ -2,6 +2,7 @@ package com.example.vasarely.viewmodel.primary
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,8 +31,8 @@ class UserViewModel : ViewModel(), ImageInterface {
     var profilePicture = SingleLiveEvent<Bitmap>()
 
     private var postsAmount = 0
-    var lines = 0.0
-    var lastLinePosts = 0
+//    var lines = 0.0
+//    var lastLinePosts = 0
 
     private lateinit var imageFilePath: ImageFilePath
 
@@ -59,23 +60,28 @@ class UserViewModel : ViewModel(), ImageInterface {
 
             userDatabase.userStorageInitialized.observeForever {
                 userDatabase.allUserPosts.observeForever {
-                    Log.d("it", it.count().toString())
+                    CoroutineScope(Dispatchers.IO).launch {
+                        Log.d("it", it.count().toString())
 
-                    userPostsFound.postValue(true)
+                        userPostsFound.postValue(true)
 
-                    val imagesBitmapList = it as MutableList
+                        val imagesBitmapList = it as MutableList
 
-                    userPostsData = UserPostsData(imagesBitmapList)
-                    postsAmount = userPostsData.postsAmount
-                    Log.d("postsAmount", postsAmount.toString())
-                    lines = postsAmount / 3.0
-                    lastLinePosts = ((lines * 10).toInt() % 10) / 3
+                        userPostsData = UserPostsData(imagesBitmapList)
+                        postsAmount = userPostsData.postsAmount
+                        Log.d("postsAmount", postsAmount.toString())
+    //                    lines = postsAmount / 3.0
+    //                    lastLinePosts = ((lines * 10).toInt() % 10) / 3
 
-                    GlobalScope.launch(Dispatchers.IO) {
+                        Log.d("GlobalScope", (Looper.myLooper() == Looper.getMainLooper()).toString())
                         for ((index, bitmap) in imagesBitmapList.withIndex()) {
                             val compressedBitmap = async { compressBitmap(bitmap, 50) }
                             userPostsData.allUserPostsData[index] = compressedBitmap.await()
+                            Log.d("-----bytes-----", bitmap.byteCount.toString())
+
                             if (bitmap.byteCount < 50135040) {
+                                Log.d("-----bytes2-----", bitmap.byteCount.toString())
+
                                 if (index == imagesBitmapList.count() - 1)
                                     postsProcessed.postValue(true)
                             } else {
@@ -86,6 +92,7 @@ class UserViewModel : ViewModel(), ImageInterface {
                                     postsProcessed.postValue(true) //*????????????????????????????????
                             }
                         }
+                        this.cancel()
                     }
                 }
 
@@ -97,37 +104,41 @@ class UserViewModel : ViewModel(), ImageInterface {
 
 
     private fun processData(data: Any) {
-        val uid = userDatabase.uid
-        val username: String
-        val technique: String
-        val mood: String
-        val followers: String
-        val following: String
-        var followingList = listOf<String>()
-        val genres = mutableListOf<String>()
+        CoroutineScope(Dispatchers.IO).launch {
+            val uid = userDatabase.uid
+            val username: String
+            val technique: String
+            val mood: String
+            val followers: String
+            val following: String
+            var followingList = listOf<String>()
+            val genres = mutableListOf<String>()
 
-        val dataHashMap = data as HashMap<*, *>
+            val dataHashMap = data as HashMap<*, *>
 
-        val preferenceHashMap = dataHashMap["preferences"] as HashMap<*, *>
+            val preferenceHashMap = dataHashMap["preferences"] as HashMap<*, *>
 
-        username = dataHashMap["username"].toString()
-        technique = preferenceHashMap["technique"].toString()
-        mood = preferenceHashMap["mood"].toString()
-        followers = dataHashMap["followers"].toString()
-        following = dataHashMap["following"].toString()
-        if (dataHashMap["followingList"].toString() != "empty")
-            followingList = dataHashMap["followingList"].toString().split(",")
-        Log.d("followingList", followingList.toString())
+            username = dataHashMap["username"].toString()
+            technique = preferenceHashMap["technique"].toString()
+            mood = preferenceHashMap["mood"].toString()
+            followers = dataHashMap["followers"].toString()
+            following = dataHashMap["following"].toString()
+            if (dataHashMap["followingList"].toString() != "empty")
+                followingList = dataHashMap["followingList"].toString().split(",")
+            Log.d("followingList", followingList.toString())
 
-        val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
-        for (value in genresArrayList) {
-            genres.add(value as String)
+            val genresArrayList = preferenceHashMap["genres"] as ArrayList<*>
+            for (value in genresArrayList) {
+                genres.add(value as String)
+            }
+
+            userData = UserData(
+                uid, username, technique, mood, genres,
+                followers, following, followingList
+            )
+
+            this.cancel()
         }
-
-        userData = UserData(
-            uid, username, technique, mood, genres,
-            followers, following, followingList
-        )
     }
 
 
@@ -199,7 +210,6 @@ class UserViewModel : ViewModel(), ImageInterface {
         imageFilePath = ImageFilePath(filePath)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun saveImageAndData(
         byHandSelected: Int, funButtonSelected: Int,
         stillLifeButtonSelected: Int, portraitButtonSelected: Int,
@@ -234,44 +244,56 @@ class UserViewModel : ViewModel(), ImageInterface {
             else "depressed"
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             val selectedGenre = async { checkWhatGenreIsSelected() }
             val technique = async { checkWhatTechniqueIsSelected() }
             val mood = async { checkWhatMoodIsSelected() }
             userDatabase.saveImage(imageFilePath.filePath)
             userDatabase.saveImageDescription(description)
-            userDatabase.saveHashtags(technique.await(), mood.await(), selectedGenre.await())
+            userDatabase.saveHashtags(
+                technique.await(),
+                mood.await(),
+                selectedGenre.await()
+            ).let {
+                this.cancel()
+            }
         }
 
     }
-//scope
-    fun saveNewImageToLocalDB(imageBitmap: Bitmap) {
-        var imageBitmap = imageBitmap
+    //scope
+    fun saveNewImageToLocalDB(bitmap: Bitmap) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var imageBitmap = bitmap
 
-        imageBitmap = compressBitmap(imageBitmap, 50)
-        if (imageBitmap.byteCount >= 50135040)
-            imageBitmap = rotateImage(imageBitmap, 90f)
+            imageBitmap = compressBitmap(imageBitmap, 50)
+            if (imageBitmap.byteCount >= 50135040)
+                imageBitmap = rotateImage(imageBitmap, 90f)
 
-        if (isProfileDataInitialized()) {
-            userPostsData.allUserPostsData.add(imageBitmap)
-            postsAmount++
-            lines = postsAmount / 3.0
-            lastLinePosts = ((lines * 10).toInt() % 10) / 3
-        } else {
-            val bitmapList = mutableListOf<Bitmap>()
-            bitmapList.add(imageBitmap)
-            userPostsData = UserPostsData(bitmapList)
-            postsAmount++
-            lines = postsAmount / 3.0
-            lastLinePosts = ((lines * 10).toInt() % 10) / 3
+            if (isProfileDataInitialized()) {
+                userPostsData.allUserPostsData.add(imageBitmap)
+                postsAmount++
+//                lines = postsAmount / 3.0
+//                lastLinePosts = ((lines * 10).toInt() % 10) / 3
+            } else {
+                val bitmapList = mutableListOf<Bitmap>()
+                bitmapList.add(imageBitmap)
+                userPostsData = UserPostsData(bitmapList)
+                postsAmount++
+//                lines = postsAmount / 3.0
+//                lastLinePosts = ((lines * 10).toInt() % 10) / 3
+            }
+            this.cancel()
         }
     }
+
 
     fun updateName(newNickname: String) {
         userDatabase.updateName(newNickname)
     }
 
     fun getData() {
-        userDatabase.getData()
+        GlobalScope.launch {
+            userDatabase.getData()
+        }
     }
 }

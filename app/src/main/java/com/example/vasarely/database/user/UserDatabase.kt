@@ -2,10 +2,15 @@ package com.example.vasarely.database.user
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Looper
+import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.*
+import javax.security.auth.callback.Callback
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class UserDatabase : UserAuth() {
 
     lateinit var preferencesReference: DatabaseReference
@@ -22,10 +27,13 @@ class UserDatabase : UserAuth() {
 
     init {
         uidInit.observeForever { uid ->
-            userStorage = UserStorage(uid)
-            allUserPosts = userStorage.allUserPosts
-            profilePicture = userStorage.profilePicture
-            userStorageInitialized.postValue(true)
+            CoroutineScope(Dispatchers.IO).launch {
+                userStorage = UserStorage(uid)
+                allUserPosts = userStorage.allUserPosts
+                profilePicture = userStorage.profilePicture
+                userStorageInitialized.postValue(true)
+                this.cancel()
+            }
         }
     }
 
@@ -33,9 +41,21 @@ class UserDatabase : UserAuth() {
         userStorage.saveProfilePicture(filePath)
 
     fun saveImage(filePath: Uri) {
-        amountOfWorks += 1
-        userStorage.saveImage(filePath, amountOfWorks)
-        currentUserDb.child("userData").child("worksAmount").setValue(amountOfWorks)
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("UserDatabase", "saveImage")
+            amountOfWorks += 1
+            userStorage.saveImage(filePath, amountOfWorks){
+                Log.d("UserDatabase", "callback")
+                currentUserDb
+                    .child("userData")
+                    .child("worksAmount")
+                    .setValue(amountOfWorks).addOnSuccessListener {
+                        this.cancel()
+                    }
+            }
+
+
+        }
     }
 
     fun saveImageDescription(description: String) {
@@ -89,23 +109,27 @@ class UserDatabase : UserAuth() {
     }
 
     fun getData() {
-        currentUserDb.child("userData").get().addOnSuccessListener {
-            userData.postValue(it.value)
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("getDataScope", (Looper.myLooper() == Looper.getMainLooper()).toString())
 
-            userStorage.getProfilePicture()
+            currentUserDb.child("userData").get().addOnSuccessListener {
+                userData.postValue(it.value)
 
-            val dataSnapshot = it.value as HashMap<*, *> //don`t use hashMap
+                userStorage.getProfilePicture()
 
-            amountOfWorks = if (dataSnapshot["worksAmount"] != null)
-                dataSnapshot["worksAmount"].toString().toInt()
-            else
-                0
+                val dataSnapshot = it.value as HashMap<*, *> //don`t use hashMap
 
-            userStorage.retrieveAllUserPosts(amountOfWorks)
+                amountOfWorks = if (dataSnapshot["worksAmount"] != null)
+                    dataSnapshot["worksAmount"].toString().toInt()
+                else
+                    0
 
-        }.addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-            getData()
+                userStorage.retrieveAllUserPosts(amountOfWorks)
+
+            }.addOnFailureListener { exception ->
+                dataChangeExceptions.postValue(exception.toString())
+                getData()
+            }
         }
     }
 

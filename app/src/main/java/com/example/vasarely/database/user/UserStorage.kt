@@ -3,10 +3,14 @@ package com.example.vasarely.database.user
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Looper
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.database.root.StorageRoot
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.callbackFlow
 import java.io.File
+import javax.security.auth.callback.Callback
 
 class UserStorage(uid: String): StorageRoot() {
 
@@ -15,44 +19,70 @@ class UserStorage(uid: String): StorageRoot() {
     var allUserPosts: SingleLiveEvent<List<Bitmap>> = SingleLiveEvent()
 
     fun getProfilePicture() {
-        val localFileProfilePicture = File.createTempFile("tempImage", "jpg")
-        imageReference = userStorageReference.child("profilePhoto/avatar")
-        imageReference.getFile(localFileProfilePicture).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeFile(localFileProfilePicture.absolutePath)
-            profilePicture.postValue(bitmap)
-            localFileProfilePicture.delete()
+        CoroutineScope(Dispatchers.IO).launch  {
+            imageReference = userStorageReference.child("profilePhoto/avatar")
+            kotlin.runCatching {
+                Log.d(
+                    "getProfilePictureScope",
+                    (Looper.myLooper() == Looper.getMainLooper()).toString()
+                )
+                val localFileProfilePicture = File.createTempFile("tempImage", "jpg")
+                imageReference.getFile(localFileProfilePicture).addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeFile(localFileProfilePicture.absolutePath)
+                    profilePicture.postValue(bitmap)
+                    localFileProfilePicture.delete()
+                    this.cancel()
+                }
+            }
+
         }
     }
 
     fun retrieveAllUserPosts(amountOfWorks: Int) {
-        val allUserPostsList = mutableListOf<Bitmap>()
+        CoroutineScope(Dispatchers.IO).launch {
+            kotlin.runCatching {
+                Log.d("retrieveAllUserPosts", (Looper.myLooper() == Looper.getMainLooper()).toString())
+                val allUserPostsList = mutableListOf<Bitmap>()
 
-        for (i in 1..amountOfWorks) {
-            Log.d("i", i.toString())
-            val localFile = File.createTempFile("tempImage", "jpg")
-            imageReference = userStorageReference.child("userPosts/$i")
-            imageReference.getFile(localFile).addOnSuccessListener {
-                val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                allUserPostsList.add(bitmap)
+                for (i in 1..amountOfWorks) {
+                    Log.d("i", i.toString())
+                    val localFile = File.createTempFile("tempImage", "jpg")
+                    imageReference = userStorageReference.child("userPosts/$i")
+                    imageReference.getFile(localFile).addOnSuccessListener {
+                        val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                        allUserPostsList.add(bitmap)
 
-                localFile.delete()
+                        localFile.delete()
 
-                if (allUserPostsList.count() == amountOfWorks)
-                    allUserPosts.postValue(allUserPostsList)
+                        if (allUserPostsList.count() == amountOfWorks) {
+                            allUserPosts.postValue(allUserPostsList)
+                            this.cancel()
+                        }
+                    }
+                }
             }
+
         }
     }
 
     fun saveProfilePicture(filePath: Uri) {
-        imageReference = userStorageReference.child("profilePhoto/avatar")
-        imageReference.putFile(filePath)
+        CoroutineScope(Dispatchers.IO).launch {
+            imageReference = userStorageReference.child("profilePhoto/avatar")
+            imageReference.putFile(filePath).addOnSuccessListener {
+                this.cancel()
+            }
+        }
     }
 
-    fun saveImage(filePath : Uri, amountOfWorks: Int) {
-        imageReference = userStorageReference.child("userPosts/$amountOfWorks")
-
-        imageReference.putFile(filePath).addOnSuccessListener {
-            //
+    fun saveImage(filePath : Uri, amountOfWorks: Int, callback: () -> Unit) {
+        Log.d("UserStorage", "saveImage")
+        CoroutineScope(Dispatchers.IO).launch {
+            imageReference = userStorageReference.child("userPosts/$amountOfWorks")
+            imageReference.putFile(filePath).addOnSuccessListener {
+                Log.d("UserStorage", "image put")
+                callback.invoke()
+                this.cancel()
+            }
         }
     }
 }

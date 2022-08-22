@@ -2,6 +2,7 @@ package com.example.vasarely.viewmodel.primary
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.database.users.UsersDatabase
 import com.example.vasarely.model.users.FoundedUserData
@@ -56,14 +57,12 @@ class UsersViewModel : ViewModel(), ImageInterface {
         usersDatabase.getOtherUserPosts(foundedUserData.uid, foundedUserData.worksAmount)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun processFoundedUserPhotos(imagesBitmapList: MutableList<Bitmap>) {
+        CoroutineScope(Dispatchers.IO).launch  {
+            foundedUserData.allFoundedUserPostsData = imagesBitmapList
+            foundedUserLines = foundedUserData.worksAmount.toDouble() / 3.0
+            foundedUserLastLinePosts = ((foundedUserLines * 10).toInt() % 10) / 3
 
-        foundedUserData.allFoundedUserPostsData = imagesBitmapList
-        foundedUserLines = foundedUserData.worksAmount.toDouble() / 3.0
-        foundedUserLastLinePosts = ((foundedUserLines * 10).toInt() % 10) / 3
-
-        GlobalScope.launch (Dispatchers.IO) {
             for ((index, bitmap) in imagesBitmapList.withIndex()) {
                 val compressedBitmap = async { compressBitmap(bitmap, 50) }
                 foundedUserData.allFoundedUserPostsData[index] = compressedBitmap.await()

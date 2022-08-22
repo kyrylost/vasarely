@@ -19,11 +19,10 @@ open class DatabaseRoot {
     var localDbCopyInitialized = SingleLiveEvent<Boolean>()
 
     //var dataReference = MutableLiveData<DataSnapshot>()
-    @OptIn(DelicateCoroutinesApi::class)
-    fun addDataEventListener(data: DatabaseReference) {
+    private fun addDataEventListener(data: DatabaseReference) {
         val dataChangedListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                GlobalScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     localDbCopy = async { LocalDbCopy(dataSnapshot) }
                     Log.d(TAG, dataSnapshot.toString())
                 }
@@ -37,9 +36,8 @@ open class DatabaseRoot {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun retrieveAllData() {
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             databaseReference.get().addOnSuccessListener {
                 localDbCopy = async { LocalDbCopy(it) }
                 localDbCopyInitialized.postValue(true)

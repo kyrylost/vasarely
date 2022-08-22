@@ -29,7 +29,8 @@
         android:label="SearchScreen">
         <action
             android:id="@+id/action_searchScreen_to_userPersonalPageScreen"
-            app:destination="@id/userPersonalPageScreen" />
+            app:destination="@id/userPersonalPageScreen"
+            app:enterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_searchScreen_to_mainScreen"
             app:destination="@id/mainScreen" />
