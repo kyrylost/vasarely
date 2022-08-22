@@ -28,6 +28,7 @@ class UserViewModel : ViewModel(), ImageInterface {
 
     lateinit var userData: UserData
     lateinit var userPostsData: UserPostsData
+    private var userPostsProcessed = false
     var profilePicture = SingleLiveEvent<Bitmap>()
 
     private var postsAmount = 0
@@ -38,8 +39,12 @@ class UserViewModel : ViewModel(), ImageInterface {
 
     lateinit var userDB: String
 
-    fun isLocalDataInitialized() = ::userData.isInitialized
-    fun isProfileDataInitialized() = ::userPostsData.isInitialized
+    fun isUserDataInitialized() = ::userData.isInitialized
+    fun isUserPostsDataInitializedAndProcessed(): Boolean {
+        return if (userPostsProcessed)
+            ::userPostsData.isInitialized
+        else false
+    }
     fun isProfilePictureInitialized() = userData.profilePictureIsInitialized()
     fun isUserDBInitialized() = ::userDB.isInitialized
 
@@ -81,15 +86,18 @@ class UserViewModel : ViewModel(), ImageInterface {
 
                             if (bitmap.byteCount < 50135040) {
                                 Log.d("-----bytes2-----", bitmap.byteCount.toString())
-
-                                if (index == imagesBitmapList.count() - 1)
+                                if (index == imagesBitmapList.count() - 1) {
                                     postsProcessed.postValue(true)
+                                    userPostsProcessed = true
+                                }
                             } else {
                                 val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
                                 userPostsData.allUserPostsData[index] = rotatedBitmap.await()
 
-                                if (index == imagesBitmapList.count() - 1)
-                                    postsProcessed.postValue(true) //*????????????????????????????????
+                                if (index == imagesBitmapList.count() - 1) {
+                                    postsProcessed.postValue(true)
+                                    userPostsProcessed = true
+                                }
                             }
                         }
                         this.cancel()
@@ -269,7 +277,7 @@ class UserViewModel : ViewModel(), ImageInterface {
             if (imageBitmap.byteCount >= 50135040)
                 imageBitmap = rotateImage(imageBitmap, 90f)
 
-            if (isProfileDataInitialized()) {
+            if (isUserDataInitialized()) {
                 userPostsData.allUserPostsData.add(imageBitmap)
                 postsAmount++
 //                lines = postsAmount / 3.0

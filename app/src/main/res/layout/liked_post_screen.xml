@@ -31,17 +31,15 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
+                    android:layout_height="70dp">
 
                     <TextView
                         android:id="@+id/likedPostsText"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="15dp"
-                        android:layout_marginTop="23dp"
                         android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center_vertical"
                         android:text="Вподобані публікації"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -50,19 +48,19 @@
 
                     <ImageButton
                         android:id="@+id/likedPostReturnButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="32dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="30dp"
                         android:background="@null"
                         android:contentDescription="@string/continue_btn_text"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
+                        android:scaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/back" />
+                        app:srcCompat="@drawable/back"
+                        tools:ignore="TouchTargetSizeCheck" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -145,11 +145,10 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
 
 
-        if (!appViewModel.userViewModel.isLocalDataInitialized()) {
+        if (!appViewModel.userViewModel.isUserDataInitialized()) {
             if (appViewModel.userViewModel.isUserDBInitialized()) {
-                Log.d("SomeShit", "wefjiowjefiopwefiFUCK")
                 appViewModel.userViewModel.getData()
-                appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
+                appViewModel.usersViewModel.retrieveAllData()// Recommendations Search
             }
             else {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")

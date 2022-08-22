@@ -28,10 +28,10 @@
                 <TextView
                     android:id="@+id/select_pref_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="23dp"
                     android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
                     android:text="@string/select_new_pref"
                     android:textColor="@color/design_default_color_on_secondary"
                     android:textSize="16sp"
@@ -41,17 +41,18 @@
 
                 <ImageButton
                     android:id="@+id/newPrefReturnButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="32dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="30dp"
                     android:background="@null"
                     android:contentDescription="@string/forget_password"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
+                    android:scaleType="fitCenter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/back" />
+                    app:srcCompat="@drawable/back"
+                    tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

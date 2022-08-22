@@ -6,9 +6,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vasarely.databinding.PostImageBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class PostAdapter (private val postsBitmaps: List<Bitmap>)
     : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+
+    var onItemClick: ((Bitmap) -> Unit)? = null
 
     val width = Resources.getSystem().displayMetrics.widthPixels / 3 -
             (12 * Resources.getSystem().displayMetrics.density).toInt()
@@ -32,8 +38,16 @@ class PostAdapter (private val postsBitmaps: List<Bitmap>)
         : RecyclerView.ViewHolder(postImageBinding.root) {
 
         fun bindImage(imageBitmap: Bitmap) {
-            postImageBinding.postImageView.setImageBitmap(imageBitmap)
-            postImageBinding.postImageView.layoutParams.height = width
+            CoroutineScope(Dispatchers.IO).launch {
+                postImageBinding.postImageView.setImageBitmap(imageBitmap)
+                postImageBinding.postImageView.layoutParams.height = width
+
+                postImageBinding.postImageView.setOnClickListener {
+                    onItemClick?.invoke(imageBitmap)
+                }
+
+                this.cancel()
+            }
         }
 
     }
