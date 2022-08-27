@@ -9,9 +9,10 @@ import kotlinx.coroutines.*
 
 open class DatabaseRoot {
 
-    private var firebaseDatabase = FirebaseDatabase.getInstance("https://vasarely-f0ed5-default-rtdb.europe-west1.firebasedatabase.app")
-    var databaseReference = firebaseDatabase.reference.child("profiles")
-    //addDataEventListener(databaseReference)
+    var databaseReference = DatabaseInstance
+        .firebaseDatabase
+        .reference
+        .child("profiles")
 
     var dataChangeExceptions: SingleLiveEvent<String> = SingleLiveEvent()
 
@@ -48,11 +49,5 @@ open class DatabaseRoot {
         }
 
     }
-
-
-//    fun recommendationsSearch_() {
-//        localDbCopyLiveEvent.postValue(localDbCopy.allData)
-//    }
-
 
 }

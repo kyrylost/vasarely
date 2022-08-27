@@ -222,8 +222,16 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        Log.d("onStop", "__________________")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+
+        Log.d("onDestroy", "__________________")
     }
 }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.*
 import javax.security.auth.callback.Callback
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class UserDatabase : UserAuth() {
 
     lateinit var preferencesReference: DatabaseReference
