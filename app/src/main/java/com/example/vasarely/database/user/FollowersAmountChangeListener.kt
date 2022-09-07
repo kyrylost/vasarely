@@ -9,13 +9,16 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
-class FollowersAmountChangeListener(uid : String) : DatabaseRoot() {
+class FollowersAmountChangeListener(uid: String) : DatabaseRoot() {
 
     var followersAmountLiveData = SingleLiveEvent<String>()
     var listenerIsJustAttached = true
 
     init {
-        val userFollowersReference = databaseReference.child(uid).child("userData").child("followers")
+        val userFollowersReference = databaseReference
+            .child(uid)
+            .child("userData")
+            .child("followers")
         setNewFollowerListener(userFollowersReference)
     }
 
@@ -26,8 +29,7 @@ class FollowersAmountChangeListener(uid : String) : DatabaseRoot() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (listenerIsJustAttached) {
                     listenerIsJustAttached = false
-                }
-                else {
+                } else {
                     followersAmountLiveData.postValue(dataSnapshot.value.toString())
                     Log.d(Logger.TAG, dataSnapshot.toString())
                 }

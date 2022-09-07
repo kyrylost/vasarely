@@ -15,7 +15,7 @@ import com.example.vasarely.databinding.PreferencesSelectionScreenBinding
 import com.example.vasarely.viewmodel.primary.UserViewModel
 
 
-class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen) {
+class PreferencesSelectionScreen : Fragment(R.layout.preferences_selection_screen) {
 
     private val userViewModel: UserViewModel by activityViewModels()
     private var _binding: PreferencesSelectionScreenBinding? = null
@@ -91,14 +91,14 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
             byHandClicked += 1
             if (byHandClicked > 2) byHandClicked = 1
-            if (byHandClicked !=2) {
+            if (byHandClicked != 2) {
                 byHand.setBackgroundColor(Color.parseColor("#0082DD"))
                 byHand.setTextColor(Color.WHITE)
                 min1 += 1
-            }else{
+            } else {
                 byHand.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 byHand.setTextColor(Color.BLACK)
-                min1-=1
+                min1 -= 1
             }
         }
         binding.compGraphButton.setOnClickListener {
@@ -106,12 +106,12 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
 
             computerGraphClicked += 1
             if (computerGraphClicked > 2) computerGraphClicked = 1
-            if (computerGraphClicked!=2) {
+            if (computerGraphClicked != 2) {
                 compGraph.setBackgroundColor(Color.parseColor("#0082DD"))
                 compGraph.setTextColor(Color.WHITE)
                 min1 += 1
 
-            }else{
+            } else {
                 compGraph.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 compGraph.setTextColor(Color.BLACK)
                 min1 -= 1
@@ -124,8 +124,8 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (depressedButtonClicked > 2) depressedButtonClicked = 1
             if (depressedButtonClicked != 2) {
                 depress.setBackgroundColor(Color.parseColor("#0082DD"))
-                depress.setTextColor(Color.WHITE)}
-            else{
+                depress.setTextColor(Color.WHITE)
+            } else {
                 depress.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 depress.setTextColor(Color.BLACK)
             }
@@ -136,8 +136,8 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (funButtonClicked > 2) funButtonClicked = 1
             if (funButtonClicked != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
-                funBut.setTextColor(Color.WHITE)}
-            else{
+                funBut.setTextColor(Color.WHITE)
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
             }
@@ -150,11 +150,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickS != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-            min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min-=1
+                min -= 1
             }
         }
         binding.portraitButton.setOnClickListener {
@@ -164,11 +164,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickP != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.landscapeButton.setOnClickListener {
@@ -178,11 +178,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickL != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.marineButton.setOnClickListener {
@@ -192,11 +192,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickM != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.battlePaintingButton.setOnClickListener {
@@ -206,11 +206,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickB != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.interiorButton.setOnClickListener {
@@ -220,11 +220,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickI != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.caricatureButton.setOnClickListener {
@@ -234,11 +234,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickC != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.nudeButton.setOnClickListener {
@@ -248,11 +248,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickN != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.animeButton.setOnClickListener {
@@ -262,11 +262,11 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickA != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            }else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.horrorButton.setOnClickListener {
@@ -275,32 +275,34 @@ class PreferencesSelectionScreen: Fragment(R.layout.preferences_selection_screen
             if (clickH != 2) {
                 funBut.setBackgroundColor(Color.parseColor("#0082DD"))
                 funBut.setTextColor(Color.WHITE)
-                min +=1
-            } else{
+                min += 1
+            } else {
                 funBut.setBackgroundColor(Color.parseColor("#00FFFFFF"))
                 funBut.setTextColor(Color.BLACK)
-                min -=1
+                min -= 1
             }
         }
         binding.continueButton.setOnClickListener {
-            if (min1 < 1){
+            if (min1 < 1) {
                 binding.firstCategoryMin.setTextColor(Color.RED)
-                if (min < 2){
+                if (min < 2) {
                     binding.secondCategoryMin.setTextColor(Color.RED)
                 }
-            }
-            else if (min < 2){
+            } else if (min < 2) {
                 binding.secondCategoryMin.setTextColor(Color.RED)
-            }
-            else{
-                userViewModel.savePreference(byHandClicked, computerGraphClicked,
+            } else {
+                userViewModel.savePreference(
+                    byHandClicked, computerGraphClicked,
                     depressedButtonClicked, funButtonClicked, clickS, clickP, clickL, clickM,
-                    clickB, clickI, clickC, clickN, clickA, clickH)
+                    clickB, clickI, clickC, clickN, clickA, clickH
+                )
 
                 userViewModel.getData()
 
-                val action = PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
-                findNavController().navigate(action)}
+                val action =
+                    PreferencesSelectionScreenDirections.actionPreferencesSelectionScreenToSearchScreen()
+                findNavController().navigate(action)
+            }
         }
 
     }

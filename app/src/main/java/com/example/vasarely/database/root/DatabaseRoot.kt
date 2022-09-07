@@ -43,7 +43,7 @@ open class DatabaseRoot {
                 localDbCopy = async { LocalDbCopy(it) }
                 localDbCopyInitialized.postValue(true)
                 addDataEventListener(databaseReference)
-            } .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 dataChangeExceptions.postValue(exception.toString())
             }
         }

@@ -6,8 +6,10 @@ import android.os.Looper
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.google.firebase.database.DatabaseReference
-import kotlinx.coroutines.*
-import javax.security.auth.callback.Callback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 
 class UserDatabase : UserAuth() {
@@ -19,7 +21,7 @@ class UserDatabase : UserAuth() {
 
     private var amountOfWorks = 0
 
-    var userData: SingleLiveEvent<Any> = SingleLiveEvent()
+    var userDataFound: SingleLiveEvent<Any> = SingleLiveEvent()
 
     var allUserPosts = SingleLiveEvent<List<Bitmap>>()
     var profilePicture = SingleLiveEvent<Bitmap>()
@@ -43,7 +45,7 @@ class UserDatabase : UserAuth() {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("UserDatabase", "saveImage")
             amountOfWorks += 1
-            userStorage.saveImage(filePath, amountOfWorks){
+            userStorage.saveImage(filePath, amountOfWorks) {
                 Log.d("UserDatabase", "callback")
                 currentUserDb
                     .child("userData")
@@ -58,26 +60,42 @@ class UserDatabase : UserAuth() {
     }
 
     fun saveImageDescription(description: String) {
-        currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("description").setValue(description)
+        currentUserDb
+            .child("profileData")
+            .child("posts")
+            .child("$amountOfWorks")
+            .child("description")
+            .setValue(description)
     }
 
-    fun saveHashtags(technique : String, mood : String, genre : String) {
-        currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("mood").setValue(mood)
+    fun saveHashtags(technique: String, mood: String, genre: String) {
+        currentUserDb
+            .child("profileData")
+            .child("posts")
+            .child("$amountOfWorks")
+            .child("hashtags")
+            .child("mood")
+            .setValue(mood)
 
-        currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("technique").setValue(technique)
+        currentUserDb.child("profileData")
+            .child("posts")
+            .child("$amountOfWorks")
+            .child("hashtags")
+            .child("technique")
+            .setValue(technique)
 
-        currentUserDb.child("profileData").child("posts")
-            .child("$amountOfWorks").child("hashtags")
-            .child("genre").setValue(genre)
+        currentUserDb.child("profileData")
+            .child("posts")
+            .child("$amountOfWorks")
+            .child("hashtags")
+            .child("genre")
+            .setValue(genre)
     }
 
-    fun savePreference(technique : String, mood : String, selectedGenres : List<String>) {
-        preferencesReference = currentUserDb.child("userData").child("preferences")
+    fun savePreference(technique: String, mood: String, selectedGenres: List<String>) {
+        preferencesReference = currentUserDb
+            .child("userData")
+            .child("preferences")
 
         val techniqueReference = preferencesReference.child("technique")
         val moodReference = preferencesReference.child("mood")
@@ -97,38 +115,51 @@ class UserDatabase : UserAuth() {
     }
 
     fun updateName(newNickname: String) {
-        currentUserDb.child("userData").child("username").setValue(newNickname).addOnFailureListener { exception ->
-            dataChangeExceptions.postValue(exception.toString())
-        }
+        currentUserDb
+            .child("userData")
+            .child("username")
+            .setValue(newNickname).addOnFailureListener { exception ->
+                dataChangeExceptions.postValue(exception.toString())
+            }
     }
 
-    fun addFollowing (followingNumber : Int, followingUsersUid: String) {
-        databaseReference.child(uid).child("userData").child("following").setValue(followingNumber)
-        databaseReference.child(uid).child("userData").child("followingList").setValue(followingUsersUid)
+    fun addFollowing(followingNumber: Int, followingUsersUid: String) {
+        databaseReference
+            .child(uid)
+            .child("userData")
+            .child("following")
+            .setValue(followingNumber)
+        databaseReference
+            .child(uid)
+            .child("userData")
+            .child("followingList")
+            .setValue(followingUsersUid)
     }
 
     fun getData() {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("getDataScope", (Looper.myLooper() == Looper.getMainLooper()).toString())
 
-            currentUserDb.child("userData").get().addOnSuccessListener {
-                userData.postValue(it.value)
+            currentUserDb
+                .child("userData")
+                .get().addOnSuccessListener { userData ->
+                    userDataFound.postValue(userData.value)
 
-                userStorage.getProfilePicture()
+                    userStorage.getProfilePicture()
 
-                val dataSnapshot = it.value as HashMap<*, *> //don`t use hashMap
+                    val dataSnapshot = userData.value as HashMap<*, *> //don`t use hashMap
 
-                amountOfWorks = if (dataSnapshot["worksAmount"] != null)
-                    dataSnapshot["worksAmount"].toString().toInt()
-                else
-                    0
+                    amountOfWorks = if (dataSnapshot["worksAmount"] != null)
+                        dataSnapshot["worksAmount"].toString().toInt()
+                    else
+                        0
 
-                userStorage.retrieveAllUserPosts(amountOfWorks)
+                    userStorage.retrieveAllUserPosts(amountOfWorks)
 
-            }.addOnFailureListener { exception ->
-                dataChangeExceptions.postValue(exception.toString())
-                getData()
-            }
+                }.addOnFailureListener { exception ->
+                    dataChangeExceptions.postValue(exception.toString())
+                    getData()
+                }
         }
     }
 

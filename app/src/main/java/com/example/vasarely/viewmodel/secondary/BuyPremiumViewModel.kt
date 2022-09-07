@@ -9,39 +9,39 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class BuyPremiumViewModel: ViewModel() {
+class BuyPremiumViewModel : ViewModel() {
 
     private val repository = ApiRepository()
 
-    private var usdCourse : BigDecimal? = BigDecimal.ZERO
-    private var eurCourse : BigDecimal? = BigDecimal.ZERO
-    private var btcCourse : BigDecimal? = BigDecimal.ZERO
+    private var usdCourse: BigDecimal? = BigDecimal.ZERO
+    private var eurCourse: BigDecimal? = BigDecimal.ZERO
+    private var btcCourse: BigDecimal? = BigDecimal.ZERO
 
-    private var standardPremiumCostInUsd : BigDecimal? = BigDecimal.ZERO
-    private var standardPremiumCostInEur : BigDecimal? = BigDecimal.ZERO
-    private var standardPremiumCostInBtc : BigDecimal? = BigDecimal.ZERO
+    private var standardPremiumCostInUsd: BigDecimal? = BigDecimal.ZERO
+    private var standardPremiumCostInEur: BigDecimal? = BigDecimal.ZERO
+    private var standardPremiumCostInBtc: BigDecimal? = BigDecimal.ZERO
 
     val costsAreCalculatedMutableLiveData = MutableLiveData<Boolean>()
 
     var displayedCost = MutableLiveData<String>()
 
     private var uahSelected = true
-    var uahTextColor = MutableLiveData<Int>()//Color.parseColor("#0082DD")
+    var uahTextColor = MutableLiveData<Int>()
 
-    var usdSelected = false
+    private var usdSelected = false
     var usdTextColor = MutableLiveData<Int>()
 
-    var eurSelected = false
+    private var eurSelected = false
     var eurTextColor = MutableLiveData<Int>()
 
-    var btcSelected = false
+    private var btcSelected = false
     var btcTextColor = MutableLiveData<Int>()
 
     fun getCourse() {
         viewModelScope.launch {
             //coursesList.value = repository.getCourse()
             val allCourses = repository.getCourse()
-            allCourses.body().let { coursesList->
+            allCourses.body().let { coursesList ->
                 if (coursesList != null) {
                     for (course in coursesList) {
                         when (course.ccy) {

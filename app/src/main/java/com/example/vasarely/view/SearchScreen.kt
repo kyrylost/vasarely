@@ -5,15 +5,15 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,7 +35,12 @@ class SearchScreen : Fragment(R.layout.search_screen) {
     private var _binding: SearchScreenBinding? = null
     private val binding get() = _binding!!
 
-    private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+    private fun View.margin(
+        left: Float? = null,
+        top: Float? = null,
+        right: Float? = null,
+        bottom: Float? = null
+    ) {
         layoutParams<ViewGroup.MarginLayoutParams> {
             left?.run { leftMargin = dpToPx(this) }
             top?.run { topMargin = dpToPx(this) }
@@ -75,7 +80,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
         fun showData() {
             // Show data
         }
-0
+        0
         val progressDialog = ProgressDialog(requireContext())
 
         appViewModel.userViewModel.userMutableLiveData.observe(viewLifecycleOwner) { preferencesAreSelected ->
@@ -86,57 +91,56 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             if (!preferencesAreSelected) {
                 val action = SearchScreenDirections.actionSearchScreenToPreferencesSelectionScreen()
                 findNavController().navigate(action)
-            }
-            else {
-//                val serviceIntent = Intent(context, NotificationService::class.java)
-//                serviceIntent.putExtra("Uid", appViewModel.userViewModel.userDatabase.uid) //remove db ref
-//                context?.startForegroundService(serviceIntent)
+            } else {
+                val serviceIntent = Intent(context, NotificationService::class.java)
+                serviceIntent.putExtra(
+                    "Uid",
+                    appViewModel.userViewModel.userDatabase.uid
+                ) //remove db ref
+                context?.startForegroundService(serviceIntent)
 
                 appViewModel.userViewModel.getData()
                 appViewModel.usersViewModel.retrieveAllData()//databaseRecommendationsSearch()
             }
         }
 
-
-
-
         appViewModel.usersViewModel.localDbCopyLiveEvent.observe(viewLifecycleOwner) {
             appViewModel.recommendationsViewModel.getPostsData(
-                it, appViewModel.userViewModel.userData)
+                it, appViewModel.userViewModel.userData
+            )
         }
-
-
-
 
         appViewModel.recommendationsViewModel.recommendedPost.observe(viewLifecycleOwner) { post ->
 
-                fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
-                    val matrix = Matrix()
-                    matrix.postRotate(angle)
-                    return Bitmap.createBitmap(
-                        source, 0, 0, source.width, source.height, matrix, true)
-                }
+            fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+                val matrix = Matrix()
+                matrix.postRotate(angle)
+                return Bitmap.createBitmap(
+                    source, 0, 0, source.width, source.height, matrix, true
+                )
+            }
 
 
-                val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+            val screenWidth = Resources.getSystem().displayMetrics.widthPixels
 
-                val postImageView = ImageView(context)
+            val postImageView = ImageView(context)
 
-                val params = screenWidth - dpToPx(60F)
-                val postLinearLayoutParams = LinearLayout.LayoutParams(
-                    params, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val params = screenWidth - dpToPx(60F)
+            val postLinearLayoutParams = LinearLayout.LayoutParams(
+                params, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
 
-                postImageView.layoutParams = postLinearLayoutParams
-                postImageView.scaleType = ImageView.ScaleType.FIT_START
+            postImageView.layoutParams = postLinearLayoutParams
+            postImageView.scaleType = ImageView.ScaleType.FIT_START
 
-                postImageView.adjustViewBounds = true
+            postImageView.adjustViewBounds = true
 
-                postImageView.margin(30F, 15F, 30F, 15F)
+            postImageView.margin(30F, 15F, 30F, 15F)
 
-                if (post.byteCount < 50135040)
-                    postImageView.setImageBitmap(post)
-                else postImageView.setImageBitmap(rotateImage(post, 90f))
-                binding.recs.addView(postImageView)
+            if (post.byteCount < 50135040)
+                postImageView.setImageBitmap(post)
+            else postImageView.setImageBitmap(rotateImage(post, 90f))
+            binding.recs.addView(postImageView)
         }
 
 
@@ -149,8 +153,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             if (appViewModel.userViewModel.isUserDBInitialized()) {
                 appViewModel.userViewModel.getData()
                 appViewModel.usersViewModel.retrieveAllData()// Recommendations Search
-            }
-            else {
+            } else {
                 progressDialog.setMessage("Зачекайте, триває завантаження...")
                 progressDialog.setCancelable(false)
                 progressDialog.show()
@@ -158,16 +161,19 @@ class SearchScreen : Fragment(R.layout.search_screen) {
                 //searchViewModel.waitForEightSec()
                 searchViewModel.stopWaiting.observe(viewLifecycleOwner) {
                     progressDialog.dismiss()
-                    Toast.makeText(requireContext(), "Відсутній зв'язок з базою даних!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Відсутній зв'язок з базою даних!",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 //wait for 10 sec, if no send new request
             }
-        }
-        else showData()
+        } else showData()
 
 
-        binding.searchInputLayout.measure(0,0)
+        binding.searchInputLayout.measure(0, 0)
         val searchInputLayoutHeight = binding.searchInputLayout.measuredHeight
 
         val logo: ImageView = binding.logo
@@ -179,9 +185,9 @@ class SearchScreen : Fragment(R.layout.search_screen) {
 
         //----------------------------Navigation between screens----------------------------------//
         binding.homeButton.setOnClickListener {
-                val action = SearchScreenDirections.actionSearchScreenToMainScreen()
-                findNavController().navigate(action)
-            }
+            val action = SearchScreenDirections.actionSearchScreenToMainScreen()
+            findNavController().navigate(action)
+        }
 
         binding.userPageButton.setOnClickListener {
             val action = SearchScreenDirections.actionSearchScreenToUserPersonalPageScreen()
@@ -208,7 +214,7 @@ class SearchScreen : Fragment(R.layout.search_screen) {
             popupMenu.inflate(R.menu.founded_users_menu)
 
             for ((userNumber, userData) in foundedUsers.withIndex()) {
-                popupMenu.menu.add(0,userNumber,0,userData[1])
+                popupMenu.menu.add(0, userNumber, 0, userData[1])
             }
 
             popupMenu.show()

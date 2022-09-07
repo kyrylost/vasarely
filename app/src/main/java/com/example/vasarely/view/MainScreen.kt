@@ -12,7 +12,7 @@ import com.example.vasarely.R
 import com.example.vasarely.databinding.MainScreenBinding
 import com.example.vasarely.viewmodel.primary.AppViewModel
 
-class MainScreen: Fragment(R.layout.main_screen) {
+class MainScreen : Fragment(R.layout.main_screen) {
 
     private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: MainScreenBinding? = null
@@ -23,10 +23,6 @@ class MainScreen: Fragment(R.layout.main_screen) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-//        appViewModel.userData.observe(viewLifecycleOwner) {
-//            appViewModel.processData(it)
-//        }
 
         appViewModel.userViewModel.dataChangeExceptions.observe(viewLifecycleOwner) { exception ->
             Toast.makeText(requireContext(), exception, Toast.LENGTH_LONG).show()

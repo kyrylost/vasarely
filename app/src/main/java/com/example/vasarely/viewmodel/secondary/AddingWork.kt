@@ -104,8 +104,7 @@ class AddingWork : ViewModel() {
                 minNumberOfTechniques--
 
                 byHandColorChanged.postValue(true)
-            }
-            else {
+            } else {
                 byHandClicked++
                 byHandBGColor = Color.parseColor("#0082DD")
                 byHandTextColor = Color.WHITE
@@ -134,8 +133,7 @@ class AddingWork : ViewModel() {
                 minNumberOfTechniques--
 
                 computerGraphColorChanged.postValue(true)
-            }
-            else {
+            } else {
                 computerGraphClicked++
                 computerGraphBGColor = Color.parseColor("#0082DD")
                 computerGraphTextColor = Color.WHITE
@@ -156,7 +154,7 @@ class AddingWork : ViewModel() {
     }
 
 
-    private fun unclickStillLifeButton () {
+    private fun unclickStillLifeButton() {
         stillLifeButtonClicked = 0
         stillLifeButtonBGColor = Color.parseColor("#00FFFFFF")
         stillLifeButtonTextColor = Color.BLACK
@@ -165,7 +163,7 @@ class AddingWork : ViewModel() {
         stillLifeButtonColorChanged.postValue(true)
     }
 
-    private fun unclickPortraitButton () {
+    private fun unclickPortraitButton() {
         portraitButtonClicked = 0
         portraitButtonBGColor = Color.parseColor("#00FFFFFF")
         portraitButtonTextColor = Color.BLACK
@@ -174,7 +172,7 @@ class AddingWork : ViewModel() {
         portraitButtonColorChanged.postValue(true)
     }
 
-    private fun unclickLandscapeButton () {
+    private fun unclickLandscapeButton() {
         landscapeButtonClicked = 0
         landscapeButtonBGColor = Color.parseColor("#00FFFFFF")
         landscapeButtonTextColor = Color.BLACK
@@ -183,7 +181,7 @@ class AddingWork : ViewModel() {
         landscapeButtonColorChanged.postValue(true)
     }
 
-    private fun unclickMarineButton () {
+    private fun unclickMarineButton() {
         marineButtonClicked = 0
         marineButtonBGColor = Color.parseColor("#00FFFFFF")
         marineButtonTextColor = Color.BLACK
@@ -192,7 +190,7 @@ class AddingWork : ViewModel() {
         marineButtonColorChanged.postValue(true)
     }
 
-    private fun unclickBattlePaintingButton () {
+    private fun unclickBattlePaintingButton() {
         battlePaintingButtonClicked = 0
         battlePaintingButtonBGColor = Color.parseColor("#00FFFFFF")
         battlePaintingButtonTextColor = Color.BLACK
@@ -201,7 +199,7 @@ class AddingWork : ViewModel() {
         battlePaintingButtonColorChanged.postValue(true)
     }
 
-    private fun unclickInteriorButton () {
+    private fun unclickInteriorButton() {
         interiorButtonClicked = 0
         interiorButtonBGColor = Color.parseColor("#00FFFFFF")
         interiorButtonTextColor = Color.BLACK
@@ -210,7 +208,7 @@ class AddingWork : ViewModel() {
         interiorButtonColorChanged.postValue(true)
     }
 
-    private fun unclickCaricatureButton () {
+    private fun unclickCaricatureButton() {
         caricatureButtonClicked = 0
         caricatureButtonBGColor = Color.parseColor("#00FFFFFF")
         caricatureButtonTextColor = Color.BLACK
@@ -219,7 +217,7 @@ class AddingWork : ViewModel() {
         caricatureButtonColorChanged.postValue(true)
     }
 
-    private fun unclickNudeButton () {
+    private fun unclickNudeButton() {
         nudeButtonClicked = 0
         nudeButtonBGColor = Color.parseColor("#00FFFFFF")
         nudeButtonTextColor = Color.BLACK
@@ -228,7 +226,7 @@ class AddingWork : ViewModel() {
         nudeButtonColorChanged.postValue(true)
     }
 
-    private fun unclickAnimeButton () {
+    private fun unclickAnimeButton() {
         animeButtonClicked = 0
         animeButtonBGColor = Color.parseColor("#00FFFFFF")
         animeButtonTextColor = Color.BLACK
@@ -237,7 +235,7 @@ class AddingWork : ViewModel() {
         animeButtonColorChanged.postValue(true)
     }
 
-    private fun unclickHorrorButton () {
+    private fun unclickHorrorButton() {
         horrorButtonClicked = 0
         horrorButtonBGColor = Color.parseColor("#00FFFFFF")
         horrorButtonTextColor = Color.BLACK
@@ -251,8 +249,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (stillLifeButtonClicked == 1) {
                 unclickStillLifeButton()
-            }
-            else {
+            } else {
                 stillLifeButtonClicked++
                 stillLifeButtonBGColor = Color.parseColor("#0082DD")
                 stillLifeButtonTextColor = Color.WHITE
@@ -303,8 +300,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (portraitButtonClicked == 1) {
                 unclickPortraitButton()
-            }
-            else {
+            } else {
                 portraitButtonClicked++
                 portraitButtonBGColor = Color.parseColor("#0082DD")
                 portraitButtonTextColor = Color.WHITE
@@ -355,8 +351,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (landscapeButtonClicked == 1) {
                 unclickLandscapeButton()
-            }
-            else {
+            } else {
                 landscapeButtonClicked++
                 landscapeButtonBGColor = Color.parseColor("#0082DD")
                 landscapeButtonTextColor = Color.WHITE
@@ -407,8 +402,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (marineButtonClicked == 1) {
                 unclickMarineButton()
-            }
-            else {
+            } else {
                 marineButtonClicked++
                 marineButtonBGColor = Color.parseColor("#0082DD")
                 marineButtonTextColor = Color.WHITE
@@ -459,8 +453,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (battlePaintingButtonClicked == 1) {
                 unclickBattlePaintingButton()
-            }
-            else {
+            } else {
                 battlePaintingButtonClicked++
                 battlePaintingButtonBGColor = Color.parseColor("#0082DD")
                 battlePaintingButtonTextColor = Color.WHITE
@@ -511,8 +504,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (interiorButtonClicked == 1) {
                 unclickInteriorButton()
-            }
-            else {
+            } else {
                 interiorButtonClicked++
                 interiorButtonBGColor = Color.parseColor("#0082DD")
                 interiorButtonTextColor = Color.WHITE
@@ -563,8 +555,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (caricatureButtonClicked == 1) {
                 unclickCaricatureButton()
-            }
-            else {
+            } else {
                 caricatureButtonClicked++
                 caricatureButtonBGColor = Color.parseColor("#0082DD")
                 caricatureButtonTextColor = Color.WHITE
@@ -615,8 +606,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (nudeButtonClicked == 1) {
                 unclickNudeButton()
-            }
-            else {
+            } else {
                 nudeButtonClicked++
                 nudeButtonBGColor = Color.parseColor("#0082DD")
                 nudeButtonTextColor = Color.WHITE
@@ -667,8 +657,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (animeButtonClicked == 1) {
                 unclickAnimeButton()
-            }
-            else {
+            } else {
                 animeButtonClicked++
                 animeButtonBGColor = Color.parseColor("#0082DD")
                 animeButtonTextColor = Color.WHITE
@@ -719,8 +708,7 @@ class AddingWork : ViewModel() {
         viewModelScope.launch {
             if (horrorButtonClicked == 1) {
                 unclickHorrorButton()
-            }
-            else {
+            } else {
                 horrorButtonClicked++
                 horrorButtonBGColor = Color.parseColor("#0082DD")
                 horrorButtonTextColor = Color.WHITE
@@ -777,8 +765,7 @@ class AddingWork : ViewModel() {
                 minNumberOfMoods--
 
                 funButtonColorChanged.postValue(true)
-            }
-            else {
+            } else {
                 funButtonClicked++
                 funButtonBGColor = Color.parseColor("#0082DD")
                 funButtonTextColor = Color.WHITE
@@ -807,8 +794,7 @@ class AddingWork : ViewModel() {
                 minNumberOfMoods--
 
                 depressedButtonColorChanged.postValue(true)
-            }
-            else {
+            } else {
                 depressedButtonClicked++
                 depressedButtonBGColor = Color.parseColor("#0082DD")
                 depressedButtonTextColor = Color.WHITE

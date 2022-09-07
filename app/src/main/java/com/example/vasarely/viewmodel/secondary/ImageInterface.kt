@@ -9,14 +9,14 @@ import java.io.ByteArrayOutputStream
 
 interface ImageInterface {
 
-    fun rotateImage(source: Bitmap, angle: Float) : Bitmap {
+    fun rotateImage(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    fun compressBitmap(bitmap: Bitmap, quality: Int) : Bitmap {
-        Log.d("compressBitmap",  (Looper.myLooper() == Looper.getMainLooper()).toString())
+    fun compressBitmap(bitmap: Bitmap, quality: Int): Bitmap {
+        Log.d("compressBitmap", (Looper.myLooper() == Looper.getMainLooper()).toString())
 
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)

@@ -32,8 +32,6 @@ class UserViewModel : ViewModel(), ImageInterface {
     var profilePicture = SingleLiveEvent<Bitmap>()
 
     private var postsAmount = 0
-//    var lines = 0.0
-//    var lastLinePosts = 0
 
     private lateinit var imageFilePath: ImageFilePath
 
@@ -45,6 +43,7 @@ class UserViewModel : ViewModel(), ImageInterface {
             ::userPostsData.isInitialized
         else false
     }
+
     fun isProfilePictureInitialized() = userData.profilePictureIsInitialized()
     fun isUserDBInitialized() = ::userDB.isInitialized
 
@@ -59,8 +58,8 @@ class UserViewModel : ViewModel(), ImageInterface {
 
     init {
         viewModelScope.launch {
-            userDatabase.userData.observeForever {
-                processData(it)
+            userDatabase.userDataFound.observeForever { userData ->
+                processData(userData)
             }
 
             userDatabase.userStorageInitialized.observeForever {
@@ -75,10 +74,11 @@ class UserViewModel : ViewModel(), ImageInterface {
                         userPostsData = UserPostsData(imagesBitmapList)
                         postsAmount = userPostsData.postsAmount
                         Log.d("postsAmount", postsAmount.toString())
-    //                    lines = postsAmount / 3.0
-    //                    lastLinePosts = ((lines * 10).toInt() % 10) / 3
 
-                        Log.d("GlobalScope", (Looper.myLooper() == Looper.getMainLooper()).toString())
+                        Log.d(
+                            "GlobalScope",
+                            (Looper.myLooper() == Looper.getMainLooper()).toString()
+                        )
                         for ((index, bitmap) in imagesBitmapList.withIndex()) {
                             val compressedBitmap = async { compressBitmap(bitmap, 50) }
                             userPostsData.allUserPostsData[index] = compressedBitmap.await()
@@ -91,7 +91,8 @@ class UserViewModel : ViewModel(), ImageInterface {
                                     userPostsProcessed = true
                                 }
                             } else {
-                                val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
+                                val rotatedBitmap =
+                                    async { rotateImage(compressedBitmap.await(), 90f) }
                                 userPostsData.allUserPostsData[index] = rotatedBitmap.await()
 
                                 if (index == imagesBitmapList.count() - 1) {
@@ -268,7 +269,7 @@ class UserViewModel : ViewModel(), ImageInterface {
         }
 
     }
-    //scope
+
     fun saveNewImageToLocalDB(bitmap: Bitmap) {
         CoroutineScope(Dispatchers.IO).launch {
             var imageBitmap = bitmap
@@ -280,15 +281,11 @@ class UserViewModel : ViewModel(), ImageInterface {
             if (isUserDataInitialized()) {
                 userPostsData.allUserPostsData.add(imageBitmap)
                 postsAmount++
-//                lines = postsAmount / 3.0
-//                lastLinePosts = ((lines * 10).toInt() % 10) / 3
             } else {
                 val bitmapList = mutableListOf<Bitmap>()
                 bitmapList.add(imageBitmap)
                 userPostsData = UserPostsData(bitmapList)
                 postsAmount++
-//                lines = postsAmount / 3.0
-//                lastLinePosts = ((lines * 10).toInt() % 10) / 3
             }
             this.cancel()
         }

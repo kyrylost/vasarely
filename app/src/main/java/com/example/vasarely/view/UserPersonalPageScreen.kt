@@ -33,7 +33,7 @@ import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 
 
-class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
+class UserPersonalPageScreen : Fragment(R.layout.user_personal_page_screen) {
 
     private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: UserPersonalPageScreenBinding? = null
@@ -44,7 +44,12 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     private var profilePictureImage: ImageView? = null
     private var addingNewPhoto = true
 
-    private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+    private fun View.margin(
+        left: Float? = null,
+        top: Float? = null,
+        right: Float? = null,
+        bottom: Float? = null
+    ) {
         layoutParams<ViewGroup.MarginLayoutParams> {
             left?.run { leftMargin = dpToPx(this) }
             top?.run { topMargin = dpToPx(this) }
@@ -90,7 +95,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             binding.avatarPlacer.setImageBitmap(appViewModel.userViewModel.userData.profilePicture)
 
         fun showPosts() {
-            Log.d("showPosts" ,"Triggered")
+            Log.d("showPosts", "Triggered")
             binding.layoutForProgressBar.removeAllViews()
             binding.postsRecyclerView.apply {
                 val postAdapter =
@@ -147,7 +152,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         //----------------------------Navigation between screens----------------------------------//
         //to SearchScreen
         binding.searchButton.setOnClickListener {
-            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
+            val action =
+                UserPersonalPageScreenDirections.actionUserPersonalPageScreenToSearchScreen()
             findNavController().navigate(action)
         }
         //to MainScreen
@@ -157,16 +163,19 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
         }
 
         binding.menuImgBtn.setOnClickListener {
-            val action = UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
+            val action =
+                UserPersonalPageScreenDirections.actionUserPersonalPageScreenToNewPreferencesScreen()
             findNavController().navigate(action)
         }
 
 
         binding.avatarPlacer.setOnClickListener {
-            val popupSetProfilePicture = layoutInflater.inflate(R.layout.add_profile_picture_popup, null)
+            val popupSetProfilePicture =
+                layoutInflater.inflate(R.layout.add_profile_picture_popup, null)
 
             profilePictureImage = popupSetProfilePicture.findViewById(R.id.addProfilePictureImage)
-            val profilePictureButton = popupSetProfilePicture.findViewById<Button>(R.id.addProfilePictureButton)
+            val profilePictureButton =
+                popupSetProfilePicture.findViewById<Button>(R.id.addProfilePictureButton)
 
             addingNewPhoto = false
             launchGallery()
@@ -200,13 +209,33 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
 
         binding.gridImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.accent))
-            binding.columnSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+            binding.gridSelected.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accent
+                )
+            )
+            binding.columnSelected.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
         }
 
         binding.columnImgBtn.setOnClickListener {
-            binding.gridSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-            binding.columnSelected.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.accent))
+            binding.gridSelected.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            binding.columnSelected.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accent
+                )
+            )
         }
 
         binding.menuImgBtn.setOnClickListener {
@@ -258,7 +287,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
 
             fun likedPostOnClick() {
                 val action = UserPersonalPageScreenDirections
-                        .actionUserPersonalPageScreenToLikedPostScreen()
+                    .actionUserPersonalPageScreenToLikedPostScreen()
                 findNavController().navigate(action)
 
                 settingsDialog.dismiss()
@@ -290,7 +319,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 changeNicknameDialog.show()
 
 
-                closeNicknameButton.setOnClickListener{
+                closeNicknameButton.setOnClickListener {
                     changeNicknameDialog.dismiss()
                 }
 
@@ -323,7 +352,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 changePasswordDialog.show()
 
 
-                closePasswordButton.setOnClickListener{
+                closePasswordButton.setOnClickListener {
                     changePasswordDialog.dismiss()
                 }
             }
@@ -354,7 +383,7 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             }
 
             // -------------- Close button onClick -------------- //
-            closeSettingsButton.setOnClickListener{
+            closeSettingsButton.setOnClickListener {
                 settingsDialog.dismiss()
             }
 
@@ -429,12 +458,14 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
             addWorkDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             addWorkDialog.show()
 
-            val addNewPhotoNextButton = popupAddWork.findViewById<Button>(R.id.addNewPhotoNextButton)
+            val addNewPhotoNextButton =
+                popupAddWork.findViewById<Button>(R.id.addNewPhotoNextButton)
 
             addNewPhotoNextButton.setOnClickListener {
                 description =
                     popupAddWork.findViewById<TextInputEditText>(
-                        R.id.username_input).text.toString()
+                        R.id.username_input
+                    ).text.toString()
 
                 val popupFirstCategory =
                     layoutInflater.inflate(R.layout.first_category_popup, null)
@@ -702,7 +733,8 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
     }
 
     private var resultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result ->
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
 
             val data: Intent? = result.data
@@ -716,16 +748,14 @@ class UserPersonalPageScreen: Fragment(R.layout.user_personal_page_screen) {
                 try {
                     appViewModel.userViewModel.saveImageFilePath(filePath!!)
                     addWorkPopupImage?.setImageURI(filePath)
-                }
-                catch (e: IOException) {
+                } catch (e: IOException) {
                     e.printStackTrace()
                 }
             } else {
                 try {
                     appViewModel.userViewModel.saveImageFilePath(filePath!!)
                     profilePictureImage?.setImageURI(filePath)
-                }
-                catch (e: IOException) {
+                } catch (e: IOException) {
                     e.printStackTrace()
                 }
             }

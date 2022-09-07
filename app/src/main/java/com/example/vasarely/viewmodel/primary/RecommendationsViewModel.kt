@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.vasarely.database.users.RecommendationsStorage
 import com.example.vasarely.model.user.UserData
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecommendationsViewModel : ViewModel() {
 
@@ -57,7 +59,7 @@ class RecommendationsViewModel : ViewModel() {
         }
     }
 
-    private fun findPostsToRecommend(postsData : List<Map<Int, Any?>>, userData: UserData) {
+    private fun findPostsToRecommend(postsData: List<Map<Int, Any?>>, userData: UserData) {
         CoroutineScope(Dispatchers.IO).launch {
             var correspondsToPreference = 0
             for (singlePostData in postsData) {

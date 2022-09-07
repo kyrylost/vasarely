@@ -2,13 +2,15 @@ package com.example.vasarely.viewmodel.primary
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.database.users.UsersDatabase
 import com.example.vasarely.model.users.FoundedUserData
 import com.example.vasarely.model.users.LastFoundedUsersData
 import com.example.vasarely.viewmodel.secondary.ImageInterface
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class UsersViewModel : ViewModel(), ImageInterface {
 
@@ -41,24 +43,26 @@ class UsersViewModel : ViewModel(), ImageInterface {
         lastFoundedUsersData = LastFoundedUsersData(usersList)
     }
 
-    fun saveFoundedUser(id : Int) {
+    fun saveFoundedUser(id: Int) {
         val selectedUser = lastFoundedUsersData.usersList[id]
 
         var followersList = listOf<String>()
         if (selectedUser[5] != "empty")
             followersList = selectedUser[5].split(",")
 
-        foundedUserData = FoundedUserData(selectedUser[0], selectedUser[1], selectedUser[2].toInt(),
-            selectedUser[3].toInt(), selectedUser[4].toInt(), followersList)
+        foundedUserData = FoundedUserData(
+            selectedUser[0], selectedUser[1], selectedUser[2].toInt(),
+            selectedUser[3].toInt(), selectedUser[4].toInt(), followersList
+        )
     }
 
 
-    fun getOtherUserPosts () {
+    fun getOtherUserPosts() {
         usersDatabase.getOtherUserPosts(foundedUserData.uid, foundedUserData.worksAmount)
     }
 
     fun processFoundedUserPhotos(imagesBitmapList: MutableList<Bitmap>) {
-        CoroutineScope(Dispatchers.IO).launch  {
+        CoroutineScope(Dispatchers.IO).launch {
             foundedUserData.allFoundedUserPostsData = imagesBitmapList
             foundedUserLines = foundedUserData.worksAmount.toDouble() / 3.0
             foundedUserLastLinePosts = ((foundedUserLines * 10).toInt() % 10) / 3
@@ -69,8 +73,7 @@ class UsersViewModel : ViewModel(), ImageInterface {
                 if (bitmap.byteCount < 50135040) {
                     if (index == imagesBitmapList.count() - 1)
                         foundedUserPostProcessed.postValue(true)
-                }
-                else {
+                } else {
                     val rotatedBitmap = async { rotateImage(compressedBitmap.await(), 90f) }
                     foundedUserData.allFoundedUserPostsData[index] = rotatedBitmap.await()
 

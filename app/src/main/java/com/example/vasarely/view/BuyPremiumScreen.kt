@@ -1,26 +1,18 @@
 package com.example.vasarely.view
 
-import android.app.AlertDialog
 import android.app.ProgressDialog
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.vasarely.R
 import com.example.vasarely.databinding.BuyPremiumScreenBinding
 import com.example.vasarely.viewmodel.secondary.BuyPremiumViewModel
-import com.google.android.material.textfield.TextInputEditText
 
-class BuyPremiumScreen: Fragment(R.layout.buy_premium_screen) {
+class BuyPremiumScreen : Fragment(R.layout.buy_premium_screen) {
 
     private val buyPremiumViewModel: BuyPremiumViewModel by activityViewModels()
     private var _binding: BuyPremiumScreenBinding? = null

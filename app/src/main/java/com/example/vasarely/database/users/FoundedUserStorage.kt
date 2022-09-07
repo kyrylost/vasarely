@@ -13,7 +13,7 @@ class FoundedUserStorage : StorageRoot() {
 
     var foundedUserPosts: SingleLiveEvent<List<Bitmap>> = SingleLiveEvent()
 
-    fun getOtherUserPosts (uid : String, amountOfWorks : Int) {
+    fun getOtherUserPosts(uid: String, amountOfWorks: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             kotlin.runCatching {
                 val allUserPostsList = mutableListOf<Bitmap>()

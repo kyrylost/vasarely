@@ -9,10 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class RecommendationsStorage  : StorageRoot() {
+class RecommendationsStorage : StorageRoot() {
     var recommendation: SingleLiveEvent<Bitmap> = SingleLiveEvent()
 
-    fun getImage(userUid : String, postNumber : Int) {
+    fun getImage(userUid: String, postNumber: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             imageReference = storageReference.child("uploads/$userUid/userPosts/$postNumber")
             kotlin.runCatching {

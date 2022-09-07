@@ -7,10 +7,11 @@ import android.os.Looper
 import android.util.Log
 import com.example.vasarely.SingleLiveEvent
 import com.example.vasarely.database.root.StorageRoot
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.io.File
-import javax.security.auth.callback.Callback
 
 class UserStorage(uid: String): StorageRoot() {
 

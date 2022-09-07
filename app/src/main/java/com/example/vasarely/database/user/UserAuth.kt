@@ -29,13 +29,34 @@ open class UserAuth : DatabaseRoot() {
                 uidInit.postValue(uid)
                 currentUserDb = databaseReference.child((uid))
 
-                currentUserDb.child("userData").child("followers").setValue(0)
-                currentUserDb.child("userData").child("following").setValue(0)
-                currentUserDb.child("userData").child("followersList").setValue("empty")
-                currentUserDb.child("userData").child("followingList").setValue("empty")
-                currentUserDb.child("userData").child("worksAmount").setValue(0)
-                currentUserDb.child("userData").child("username").setValue(username)
-                currentUserDb.child("profileData").child("posts").setValue(1)
+                currentUserDb
+                    .child("userData")
+                    .child("followers")
+                    .setValue(0)
+                currentUserDb
+                    .child("userData")
+                    .child("following")
+                    .setValue(0)
+                currentUserDb
+                    .child("userData")
+                    .child("followersList")
+                    .setValue("empty")
+                currentUserDb
+                    .child("userData")
+                    .child("followingList")
+                    .setValue("empty")
+                currentUserDb
+                    .child("userData")
+                    .child("worksAmount")
+                    .setValue(0)
+                currentUserDb
+                    .child("userData")
+                    .child("username")
+                    .setValue(username)
+                currentUserDb
+                    .child("profileData")
+                    .child("posts")
+                    .setValue(1)
             }
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())
@@ -43,22 +64,24 @@ open class UserAuth : DatabaseRoot() {
     }
 
     fun login(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener{
-            if(firebaseAuth.currentUser != null) {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+            if (firebaseAuth.currentUser != null) {
 
                 currentUser = firebaseAuth.currentUser!!
                 uid = currentUser.uid
                 uidInit.postValue(uid)
                 currentUserDb = databaseReference.child((uid))
 
-                currentUserDb.child("userData").child("preferences").get().addOnSuccessListener {
-                    if (!it.exists()) {
-                        userMutableLiveData.postValue(false)
+                currentUserDb
+                    .child("userData")
+                    .child("preferences")
+                    .get().addOnSuccessListener {
+                        if (!it.exists()) {
+                            userMutableLiveData.postValue(false)
+                        } else {
+                            userMutableLiveData.postValue(true)
+                        }
                     }
-                    else {
-                        userMutableLiveData.postValue(true)
-                    }
-                }
             }
         }.addOnFailureListener { exception ->
             dataChangeExceptions.postValue(exception.toString())

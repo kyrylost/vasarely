@@ -21,13 +21,18 @@ import com.example.vasarely.R
 import com.example.vasarely.databinding.UserPageScreenBinding
 import com.example.vasarely.viewmodel.primary.AppViewModel
 
-class UserPageScreen: Fragment(R.layout.user_page_screen) {
+class UserPageScreen : Fragment(R.layout.user_page_screen) {
 
     private val appViewModel: AppViewModel by activityViewModels()
     private var _binding: UserPageScreenBinding? = null
     private val binding get() = _binding!!
 
-    private fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+    private fun View.margin(
+        left: Float? = null,
+        top: Float? = null,
+        right: Float? = null,
+        bottom: Float? = null
+    ) {
         layoutParams<ViewGroup.MarginLayoutParams> {
             left?.run { leftMargin = dpToPx(this) }
             top?.run { topMargin = dpToPx(this) }
@@ -126,7 +131,7 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
                 binding.userPostsLinearLayout.addView(horizontalLinearLayout)
             }
 
-            if (lastLinePosts != 0){
+            if (lastLinePosts != 0) {
                 val horizontalLinearLayout = LinearLayout(context)
                 horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
                 for (postNumber in 1..lastLinePosts) {
@@ -181,7 +186,8 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
         }
 
         appViewModel.foundedUserDataChanged.observe(viewLifecycleOwner) {
-            binding.followersNumber.text = appViewModel.usersViewModel.foundedUserData.getFollowers()
+            binding.followersNumber.text =
+                appViewModel.usersViewModel.foundedUserData.getFollowers()
         }
 
 
@@ -211,11 +217,15 @@ class UserPageScreen: Fragment(R.layout.user_page_screen) {
             val progressBar = ProgressBar(requireContext())
             progressBar.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT)
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
 
             progressBar.indeterminateDrawable.setColorFilter(
-                ContextCompat.getColor(requireContext(),
-                R.color.accent), PorterDuff.Mode.MULTIPLY)
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accent
+                ), PorterDuff.Mode.MULTIPLY
+            )
 
             progressBar.margin(0F, 30F, 0F, 30F)
             binding.userPostsLinearLayout.addView(progressBar)

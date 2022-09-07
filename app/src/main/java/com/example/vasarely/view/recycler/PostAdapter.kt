@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vasarely.databinding.PostImageBinding
 
-class PostAdapter (private val postsBitmaps: List<Bitmap>)
-    : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(private val postsBitmaps: List<Bitmap>) :
+    RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     var onItemClick: ((Bitmap) -> Unit)? = null
 
@@ -30,8 +30,8 @@ class PostAdapter (private val postsBitmaps: List<Bitmap>)
     override fun getItemCount(): Int = postsBitmaps.size
 
 
-    inner class PostViewHolder(private val postImageBinding: PostImageBinding)
-        : RecyclerView.ViewHolder(postImageBinding.root) {
+    inner class PostViewHolder(private val postImageBinding: PostImageBinding) :
+        RecyclerView.ViewHolder(postImageBinding.root) {
 
         fun bindImage(imageBitmap: Bitmap) {
             postImageBinding.postImageView.setImageBitmap(imageBitmap)

@@ -65,13 +65,15 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
             findNavController().navigate(action)
         }
 
-        binding.userPageButton.setOnClickListener{
-            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+        binding.userPageButton.setOnClickListener {
+            val action =
+                NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
             findNavController().navigate(action)
         }
 
         binding.newPrefReturnButton.setOnClickListener {
-            val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+            val action =
+                NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
             findNavController().navigate(action)
         }
 
@@ -199,12 +201,11 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
                 if (min1 < 2) {
                     binding.secondCategoryMin.setTextColor(Color.RED)
                 }
-            }
-            else if (min < 2) {
+            } else if (min < 2) {
                 binding.secondCategoryMin.setTextColor(Color.RED)
-            }
-            else {
-                appViewModel.userViewModel.savePreference(workPerformances[binding.byHandButton] ?: 0,
+            } else {
+                appViewModel.userViewModel.savePreference(
+                    workPerformances[binding.byHandButton] ?: 0,
                     workPerformances[binding.compGraphButton] ?: 0,
                     pictureMoods[binding.depressedButton] ?: 0,
                     pictureMoods[binding.funButton] ?: 0,
@@ -217,9 +218,11 @@ class NewPreferencesScreen : Fragment(R.layout.new_preferences_screen) {
                     favouriteGenres[binding.caricatureButton] ?: 0,
                     favouriteGenres[binding.nudeButton] ?: 0,
                     favouriteGenres[binding.animeButton] ?: 0,
-                    favouriteGenres[binding.horrorButton] ?: 0)
+                    favouriteGenres[binding.horrorButton] ?: 0
+                )
 
-                val action = NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
+                val action =
+                    NewPreferencesScreenDirections.actionNewPreferencesScreenToUserPersonalPageScreen()
                 findNavController().navigate(action)
             }
         }
